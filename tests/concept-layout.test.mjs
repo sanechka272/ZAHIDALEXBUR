@@ -26,9 +26,10 @@ test('header keeps phone and navigation but no CTA button', () => {
 });
 
 test('header and footer use the supplied ZAHIDALEXBUR logo asset', () => {
-  assert.match(component, /\/brand\/zahidalexbur-logo\.webp/);
+  assert.match(siteData, /logo:\s*['"]\/brand\/zahidalexbur-logo\.webp['"]/);
   const header = component.match(/<header[\s\S]*?<\/header>/)?.[0] ?? '';
   assert.match(header, /brand-logo/);
+  assert.match(header, /src=\{assets\.logo\}/);
   assert.doesNotMatch(header, /<strong>ZAHIDALEXBUR<\/strong>/);
 });
 
@@ -44,10 +45,13 @@ test('all photographic presets are repository-local and external image URLs are 
   }
 });
 
-test('landing uses generated concept imagery for the main photographic scenes', () => {
+test('landing uses local concept imagery for the main photographic scenes', () => {
   for (const asset of ['hero-drilling.webp', 'approach-geology.webp', 'water-hands.webp']) {
-    assert.match(component, new RegExp(`/generated/${asset}`));
+    assert.match(siteData, new RegExp(`/generated/${asset}`));
   }
+  assert.match(component, /assets\.hero/);
+  assert.match(component, /assets\.geology/);
+  assert.match(component, /assets\.water/);
 });
 
 test('landing keeps one primary three-card well-service section', () => {
@@ -94,9 +98,12 @@ test('motion remains CSS-first without heavyweight animation dependencies', () =
   assert.doesNotMatch(packageJson, /framer-motion|gsap/);
 });
 
-test('landing includes three original-service package cards with generated local imagery', () => {
+test('landing includes three original-service package cards with local generated imagery', () => {
   assert.match(component, /well-package-card/);
-  for (const asset of ['package-private.webp', 'package-filter.webp', 'package-industrial.webp']) assert.match(component, new RegExp(`/generated/${asset}`));
+  assert.match(component, /service\.image/);
+  for (const asset of ['package-private.webp', 'package-filter.webp', 'package-industrial.webp']) {
+    assert.match(siteData, new RegExp(`/generated/${asset}`));
+  }
 });
 
 test('service package cards render verified inclusions and premium CSS-first motion', () => {
