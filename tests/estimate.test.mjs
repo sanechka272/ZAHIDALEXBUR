@@ -2,16 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { estimateByLocation } from '../lib/estimate.js';
 
-test('returns a known range for Sokolnyky', () => {
+test('recognizes Sokolnyky without inventing a depth range', () => {
   const result = estimateByLocation('Сокільники');
   assert.equal(result.label, 'Сокільники');
-  assert.equal(result.depth, '40–70 м');
+  assert.equal(result.depth, 'потрібна оцінка');
   assert.equal(result.kind, 'known');
 });
 
 test('matches known locations case-insensitively', () => {
   const result = estimateByLocation('винники');
   assert.equal(result.label, 'Винники');
+  assert.equal(result.depth, 'потрібна оцінка');
   assert.equal(result.kind, 'known');
 });
 
