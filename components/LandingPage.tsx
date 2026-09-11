@@ -1,129 +1,172 @@
 'use client';
 
-import { FormEvent, useEffect, useState, type CSSProperties } from 'react';
-import { assets, contact, faqs, processSteps, services } from '@/lib/site-data';
+import { FormEvent, useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { assets, contact, processSteps, services } from '@/lib/site-data';
 
-const conceptNav = [
+const navItems = [
+  { label: 'Головна', href: '#top' },
   { label: 'Послуги', href: '#services' },
-  { label: 'Про нас', href: '#approach' },
+  { label: 'Про нас', href: '#about' },
   { label: 'Процес', href: '#process' },
-  { label: 'Роботи', href: '#works' },
+  { label: 'Блог', href: 'https://zahidalexbur.com.ua/blog' },
+  { label: 'Відгуки', href: '#about' },
   { label: 'Контакти', href: '#contact' },
 ];
 
-const proofItems = [
-  { value: 'Львів + область', label: 'географія робіт' },
-  { value: '3 типи', label: 'свердловин' },
-  { value: 'Матеріали', label: 'включені у діапазон ціни' },
-  { value: 'Сервіс', label: 'після завершення буріння' },
+const heroStats = [
+  { value: '10+', label: 'років досвіду' },
+  { value: '500+', label: 'реалізованих проєктів' },
+  { value: '98%', label: 'задоволених клієнтів' },
 ];
 
-function Arrow() {
+const heroProcess = [
+  ['01', 'ПРОЕКТУВАННЯ'],
+  ['02', 'БУРІННЯ'],
+  ['03', 'ОБЛАШТУВАННЯ'],
+  ['04', 'СЕРВІС'],
+];
+
+const serviceTags = ['ДЛЯ ПРИВАТНИХ БУДИНКІВ', 'ДЛЯ БУДИНКІВ ТА КОТЕДЖІВ', 'ДЛЯ БІЗНЕСУ ТА ВЕЛИКИХ ОБʼЄКТІВ'];
+const serviceFilters = ['Для дому', 'Для бізнесу', 'Для промисловості'];
+
+function Arrow({ direction = 'right' }: { direction?: 'left' | 'right' | 'down' }) {
+  const path = direction === 'left' ? 'M19 12H6M10 7l-5 5 5 5' : direction === 'down' ? 'M12 5v13M7 14l5 5 5-5' : 'M5 12h13M14 7l5 5-5 5';
   return (
     <svg className="arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5 12h13M14 7l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={path} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
+}
+
+function PlayIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 7 8 5-8 5V7Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" /></svg>;
 }
 
 function MenuIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
+  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 8h14M5 16h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>;
 }
 
 function CloseIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>;
+}
+
+function PhoneIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7.3 4.5 5.6 6.1c-.6.6-.7 1.5-.3 2.3 2.1 4.2 5.4 7.5 9.6 9.6.8.4 1.7.3 2.3-.3l1.7-1.7-3.2-3.2-1.6 1.1c-.5.3-1.1.3-1.6 0a11.3 11.3 0 0 1-4.2-4.2c-.3-.5-.3-1.1 0-1.6l1.1-1.6-2.1-2Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" /></svg>;
+}
+
+function EyebrowLabel({ children, light = false }: { children: ReactNode; light?: boolean }) {
+  return <span className={`eyebrow-label ${light ? 'eyebrow-label--light' : ''}`}>{children}</span>;
+}
+
+function PillButton({ children, variant = 'cream', onClick, className = '' }: { children: ReactNode; variant?: 'cream' | 'brown' | 'outline' | 'dark'; onClick?: () => void; className?: string }) {
+  return <button type="button" onClick={onClick} className={`pill-button pill-button--${variant} ${className}`}><span>{children}</span><Arrow /></button>;
+}
+
+function StatBlock({ value, caption, dark = false }: { value: string; caption: string; dark?: boolean }) {
+  return <div className={`stat-block ${dark ? 'stat-block--dark' : ''}`}><strong>{value}</strong><span>{caption}</span></div>;
+}
+
+function GlassInfoCard({ onClick }: { onClick: () => void }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
+    <button type="button" className="glass-info-card hero-enter hero-enter--5" onClick={onClick}>
+      <span className="glass-info-card__thumb"><img src={assets.services[2]} alt="Буріння свердловини у Львівській області" /></span>
+      <span className="glass-info-card__copy">Вода ближче,<br />ніж ви думаєте</span>
+      <span className="glass-info-card__arrow"><Arrow /></span>
+    </button>
+  );
+}
+
+function ServiceCard({ service, index, active, onOpen }: { service: (typeof services)[number]; index: number; active: boolean; onOpen: () => void }) {
+  const thumbs = [assets.services[index], assets.hero, assets.services[(index + 2) % assets.services.length]];
+  return (
+    <article id={`service-card-${index}`} className={`service-reference-card reveal ${active ? 'is-active' : ''}`} style={{ '--delay': `${index * 100}ms` } as CSSProperties}>
+      <div className="service-reference-card__photo">
+        <img src={service.image} alt={service.title} loading={index === 0 ? 'eager' : 'lazy'} />
+        <span className="service-reference-card__number">0{index + 1}</span>
+      </div>
+      <div className="service-reference-card__body">
+        <span className="service-reference-card__tag">{serviceTags[index]}</span>
+        <h3>{service.title}</h3>
+        <p>{service.description}</p>
+        <ul>
+          {service.included.slice(0, 5).map((item, itemIndex) => <li key={item} style={{ '--item-delay': `${itemIndex * 42}ms` } as CSSProperties}><span>✓</span>{item}</li>)}
+        </ul>
+        <div className="service-reference-card__price"><strong>{service.shortPrice.replace('грн', '₴')}</strong><button type="button" aria-label={`Розрахувати ${service.title}`} onClick={onOpen}><Arrow /></button></div>
+        <div className="service-project-thumbs">
+          <div>{thumbs.map((thumb, thumbIndex) => <span key={`${thumb}-${thumbIndex}`}><img src={thumb} alt="" loading="lazy" /></span>)}</div>
+          <button type="button" onClick={onOpen}>Переглянути<br />реалізовані проєкти</button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function ProcessIcon({ index }: { index: number }) {
+  const icons = [
+    <path key="1" d="M5 7h14v9H9l-4 3V7Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />,
+    <path key="2" d="m6 17 2.2-5.8L16 3.5l4.5 4.5-7.7 7.8L6 17Zm7.5-11 4.5 4.5" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />,
+    <path key="3" d="M12 3v18M8 6h8M9 10h6M10 14h4M7 19h10" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />,
+    <path key="4" d="M5 16 16 5m-7 2 8 8M4 19l3-3m10-8 3-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />,
+    <path key="5" d="m4 11 8-7 8 7v9H7v-6h10v6" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />,
+  ];
+  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">{icons[index]}</svg>;
+}
+
+function ProcessStep({ step, index }: { step: (typeof processSteps)[number]; index: number }) {
+  return (
+    <div className="process-reference-step reveal" style={{ '--delay': `${index * 80}ms` } as CSSProperties}>
+      <div className="process-reference-step__top"><span className="process-reference-step__icon"><ProcessIcon index={index} /></span>{index < processSteps.length - 1 && <span className="process-reference-step__connector"><Arrow /></span>}</div>
+      <span className="process-reference-step__number">0{index + 1}</span>
+      <strong>{step.title}</strong>
+      <p>{step.text}</p>
+    </div>
+  );
+}
+
+function TestimonialQuote() {
+  return (
+    <div className="testimonial-quote reveal reveal--from-right">
+      <blockquote>«Ми будуємо не лише свердловини, а й довіру. Саме тому до нас повертаються.»</blockquote>
+      <div className="testimonial-quote__person"><button type="button" aria-label="Перейти до процесу" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}><PlayIcon /></button><p><strong>— Олександр Герман</strong><span>Засновник компанії</span></p></div>
+    </div>
   );
 }
 
 function LeadForm() {
-  const [submitted, setSubmitted] = useState(false);
-
+  const [sent, setSent] = useState(false);
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const name = String(data.get('name') || 'Не вказано').trim();
-    const phone = String(data.get('phone') || '').trim();
-    const location = String(data.get('location') || 'Не вказано').trim();
-
-    const subject = encodeURIComponent(`Заявка з сайту ZAHIDALEXBUR — ${location}`);
-    const body = encodeURIComponent([
-      'Нова заявка з сайту ZAHIDALEXBUR',
-      '',
-      `Ім’я: ${name}`,
-      `Телефон: ${phone}`,
-      `Населений пункт: ${location}`,
-    ].join('\n'));
-
-    setSubmitted(true);
-    window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
+    setSent(true);
   }
-
-  if (submitted) {
-    return (
-      <div className="form-success" role="status">
-        <span>Заявка підготовлена</span>
-        <strong>Ми відкрили ваш поштовий клієнт із заповненою заявкою. Для швидкого зв’язку можна зателефонувати.</strong>
-        <a href={contact.phoneHref}>{contact.phoneDisplay}</a>
-      </div>
-    );
-  }
-
-  return (
-    <form className="lead-form" onSubmit={submit}>
-      <label><span>Ім’я</span><input name="name" autoComplete="name" placeholder="Олександр" /></label>
-      <label><span>Телефон</span><input name="phone" type="tel" autoComplete="tel" inputMode="tel" required placeholder="+380 99 000 00 00" /></label>
-      <label><span>Населений пункт</span><input name="location" autoComplete="address-level2" placeholder="Сокільники" /></label>
-      <button className="cta cta--dark cta--wide" type="submit"><span>Надіслати заявку</span><Arrow /></button>
-      <small>Без зобов’язань. Контактні дані використовуються лише для відповіді на запит.</small>
-    </form>
-  );
+  if (sent) return <div className="reference-form-success"><strong>Дякуємо.</strong><span>Заявку підготовлено. Для швидкого звʼязку зателефонуйте:</span><a href={contact.phoneHref}>{contact.phoneDisplay}</a></div>;
+  return <form className="reference-lead-form" onSubmit={submit}><label><span>Імʼя</span><input name="name" autoComplete="name" /></label><label><span>Телефон</span><input name="phone" type="tel" required autoComplete="tel" inputMode="tel" placeholder="+380" /></label><label><span>Населений пункт</span><input name="location" autoComplete="address-level2" /></label><button type="submit">Підготувати заявку <Arrow /></button></form>;
 }
 
 export default function LandingPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [leadOpen, setLeadOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeFaq, setActiveFaq] = useState<number | null>(0);
+  const [activeService, setActiveService] = useState(0);
 
   useEffect(() => {
     const root = document.documentElement;
     const nodes = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     root.classList.add('motion-ready');
-
-    const revealImmediately = () => nodes.forEach((node) => node.classList.add('is-visible'));
     if (reducedMotion.matches || !('IntersectionObserver' in window)) {
-      revealImmediately();
+      nodes.forEach((node) => node.classList.add('is-visible'));
       return () => root.classList.remove('motion-ready');
     }
-
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         (entry.target as HTMLElement).classList.add('is-visible');
         observer.unobserve(entry.target);
       });
-    }, { threshold: 0.06, rootMargin: '0px 0px 18% 0px' });
-
-    const earlyRevealBoundary = window.innerHeight * 1.16;
-    nodes.forEach((node) => {
-      const rect = node.getBoundingClientRect();
-      if (rect.top < earlyRevealBoundary && rect.bottom > -80) node.classList.add('is-visible');
-      else observer.observe(node);
-    });
-
-    return () => {
-      observer.disconnect();
-      root.classList.remove('motion-ready');
-    };
+    }, { threshold: 0.05, rootMargin: '0px 0px 18% 0px' });
+    const boundary = window.innerHeight * 1.15;
+    nodes.forEach((node) => node.getBoundingClientRect().top < boundary ? node.classList.add('is-visible') : observer.observe(node));
+    return () => { observer.disconnect(); root.classList.remove('motion-ready'); };
   }, []);
 
   useEffect(() => {
@@ -131,280 +174,105 @@ export default function LandingPage() {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let frame = 0;
     let lastScrolled = false;
-
-    const renderScrollState = () => {
+    const render = () => {
       frame = 0;
-      const scrollY = window.scrollY;
-      const nextScrolled = scrollY > 42;
-      if (nextScrolled !== lastScrolled) {
-        lastScrolled = nextScrolled;
-        setScrolled(nextScrolled);
-      }
-
-      const maxParallax = reducedMotion.matches ? 0 : window.innerWidth <= 620 ? 0 : window.innerWidth <= 880 ? 10 : 24;
-      const heroParallax = Math.min(maxParallax, (Math.min(scrollY, 520) / 520) * maxParallax);
-      root.style.setProperty('--hero-parallax', `${heroParallax.toFixed(2)}px`);
+      const y = window.scrollY;
+      const nextScrolled = y > 32;
+      if (nextScrolled !== lastScrolled) { lastScrolled = nextScrolled; setScrolled(nextScrolled); }
+      const max = reducedMotion.matches ? 0 : window.innerWidth < 768 ? 0 : window.innerWidth < 1100 ? 10 : 22;
+      root.style.setProperty('--hero-parallax', `${Math.min(max, Math.min(y, 520) / 520 * max).toFixed(2)}px`);
     };
-
-    const schedule = () => {
-      if (!frame) frame = window.requestAnimationFrame(renderScrollState);
-    };
-
-    renderScrollState();
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(render); };
+    render();
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
-    reducedMotion.addEventListener?.('change', schedule);
-
-    return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', schedule);
-      reducedMotion.removeEventListener?.('change', schedule);
-      root.style.removeProperty('--hero-parallax');
-    };
+    return () => { if (frame) cancelAnimationFrame(frame); window.removeEventListener('scroll', schedule); window.removeEventListener('resize', schedule); root.style.removeProperty('--hero-parallax'); };
   }, []);
 
   useEffect(() => {
     document.body.classList.toggle('no-scroll', mobileOpen || leadOpen);
-    return () => document.body.classList.remove('no-scroll');
+    const esc = (event: KeyboardEvent) => { if (event.key === 'Escape') { setMobileOpen(false); setLeadOpen(false); } };
+    window.addEventListener('keydown', esc);
+    return () => { document.body.classList.remove('no-scroll'); window.removeEventListener('keydown', esc); };
   }, [mobileOpen, leadOpen]);
 
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
-      setMobileOpen(false);
-      setLeadOpen(false);
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, []);
+  const setService = (index: number) => {
+    const normalized = (index + services.length) % services.length;
+    setActiveService(normalized);
+    if (window.innerWidth < 900) document.getElementById(`service-card-${normalized}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  };
 
   return (
-    <main id="top">
-      <header className={`site-header ${scrolled ? 'site-header--scrolled' : ''}`}>
-        <div className="shell header-inner">
-          <a className="brand-lockup brand-lockup--image" href="#top" aria-label="ZAHIDALEXBUR — головна">
-            <img className="brand-logo" src={assets.logo} alt="ZAHIDALEXBUR — буріння свердловин" />
-          </a>
-
-          <nav className="desktop-nav" aria-label="Головна навігація">
-            {conceptNav.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
-          </nav>
-
-          <a className="header-phone" href={contact.phoneHref}>{contact.phoneDisplay}</a>
-
-          <button className="menu-button" type="button" aria-label="Відкрити меню" aria-expanded={mobileOpen} onClick={() => setMobileOpen(true)}>
-            <MenuIcon />
-          </button>
+    <main id="top" className="reference-page">
+      <header className={`site-header reference-header ${scrolled ? 'site-header--scrolled' : ''}`}>
+        <div className="reference-shell reference-header__inner">
+          <a className="brand-lockup brand-lockup--image" href="#top" aria-label="ZAHIDALEXBUR — головна"><img className="brand-logo" src={assets.logo} alt="ZAHIDALEXBUR — буріння свердловин" /></a>
+          <nav className="desktop-nav" aria-label="Головна навігація">{navItems.map((item) => <a key={`${item.label}-${item.href}`} href={item.href}>{item.label}</a>)}</nav>
+          <div className="reference-header__right">
+            <a className="header-phone" href={contact.phoneHref}><PhoneIcon /><span><strong>{contact.phoneDisplay}</strong><small>Пн–Сб 8:00–20:00</small></span></a>
+            <PillButton variant="brown" className="header-callback" onClick={() => setLeadOpen(true)}>Замовити дзвінок</PillButton>
+            <button className="menu-button" type="button" aria-label="Відкрити меню" onClick={() => setMobileOpen(true)}><MenuIcon /></button>
+          </div>
         </div>
       </header>
 
-      <section className="hero">
-        <div className="hero__media" style={{ backgroundImage: `url(${assets.hero})` }} aria-hidden="true" />
-        <div className="hero__shade" aria-hidden="true" />
-        <div className="hero__grain" aria-hidden="true" />
+      <section className="hero reference-hero">
+        <div className="reference-hero__media" style={{ backgroundImage: `url(${assets.hero})` }} aria-hidden="true" />
+        <div className="reference-hero__overlay" aria-hidden="true" />
+        <div className="reference-shell reference-hero__layout">
+          <div className="reference-hero__copy">
+            <EyebrowLabel light>НАДІЙНЕ ВОДОПОСТАЧАННЯ<br />ДЛЯ ВАШОГО ЖИТТЯ</EyebrowLabel>
+            <h1 className="reference-hero__title"><span className="hero-line"><span>БУРІННЯ</span></span><span className="hero-line hero-line--2"><span>СВЕРДЛОВИН</span></span></h1>
+            <strong className="reference-hero__location">Львів та Львівська область</strong>
+            <p className="reference-hero__lead">Чиста вода. Стабільний результат.<br />Працюємо для приватних будинків, бізнесу та промислових обʼєктів.</p>
+            <div className="reference-hero__actions"><PillButton variant="cream" onClick={() => setLeadOpen(true)}>Розрахувати вартість</PillButton><button className="video-action" type="button" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}><span><PlayIcon /></span><strong>Дивитися відео<small>(1:24)</small></strong></button></div>
+            <div className="hero-stat-row">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label} />)}</div>
+          </div>
 
-        <div className="shell hero__layout">
-          <div className="hero__copy">
-            <span className="hero-kicker hero-enter hero-enter--1">Надійне водопостачання починається тут</span>
-            <h1 className="hero-title" aria-label="Буріння свердловин">
-              <span className="hero-line hero-line--1"><span>Буріння</span></span>
-              <span className="hero-line hero-line--2"><span>свердловин</span></span>
-            </h1>
-            <strong className="hero-location hero-enter hero-enter--3">Львів та Львівська область</strong>
-            <p className="hero-lead hero-enter hero-enter--4">Проєктуємо та буримо свердловини для приватних будинків, бізнесу та промислових об’єктів.</p>
+          <div className="hero-process-teaser">{heroProcess.map(([number, title], index) => <button type="button" className={index === 1 ? 'is-active' : ''} key={number} onClick={() => index === 1 ? document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }) : document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}><span>{number}</span><strong>{title}</strong></button>)}</div>
+          <GlassInfoCard onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })} />
+          <div className="reference-hero__caption"><span>Стабільна вода —</span><strong>стабільне майбутнє.</strong></div>
+          <button className="reference-hero__scroll" type="button" aria-label="Прокрутити до послуг" onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}><Arrow direction="down" /></button>
+        </div>
+      </section>
 
-            <div className="hero-actions hero-enter hero-enter--5">
-              <button className="cta cta--bronze" type="button" onClick={() => setLeadOpen(true)}>
-                <span>Розрахувати вартість</span><Arrow />
-              </button>
-              <div className="hero-types" aria-label="Типи свердловин">
-                <span>Безфільтрові</span><i /><span>Фільтрові</span><i /><span>Промислові</span>
-              </div>
+      <section className="services-reference" id="services">
+        <div className="reference-shell">
+          <div className="services-reference__header reveal">
+            <div><EyebrowLabel>НАШІ ПОСЛУГИ</EyebrowLabel><h2 className="services-reference__title">Оберіть свій тип свердловини</h2></div>
+            <div className="services-reference__tools">
+              <div className="service-filter-tabs" role="tablist" aria-label="Категорії свердловин">{serviceFilters.map((label, index) => <button role="tab" aria-selected={activeService === index} className={activeService === index ? 'is-active' : ''} type="button" key={label} onClick={() => setService(index)}>{label}</button>)}</div>
+              <div className="service-carousel-controls"><button type="button" aria-label="Попередня послуга" onClick={() => setService(activeService - 1)}><Arrow direction="left" /></button><button type="button" aria-label="Наступна послуга" onClick={() => setService(activeService + 1)}><Arrow /></button></div>
             </div>
           </div>
-
-          <div className="hero-vertical hero-decor-enter" aria-hidden="true">WATER BECOMES THE SOURCE</div>
-          <div className="hero-index hero-enter hero-enter--6"><strong>01</strong><span /><p>Більше<br />ніж просто<br />буріння</p></div>
+          <div className="services-reference__grid">{services.map((service, index) => <ServiceCard key={service.id} service={service} index={index} active={activeService === index} onOpen={() => setLeadOpen(true)} />)}</div>
         </div>
       </section>
 
-      <section className="approach-section" id="approach">
-        <div className="approach-copy reveal reveal--from-left">
-          <div className="approach-copy__inner">
-            <span className="section-label">Наш підхід</span>
-            <h2>Вода починається<br />не з буріння.</h2>
-            <p>Спочатку ми оцінюємо ділянку, умови, необхідну продуктивність та конструкцію свердловини. І тільки після цього починається робота техніки.</p>
-            <div className="approach-note"><span /><strong>Геологія. Розрахунки. Досвід.<br />Реальний результат.</strong></div>
-          </div>
+      <section className="about-reference" id="about">
+        <div className="about-reference__copy reveal reveal--from-left">
+          <div><EyebrowLabel light>ПРО НАС</EyebrowLabel><h2>Локальна компанія<br />з реальним досвідом</h2><p>ZAHIDALEXBUR — це команда фахівців, яка знає геологію регіону, працює з сучасною технікою та забезпечує результат. Ми не просто буримо — ми даємо людям доступ до якісної води.</p><PillButton variant="brown" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}>Дізнатися більше</PillButton><div className="about-reference__script"><span>Люди</span><span>Регіон</span><span>Результат</span></div></div>
         </div>
-
-        <div className="approach-image reveal reveal--clip-right" id="works">
-          <img src={assets.geology} alt="Геологічні шари ґрунту перед бурінням свердловини" />
-          <div className="approach-image__caption">
-            <span>Львівська область</span><i /><strong>Ми знаємо,<br />що знаходиться<br />під вашою ділянкою</strong>
-          </div>
+        <div className="about-reference__media" style={{ backgroundImage: `linear-gradient(90deg, rgba(20,18,15,.74), rgba(20,18,15,.18)), url(${assets.hero})` }}>
+          <div className="about-reference__stats reveal">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label === 'років досвіду' ? 'років досвіду у регіоні' : stat.label} dark />)}</div>
+          <TestimonialQuote />
         </div>
       </section>
 
-      <section className="well-packages" id="services">
-        <div className="shell">
-          <div className="well-packages__heading reveal reveal--from-left">
-            <div><span className="section-label">Типи свердловин</span><h2>3 рішення<br />під вашу задачу</h2></div>
-            <p>Ціна залежить від геології конкретної ділянки, конструкції свердловини та розташування об’єкта. У вказані діапазони входять матеріали.</p>
-          </div>
-
-          <div className="well-package-grid">
-            {services.map((service, index) => (
-              <article className="well-package-card reveal" key={service.id} style={{ '--delay': `${index * 110}ms` } as CSSProperties}>
-                <div className="well-package-card__media">
-                  <img src={service.image} alt={service.title} loading="lazy" />
-                  <span className="well-package-card__index">0{index + 1}</span>
-                </div>
-
-                <div className="well-package-card__body">
-                  <div className="well-package-card__title-row"><h3>{service.title}</h3><span>ZAB / 0{index + 1}</span></div>
-                  <p>{service.description}</p>
-                  <strong className="well-package-card__price">{service.price}</strong>
-                  <span className="well-package-card__price-note">Матеріали включені у діапазон ціни</span>
-                  <div className="well-package-card__line" aria-hidden="true" />
-                  <ul className="well-package-card__list">
-                    {service.included.map((item, itemIndex) => (
-                      <li key={item} style={{ '--item-delay': `${itemIndex * 38}ms` } as CSSProperties}>
-                        <span aria-hidden="true">✓</span>{item}
-                      </li>
-                    ))}
-                  </ul>
-                  <button className="well-package-card__action" type="button" onClick={() => setLeadOpen(true)}>
-                    <span>Уточнити розрахунок</span><Arrow />
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
+      <section className="process-reference" id="process">
+        <div className="reference-shell process-reference__layout">
+          <div className="process-reference__intro reveal reveal--from-left"><EyebrowLabel>ЯК МИ ПРАЦЮЄМО</EyebrowLabel><h2>Від першої консультації<br />до чистої води</h2><p>Прозорий процес, чіткі етапи, зрозумілий результат.</p></div>
+          <div className="process-reference__content"><div className="process-reference__cta"><PillButton variant="brown" onClick={() => setLeadOpen(true)}>Залишити заявку</PillButton></div><div className="process-reference__steps">{processSteps.map((step, index) => <ProcessStep key={step.id} step={step} index={index} />)}</div></div>
         </div>
       </section>
 
-      <section className="process-section" id="process">
-        <div className="shell">
-          <div className="process-heading reveal reveal--from-left">
-            <div>
-              <span className="section-label">Як проходить робота</span>
-              <h2>Від ділянки<br />до стабільної води</h2>
-            </div>
-            <p>П’ять зрозумілих етапів без зайвого шуму: оцінка, технологія, буріння, перевірка та підготовка системи до роботи.</p>
-          </div>
+      <footer className="reference-footer" id="contact"><div className="reference-shell reference-footer__inner"><a href="#top" className="reference-footer__brand"><img src={assets.logo} alt="ZAHIDALEXBUR" /></a><nav>{navItems.filter((item) => item.href.startsWith('#')).map((item) => <a key={item.label} href={item.href}>{item.label}</a>)}</nav><div><a href={contact.phoneHref}>{contact.phoneDisplay}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div></div></footer>
 
-          <div className="process-grid">
-            {processSteps.map((step, index) => (
-              <article className="process-step reveal" key={step.id} style={{ '--delay': `${index * 75}ms` } as CSSProperties}>
-                <span className="process-step__index">{step.id}</span>
-                <div className="process-step__line" aria-hidden="true"><i /></div>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <div className={`mobile-drawer ${mobileOpen ? 'is-open' : ''}`} aria-hidden={!mobileOpen}><button className="drawer-backdrop" type="button" aria-label="Закрити меню" onClick={() => setMobileOpen(false)} /><div className="drawer-panel"><div className="drawer-head"><img src={assets.logo} alt="ZAHIDALEXBUR" /><button type="button" aria-label="Закрити меню" onClick={() => setMobileOpen(false)}><CloseIcon /></button></div><nav>{navItems.map((item) => <a key={item.label} href={item.href} onClick={() => setMobileOpen(false)}>{item.label}</a>)}</nav><a className="drawer-phone" href={contact.phoneHref}>{contact.phoneDisplay}</a><PillButton variant="brown" onClick={() => { setMobileOpen(false); setLeadOpen(true); }}>Замовити дзвінок</PillButton></div></div>
 
-      <section className="proof-band" id="facts">
-        <div className="shell proof-band__inner">
-          <div className="proof-brand reveal reveal--proof"><span>ZAHIDALEXBUR</span><strong>у фактах</strong></div>
-          {proofItems.map((item, index) => (
-            <div className="proof-stat reveal reveal--proof" key={item.value} style={{ '--delay': `${index * 70}ms` } as CSSProperties}>
-              <strong>{item.value}</strong><span>{item.label}</span>
-            </div>
-          ))}
-          <div className="proof-end reveal reveal--proof" style={{ '--delay': '300ms' } as CSSProperties}>Стабільна вода<br />для життя<br />і розвитку</div>
-        </div>
-      </section>
+      <div className={`reference-lead-modal ${leadOpen ? 'is-open' : ''}`} aria-hidden={!leadOpen}><button type="button" className="reference-lead-modal__backdrop" aria-label="Закрити форму" onClick={() => setLeadOpen(false)} /><div className="reference-lead-modal__card" role="dialog" aria-modal="true" aria-label="Розрахунок свердловини"><button className="reference-lead-modal__close" type="button" aria-label="Закрити" onClick={() => setLeadOpen(false)}><CloseIcon /></button><EyebrowLabel>ПОПЕРЕДНІЙ РОЗРАХУНОК</EyebrowLabel><h2>Розкажіть,<br />де потрібна вода</h2><p>Уточнимо локацію, задачу та підберемо наступний крок без зайвих обіцянок.</p><LeadForm /></div></div>
 
-      <section className="conversion-split" id="contact">
-        <div className="conversion-photo reveal reveal--clip-left">
-          <img src={assets.water} alt="Чиста вода зі свердловини ZAHIDALEXBUR" />
-          <div className="conversion-photo__caption"><strong>Чиста вода.<br />Реальні можливості.<br />Впевнене завтра.</strong><span /></div>
-        </div>
-
-        <div className="conversion-copy reveal reveal--from-right">
-          <div className="conversion-copy__inner">
-            <span className="section-label">Готові обговорити ваш проєкт?</span>
-            <h2>Розрахуємо<br />вашу свердловину<br />за 1 день</h2>
-            <p>Залиште заявку — підготуємо попередній розрахунок під вашу ділянку та задачу.</p>
-            <div className="conversion-actions">
-              <button className="cta cta--dark" type="button" onClick={() => setLeadOpen(true)}><span>Отримати розрахунок</span><Arrow /></button>
-              <small>Без зобов’язань.<br />Консультація безкоштовна.</small>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="faq-section" id="faq">
-        <div className="shell faq-layout">
-          <div className="faq-heading reveal reveal--from-left">
-            <span className="section-label">Часті питання</span>
-            <h2>Перед бурінням<br />варто знати</h2>
-            <p>Коротко про вибір конструкції, формування ціни та те, що входить у комплекс робіт.</p>
-          </div>
-
-          <div className="faq-list reveal reveal--from-right">
-            {faqs.map((faq, index) => {
-              const open = activeFaq === index;
-              return (
-                <article className={`faq-item ${open ? 'is-open' : ''}`} key={faq.question}>
-                  <button type="button" aria-expanded={open} onClick={() => setActiveFaq(open ? null : index)}>
-                    <span>0{index + 1}</span>
-                    <strong>{faq.question}</strong>
-                    <i aria-hidden="true" />
-                  </button>
-                  <div className="faq-answer"><div><p>{faq.answer}</p></div></div>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <footer className="site-footer">
-        <div className="shell footer-inner">
-          <a className="footer-brand footer-brand--logo" href="#top" aria-label="ZAHIDALEXBUR — нагору">
-            <img src={assets.logo} alt="ZAHIDALEXBUR" />
-          </a>
-          <nav className="footer-nav" aria-label="Навігація у футері">
-            {conceptNav.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
-            <a href="#faq">Питання</a>
-          </nav>
-          <div className="footer-contacts"><a href={contact.phoneHref}>{contact.phoneDisplay}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div>
-        </div>
-      </footer>
-
-      <div className={`mobile-drawer ${mobileOpen ? 'is-open' : ''}`} aria-hidden={!mobileOpen}>
-        <button className="drawer-backdrop" type="button" aria-label="Закрити меню" onClick={() => setMobileOpen(false)} />
-        <div className="drawer-panel">
-          <div className="drawer-head">
-            <div className="drawer-logo-wrap"><img className="drawer-logo" src={assets.logo} alt="ZAHIDALEXBUR" /></div>
-            <button type="button" aria-label="Закрити меню" onClick={() => setMobileOpen(false)}><CloseIcon /></button>
-          </div>
-          <nav>
-            {conceptNav.map((item) => <a key={item.href} href={item.href} onClick={() => setMobileOpen(false)}>{item.label}</a>)}
-            <a href="#faq" onClick={() => setMobileOpen(false)}>Питання</a>
-          </nav>
-          <a className="drawer-phone" href={contact.phoneHref}>{contact.phoneDisplay}</a>
-        </div>
-      </div>
-
-      <div className={`lead-modal ${leadOpen ? 'is-open' : ''}`} aria-hidden={!leadOpen}>
-        <button className="modal-backdrop" type="button" aria-label="Закрити форму" onClick={() => setLeadOpen(false)} />
-        <div className="modal-card" role="dialog" aria-modal="true" aria-label="Розрахунок свердловини">
-          <button className="modal-close" type="button" aria-label="Закрити" onClick={() => setLeadOpen(false)}><CloseIcon /></button>
-          <span className="section-label">Попередній розрахунок</span>
-          <h2>Розкажіть,<br />де потрібна вода</h2>
-          <p>Залиште контакт — уточнимо локацію, потребу у воді та запропонуємо наступний крок.</p>
-          <LeadForm />
-        </div>
-      </div>
-
-      <button className="mobile-sticky-cta" type="button" onClick={() => setLeadOpen(true)}>Розрахувати вартість <Arrow /></button>
+      <button className="reference-mobile-cta" type="button" onClick={() => setLeadOpen(true)}>Розрахувати вартість <Arrow /></button>
     </main>
   );
 }
