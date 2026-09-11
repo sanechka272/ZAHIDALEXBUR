@@ -11,10 +11,11 @@ test('mobile service cards are a one-column grid instead of a horizontal scrolle
 
 test('mobile drilling process uses a five-step container text flip style cycle', () => {
   assert.match(css, /@keyframes\s+mobileProcessFlip/);
-  assert.match(css, /\.process-reference-step:nth-child\(2\)\s*\{[^}]*animation-delay:\s*3s/i);
-  assert.match(css, /\.process-reference-step:nth-child\(3\)\s*\{[^}]*animation-delay:\s*6s/i);
-  assert.match(css, /\.process-reference-step:nth-child\(4\)\s*\{[^}]*animation-delay:\s*9s/i);
-  assert.match(css, /\.process-reference-step:nth-child\(5\)\s*\{[^}]*animation-delay:\s*12s/i);
+  assert.match(css, /\.process-reference-step:nth-child\(2\)\s*\{[^}]*--flip-delay:\s*3s/i);
+  assert.match(css, /\.process-reference-step:nth-child\(3\)\s*\{[^}]*--flip-delay:\s*6s/i);
+  assert.match(css, /\.process-reference-step:nth-child\(4\)\s*\{[^}]*--flip-delay:\s*9s/i);
+  assert.match(css, /\.process-reference-step:nth-child\(5\)\s*\{[^}]*--flip-delay:\s*12s/i);
+  assert.match(css, /animation:\s*mobileProcessFlip\s+15s[^;]*var\(--flip-delay,\s*0s\)/i);
   assert.match(css, /\.process-reference__steps\s*\{[^}]*overflow:\s*hidden(?:\s*!important)?/i);
 });
 
