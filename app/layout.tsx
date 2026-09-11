@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import './fixes.css';
+import './final.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://zahidalexbur.com.ua'),
