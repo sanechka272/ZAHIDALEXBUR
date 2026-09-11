@@ -6,14 +6,13 @@ export const contact = {
 };
 
 export const assets = {
-  logo: '/brand/zahidalexbur-logo.webp',
-  hero: '/generated/hero-drilling.webp',
-  geology: '/generated/approach-geology.webp',
-  water: '/generated/water-hands.webp',
+  logo: '/brand/zahidalexbur-logo.svg',
+  hero: '/media/hero-waterwell.jpg',
+  about: '/media/about-mountain-forest.jpg',
   services: [
-    '/generated/package-private.webp',
-    '/generated/hero-drilling.webp',
-    '/generated/package-industrial.webp',
+    '/media/service-private-water.jpg',
+    '/media/service-filter-drilling.jpg',
+    '/media/service-industrial-rig.jpg',
   ],
 };
 
