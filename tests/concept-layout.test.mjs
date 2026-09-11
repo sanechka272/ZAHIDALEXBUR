@@ -9,13 +9,12 @@ const finalCss = await readFile(new URL('../app/final.css', import.meta.url), 'u
 const packageJson = await readFile(new URL('../package.json', import.meta.url), 'utf8');
 const siteData = await readFile(new URL('../lib/site-data.ts', import.meta.url), 'utf8');
 
-const productionMedia = [
-  '../public/brand/zahidalexbur-logo.webp',
-  '../public/generated/hero-drilling.webp',
-  '../public/generated/approach-geology.webp',
-  '../public/generated/package-private.webp',
-  '../public/generated/package-industrial.webp',
-  '../public/generated/water-hands.webp',
+const productionPhotos = [
+  '../public/media/hero-waterwell.jpg',
+  '../public/media/service-private-water.jpg',
+  '../public/media/service-filter-drilling.jpg',
+  '../public/media/service-industrial-rig.jpg',
+  '../public/media/about-mountain-forest.jpg',
 ];
 
 test('header follows approved reference with centered navigation, phone, callback pill and hamburger', () => {
@@ -27,16 +26,36 @@ test('header follows approved reference with centered navigation, phone, callbac
   assert.match(header, /assets\.logo/);
 });
 
-test('all production photographic presets are repository-local and valid WebP files', async () => {
+test('brand uses a repository-local SVG logo and never crops it with negative offsets', async () => {
+  assert.match(siteData, /logo:\s*['"]\/brand\/zahidalexbur-logo\.svg['"]/);
+  const svg = await readFile(new URL('../public/brand/zahidalexbur-logo.svg', import.meta.url), 'utf8');
+  assert.match(svg, /<svg[\s>]/);
+  assert.match(svg, /viewBox=/);
+  assert.doesNotMatch(svg, /<image\b/i);
+
+  const logoRule = finalCss.match(/\.reference-header \.brand-logo\s*\{[\s\S]*?\}/)?.[0] ?? '';
+  assert.doesNotMatch(logoRule, /(?:left|top):\s*-/);
+});
+
+test('every production photo is a large repository-local JPEG instead of a tiny placeholder', async () => {
   assert.doesNotMatch(siteData, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
   assert.doesNotMatch(component, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
 
-  for (const relativePath of productionMedia) {
+  for (const relativePath of productionPhotos) {
     const file = await readFile(new URL(relativePath, import.meta.url));
-    assert.ok(file.byteLength > 5000, `${relativePath} should not be an empty placeholder`);
-    assert.equal(file.subarray(0, 4).toString('ascii'), 'RIFF', `${relativePath} should be a valid WebP RIFF file`);
-    assert.equal(file.subarray(8, 12).toString('ascii'), 'WEBP', `${relativePath} should be a valid WebP file`);
+    assert.ok(file.byteLength > 100_000, `${relativePath} should be a real high-resolution photo, not a tiny placeholder`);
+    assert.equal(file[0], 0xff, `${relativePath} should be a JPEG`);
+    assert.equal(file[1], 0xd8, `${relativePath} should be a JPEG`);
+    assert.equal(file[2], 0xff, `${relativePath} should be a JPEG`);
   }
+});
+
+test('hero, three services and about section use distinct local photo assets', () => {
+  assert.match(siteData, /hero:\s*['"]\/media\/hero-waterwell\.jpg['"]/);
+  assert.match(siteData, /about:\s*['"]\/media\/about-mountain-forest\.jpg['"]/);
+  assert.match(siteData, /services:\s*\[[\s\S]*service-private-water\.jpg[\s\S]*service-filter-drilling\.jpg[\s\S]*service-industrial-rig\.jpg/);
+  assert.doesNotMatch(siteData, /services:\s*\[[\s\S]*hero-waterwell\.jpg/);
+  assert.match(component, /assets\.about/);
 });
 
 test('hero matches approved composition with video action, stats, process teaser and glass info card', () => {
@@ -77,7 +96,9 @@ test('process section renders the approved five-step horizontal journey', () => 
   assert.match(component, /Залишити заявку/);
 });
 
-test('reference visual layer includes glass cards, serif headings, large service cards and responsive collapse', () => {
+test('reference visual layer includes robust image fitting, glass cards, serif headings and responsive collapse', () => {
+  assert.match(finalCss, /\.reference-page img/);
+  assert.match(finalCss, /object-fit:\s*cover/);
   assert.match(finalCss, /\.glass-info-card/);
   assert.match(finalCss, /\.services-reference__title/);
   assert.match(finalCss, /\.service-reference-card/);
