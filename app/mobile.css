@@ -1,6 +1,6 @@
 /* Final service-header cleanup + mobile interaction layer. Loaded after all other styles. */
 
-/* Services no longer behave like a filtered carousel. Keep one centered editorial heading. */
+/* Services: one centered editorial heading on every breakpoint. */
 .services-reference__header {
   grid-template-columns: 1fr !important;
   justify-items: center;
@@ -20,35 +20,16 @@
   text-align: center;
 }
 
-.services-reference__tools {
+.services-reference__tools,
+.service-filter-tabs,
+.service-carousel-controls {
   display: none !important;
 }
 
-@keyframes mobileProcessFlip {
-  0%, 16% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) rotateX(0deg) scale(1);
-    filter: blur(0);
-  }
-  20% {
-    opacity: 0;
-    transform: translate3d(0, -16px, 0) rotateX(8deg) scale(.985);
-    filter: blur(4px);
-  }
-  20.01%, 100% {
-    opacity: 0;
-    transform: translate3d(0, 16px, 0) rotateX(-8deg) scale(.985);
-    filter: blur(4px);
-  }
-}
-
-@keyframes mobileProcessProgress {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
+.mobile-process-flip { display: none; }
 
 @media (max-width:767px) {
-  /* Services: real 1x1 grid — never a horizontal carousel on phones. */
+  /* Services: real 1x1 stack, never a horizontal carousel. */
   .services-reference__grid {
     display: grid !important;
     grid-template-columns: 1fr !important;
@@ -73,17 +54,15 @@
     min-height: 0;
   }
 
-  .service-reference-card__body {
-    padding: 24px 21px 19px;
-  }
+  .service-reference-card__body { padding: 24px 21px 19px; }
 
-  /* Process: Aceternity Container Text Flip-inspired mobile stage. */
-  .process-reference__content {
-    min-width: 0;
-  }
+  /* Desktop journey is replaced by one controlled active stage on phones. */
+  .process-reference__steps { display: none !important; }
+
+  .process-reference__content { min-width: 0; }
 
   .process-reference__cta {
-    margin: 0 0 22px;
+    margin: 0 0 18px;
     justify-content: stretch;
   }
 
@@ -92,157 +71,118 @@
     justify-content: space-between;
   }
 
-  .process-reference__steps {
+  .mobile-process-flip {
     position: relative;
-    display: block !important;
-    grid-template-columns: none !important;
-    width: 100%;
-    min-height: 252px;
-    padding: 0 !important;
-    overflow: hidden !important;
+    min-height: 260px;
+    padding: 20px 22px 24px;
+    display: block;
+    overflow: hidden;
     border: 1px solid #d9d2c7;
     border-radius: 24px;
     background: linear-gradient(145deg, #f8f5ef, #eee9e0);
-    box-shadow: 0 18px 48px rgba(50, 39, 29, .08);
+    box-shadow: 0 18px 48px rgba(50,39,29,.08);
     perspective: 900px;
-    isolation: isolate;
   }
 
-  .process-reference__steps::before {
-    content: 'ЕТАПИ БУРІННЯ';
-    position: absolute;
-    z-index: 4;
-    left: 24px;
-    top: 20px;
+  .mobile-process-flip__label {
+    display: block;
     color: #938779;
     font-size: 8px;
     font-weight: 800;
     letter-spacing: .14em;
   }
 
-  .process-reference__steps::after {
-    content: '';
-    position: absolute;
-    z-index: 5;
-    left: 24px;
-    right: 24px;
-    bottom: 20px;
-    height: 1px;
-    background: #a9784f;
-    transform-origin: left center;
-    animation: mobileProcessProgress 15s linear infinite;
-    animation-play-state: paused;
-  }
-
-  .process-reference-step:nth-child(1) { --flip-delay: 0s; }
-  .process-reference-step:nth-child(2) { --flip-delay: 3s; }
-  .process-reference-step:nth-child(3) { --flip-delay: 6s; }
-  .process-reference-step:nth-child(4) { --flip-delay: 9s; }
-  .process-reference-step:nth-child(5) { --flip-delay: 12s; }
-
-  .process-reference-step,
-  .motion-ready .process-reference-step,
-  .motion-ready .process-reference-step.is-visible {
-    position: absolute;
-    inset: 0;
-    min-width: 0;
-    padding: 54px 24px 40px !important;
-    display: grid;
-    align-content: center;
-    border: 0 !important;
-    opacity: 0;
-    transform-origin: 50% 50%;
-    transform: translate3d(0, 16px, 0) rotateX(-8deg) scale(.985);
-    filter: blur(4px);
-    transition: none !important;
-    animation: mobileProcessFlip 15s cubic-bezier(.22,.68,.22,1) var(--flip-delay, 0s) infinite;
-    animation-play-state: paused;
+  .mobile-process-flip__stage {
+    margin-top: 24px;
+    opacity: 1;
+    transform: translate3d(0,0,0) rotateX(0deg) scale(1);
+    filter: blur(0);
+    transition:
+      opacity .18s ease,
+      transform .28s cubic-bezier(.22,.68,.22,1),
+      filter .22s ease;
+    transform-origin: 50% 45%;
     will-change: opacity, transform, filter;
   }
 
-  /* Start the complete 01→05 sequence only when the process actually reaches the viewport. */
-  .process-reference-step.is-visible,
-  .motion-ready .process-reference-step.is-visible {
-    animation-play-state: running;
+  .mobile-process-flip__stage.is-flipping {
+    opacity: 0;
+    transform: translate3d(0,-10px,0) rotateX(5deg) scale(.99);
+    filter: blur(3px);
   }
 
-  .process-reference__steps:has(.process-reference-step.is-visible)::after {
-    animation-play-state: running;
-  }
-
-  .process-reference-step__top {
-    height: auto;
+  .mobile-process-flip__top {
     display: flex;
     align-items: center;
+    justify-content: space-between;
   }
 
-  .process-reference-step__icon {
+  .mobile-process-flip__icon {
     width: 58px;
     height: 58px;
-    flex-basis: 58px;
-    border-color: #cfc5b7;
+    display: grid;
+    place-items: center;
+    border: 1px solid #cfc5b7;
+    border-radius: 50%;
     color: #6f6255;
-    background: rgba(255,255,255,.45);
+    background: rgba(255,255,255,.5);
   }
 
-  .process-reference-step__icon svg {
-    width: 23px;
-    height: 23px;
-  }
+  .mobile-process-flip__icon svg { width: 23px; height: 23px; }
 
-  .process-reference-step__connector {
-    display: none;
-  }
-
-  .process-reference-step__number {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    margin: 0;
+  .mobile-process-flip__number {
     color: #a9784f;
     font-family: var(--display);
-    font-size: 16px;
+    font-size: 17px;
     letter-spacing: .05em;
   }
 
-  .process-reference-step > strong {
+  .mobile-process-flip__stage > strong {
     display: block;
-    margin-top: 24px;
-    max-width: 90%;
+    margin-top: 23px;
+    max-width: 92%;
     font-family: var(--ref-serif);
-    font-size: clamp(31px, 9vw, 42px);
+    font-size: clamp(31px,9vw,42px);
     font-weight: 400;
     line-height: .98;
     letter-spacing: -.035em;
   }
 
-  .process-reference-step > p {
-    max-width: 310px;
-    margin: 13px 0 0;
+  .mobile-process-flip__stage > p {
+    max-width: 320px;
+    margin: 12px 0 0;
     color: #6b6459;
     font-size: 13px;
     line-height: 1.55;
   }
+
+  .mobile-process-flip__progress {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 5px;
+  }
+
+  .mobile-process-flip__progress span {
+    height: 2px;
+    border-radius: 999px;
+    background: #d4ccc1;
+    transition: background .24s ease, transform .24s ease;
+    transform-origin: left center;
+  }
+
+  .mobile-process-flip__progress span.is-active {
+    background: #a9784f;
+    transform: scaleY(1.5);
+  }
 }
 
 @media (max-width:767px) and (prefers-reduced-motion: reduce) {
-  .process-reference__steps::after {
-    animation: none !important;
-    transform: scaleX(.2);
-  }
-
-  .process-reference-step,
-  .motion-ready .process-reference-step,
-  .motion-ready .process-reference-step.is-visible {
-    animation: none !important;
-    opacity: 0 !important;
-    transform: none !important;
-    filter: none !important;
-  }
-
-  .process-reference-step:first-child,
-  .motion-ready .process-reference-step:first-child,
-  .motion-ready .process-reference-step:first-child.is-visible {
-    opacity: 1 !important;
+  .mobile-process-flip__stage,
+  .mobile-process-flip__progress span {
+    transition: none !important;
   }
 }
