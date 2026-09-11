@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { blogArticles } from '@/lib/blog-data';
 import { assets, contact, processSteps, services } from '@/lib/site-data';
 
 const navItems = [
@@ -27,31 +28,6 @@ const heroProcess = [
 ];
 
 const serviceTags = ['ДЛЯ ПРИВАТНИХ БУДИНКІВ', 'ДЛЯ БУДИНКІВ ТА КОТЕДЖІВ', 'ДЛЯ БІЗНЕСУ ТА ВЕЛИКИХ ОБʼЄКТІВ'];
-const serviceFilters = ['Для дому', 'Для бізнесу', 'Для промисловості'];
-
-const blogArticles = [
-  {
-    tag: 'ПЛАНУВАННЯ',
-    title: 'Як вибрати місце для свердловини на ділянці',
-    excerpt: 'Що врахувати до заїзду техніки: рельєф, санітарні відстані, доступ і геологію ділянки.',
-    image: assets.services[0],
-    readTime: '6 хв читання',
-  },
-  {
-    tag: 'ГЕОЛОГІЯ',
-    title: 'Яка глибина свердловини потрібна у Львівській області',
-    excerpt: 'Чому сусідні населені пункти можуть мати різні горизонти і чому точну глибину не варто вгадувати наперед.',
-    image: assets.hero,
-    readTime: '7 хв читання',
-  },
-  {
-    tag: 'ТЕХНОЛОГІЯ',
-    title: 'Фільтрова чи безфільтрова свердловина: що обрати',
-    excerpt: 'Порівнюємо два основні рішення та пояснюємо, від яких геологічних умов залежить правильний вибір.',
-    image: assets.services[1],
-    readTime: '5 хв читання',
-  },
-];
 
 function Arrow({ direction = 'right' }: { direction?: 'left' | 'right' | 'down' }) {
   const path = direction === 'left' ? 'M19 12H6M10 7l-5 5 5 5' : direction === 'down' ? 'M12 5v13M7 14l5 5 5-5' : 'M5 12h13M14 7l5 5-5 5';
@@ -102,25 +78,25 @@ function GlassInfoCard({ onClick }: { onClick: () => void }) {
 
 function BlogCard({ article, index }: { article: (typeof blogArticles)[number]; index: number }) {
   return (
-    <article className="blog-reference-card reveal" style={{ '--delay': `${index * 90}ms` } as CSSProperties}>
-      <a className="blog-reference-card__media" href="https://zahidalexbur.com.ua/blog" target="_blank" rel="noreferrer" aria-label={article.title}>
+    <a className="blog-reference-card reveal" style={{ '--delay': `${index * 70}ms` } as CSSProperties} href={`/blog/${article.slug}`} aria-label={article.title}>
+      <div className="blog-reference-card__media">
         <img src={article.image} alt={article.title} loading="lazy" />
         <span>0{index + 1}</span>
-      </a>
+      </div>
       <div className="blog-reference-card__body">
         <div className="blog-reference-card__meta"><span>{article.tag}</span><small>{article.readTime}</small></div>
         <h3>{article.title}</h3>
         <p>{article.excerpt}</p>
-        <a className="blog-reference-card__link" href="https://zahidalexbur.com.ua/blog" target="_blank" rel="noreferrer">Читати матеріал <Arrow /></a>
+        <span className="blog-reference-card__link">Читати матеріал <Arrow /></span>
       </div>
-    </article>
+    </a>
   );
 }
 
-function ServiceCard({ service, index, active, onOpen }: { service: (typeof services)[number]; index: number; active: boolean; onOpen: () => void }) {
+function ServiceCard({ service, index, onOpen }: { service: (typeof services)[number]; index: number; onOpen: () => void }) {
   const thumbs = [assets.services[index], assets.hero, assets.services[(index + 2) % assets.services.length]];
   return (
-    <article id={`service-card-${index}`} className={`service-reference-card reveal ${active ? 'is-active' : ''}`} style={{ '--delay': `${index * 100}ms` } as CSSProperties}>
+    <article id={`service-card-${index}`} className="service-reference-card reveal" style={{ '--delay': `${index * 100}ms` } as CSSProperties}>
       <div className="service-reference-card__photo">
         <img src={service.image} alt={service.title} loading={index === 0 ? 'eager' : 'lazy'} />
         <span className="service-reference-card__number">0{index + 1}</span>
@@ -164,6 +140,26 @@ function ProcessStep({ step, index }: { step: (typeof processSteps)[number]; ind
   );
 }
 
+function MobileProcessFlip({ activeProcess, flipping }: { activeProcess: number; flipping: boolean }) {
+  const step = processSteps[activeProcess];
+  return (
+    <div className="mobile-process-flip" aria-live="polite">
+      <span className="mobile-process-flip__label">ЕТАПИ БУРІННЯ</span>
+      <div className={`mobile-process-flip__stage ${flipping ? 'is-flipping' : ''}`} key={step.id}>
+        <div className="mobile-process-flip__top">
+          <span className="mobile-process-flip__icon"><ProcessIcon index={activeProcess} /></span>
+          <span className="mobile-process-flip__number">0{activeProcess + 1}</span>
+        </div>
+        <strong>{step.title}</strong>
+        <p>{step.text}</p>
+      </div>
+      <div className="mobile-process-flip__progress" aria-hidden="true">
+        {processSteps.map((item, index) => <span key={item.id} className={index === activeProcess ? 'is-active' : ''} />)}
+      </div>
+    </div>
+  );
+}
+
 function TestimonialQuote() {
   return (
     <div className="testimonial-quote reveal reveal--from-right">
@@ -187,7 +183,9 @@ export default function LandingPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [leadOpen, setLeadOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeService, setActiveService] = useState(0);
+  const [activeProcess, setActiveProcess] = useState(0);
+  const [processInView, setProcessInView] = useState(false);
+  const [processFlipping, setProcessFlipping] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -237,11 +235,30 @@ export default function LandingPage() {
     return () => { document.body.classList.remove('no-scroll'); window.removeEventListener('keydown', esc); };
   }, [mobileOpen, leadOpen]);
 
-  const setService = (index: number) => {
-    const normalized = (index + services.length) % services.length;
-    setActiveService(normalized);
-    if (window.innerWidth < 900) document.getElementById(`service-card-${normalized}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-  };
+  useEffect(() => {
+    const section = document.getElementById('process');
+    if (!section || !('IntersectionObserver' in window)) return;
+    const mobile = window.matchMedia('(max-width: 767px)');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const observer = new IntersectionObserver(([entry]) => {
+      setProcessInView(mobile.matches && !reducedMotion.matches && entry.isIntersecting);
+    }, { threshold: 0.3 });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!processInView) return;
+    let swapTimeout = 0;
+    const interval = window.setInterval(() => {
+      setProcessFlipping(true);
+      swapTimeout = window.setTimeout(() => {
+        setActiveProcess((current) => (current + 1) % processSteps.length);
+        requestAnimationFrame(() => setProcessFlipping(false));
+      }, 150);
+    }, 1800);
+    return () => { window.clearInterval(interval); window.clearTimeout(swapTimeout); setProcessFlipping(false); };
+  }, [processInView]);
 
   return (
     <main id="top" className="reference-page">
@@ -281,12 +298,8 @@ export default function LandingPage() {
         <div className="reference-shell">
           <div className="services-reference__header reveal">
             <div><EyebrowLabel>НАШІ ПОСЛУГИ</EyebrowLabel><h2 className="services-reference__title">Оберіть свій тип свердловини</h2></div>
-            <div className="services-reference__tools">
-              <div className="service-filter-tabs" role="tablist" aria-label="Категорії свердловин">{serviceFilters.map((label, index) => <button role="tab" aria-selected={activeService === index} className={activeService === index ? 'is-active' : ''} type="button" key={label} onClick={() => setService(index)}>{label}</button>)}</div>
-              <div className="service-carousel-controls"><button type="button" aria-label="Попередня послуга" onClick={() => setService(activeService - 1)}><Arrow direction="left" /></button><button type="button" aria-label="Наступна послуга" onClick={() => setService(activeService + 1)}><Arrow /></button></div>
-            </div>
           </div>
-          <div className="services-reference__grid">{services.map((service, index) => <ServiceCard key={service.id} service={service} index={index} active={activeService === index} onOpen={() => setLeadOpen(true)} />)}</div>
+          <div className="services-reference__grid">{services.map((service, index) => <ServiceCard key={service.id} service={service} index={index} onOpen={() => setLeadOpen(true)} />)}</div>
         </div>
       </section>
 
@@ -303,7 +316,11 @@ export default function LandingPage() {
       <section className="process-reference" id="process">
         <div className="reference-shell process-reference__layout">
           <div className="process-reference__intro reveal reveal--from-left"><EyebrowLabel>ЯК МИ ПРАЦЮЄМО</EyebrowLabel><h2>Від першої консультації<br />до чистої води</h2><p>Прозорий процес, чіткі етапи, зрозумілий результат.</p></div>
-          <div className="process-reference__content"><div className="process-reference__cta"><PillButton variant="brown" onClick={() => setLeadOpen(true)}>Залишити заявку</PillButton></div><div className="process-reference__steps">{processSteps.map((step, index) => <ProcessStep key={step.id} step={step} index={index} />)}</div></div>
+          <div className="process-reference__content">
+            <div className="process-reference__cta"><PillButton variant="brown" onClick={() => setLeadOpen(true)}>Залишити заявку</PillButton></div>
+            <div className="process-reference__steps">{processSteps.map((step, index) => <ProcessStep key={step.id} step={step} index={index} />)}</div>
+            <MobileProcessFlip activeProcess={activeProcess} flipping={processFlipping} />
+          </div>
         </div>
       </section>
 
@@ -311,9 +328,9 @@ export default function LandingPage() {
         <div className="reference-shell">
           <div className="blog-reference__header reveal">
             <div><EyebrowLabel>БЛОГ</EyebrowLabel><h2>Корисно знати до того,<br />як почнеться буріння</h2></div>
-            <a className="blog-reference__all" href="https://zahidalexbur.com.ua/blog" target="_blank" rel="noreferrer">Усі матеріали <Arrow /></a>
+            <a className="blog-reference__all" href="/blog">Усі матеріали <Arrow /></a>
           </div>
-          <div className="blog-reference__grid">{blogArticles.map((article, index) => <BlogCard key={article.title} article={article} index={index} />)}</div>
+          <div className="blog-reference__grid">{blogArticles.map((article, index) => <BlogCard key={article.slug} article={article} index={index} />)}</div>
         </div>
       </section>
 
