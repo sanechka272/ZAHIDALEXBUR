@@ -3,11 +3,12 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const css = readFileSync(new URL('../app/mobile.css', import.meta.url), 'utf8');
+const landing = readFileSync(new URL('../components/LandingPage.tsx', import.meta.url), 'utf8');
 
-test('services header has no filter or carousel controls and the title is centered', () => {
+test('services header has no filter or carousel controls and the title is centered on every breakpoint', () => {
   assert.match(css, /\.services-reference__header\s*\{[^}]*grid-template-columns:\s*1fr(?:\s*!important)?[^}]*justify-items:\s*center[^}]*text-align:\s*center/i);
   assert.match(css, /\.services-reference__title\s*\{[^}]*text-align:\s*center/i);
-  assert.match(css, /\.services-reference__tools\s*\{[^}]*display:\s*none\s*!important/i);
+  assert.doesNotMatch(landing, /service-filter-tabs|service-carousel-controls|Для дому|Для бізнесу|Для промисловості/);
 });
 
 test('mobile service cards are a one-column grid instead of a horizontal scroller', () => {
@@ -15,18 +16,17 @@ test('mobile service cards are a one-column grid instead of a horizontal scrolle
   assert.match(css, /@media\s*\(max-width:767px\)[\s\S]*\.service-reference-card\s*\{[^}]*width:\s*100%[^}]*min-width:\s*0(?:\s*!important)?/i);
 });
 
-test('mobile drilling process uses a five-step viewport-triggered container text flip cycle', () => {
-  assert.match(css, /@keyframes\s+mobileProcessFlip/);
-  assert.match(css, /\.process-reference-step:nth-child\(2\)\s*\{[^}]*--flip-delay:\s*3s/i);
-  assert.match(css, /\.process-reference-step:nth-child\(3\)\s*\{[^}]*--flip-delay:\s*6s/i);
-  assert.match(css, /\.process-reference-step:nth-child\(4\)\s*\{[^}]*--flip-delay:\s*9s/i);
-  assert.match(css, /\.process-reference-step:nth-child\(5\)\s*\{[^}]*--flip-delay:\s*12s/i);
-  assert.match(css, /animation:\s*mobileProcessFlip\s+15s[^;]*var\(--flip-delay,\s*0s\)/i);
-  assert.match(css, /animation-play-state:\s*paused/i);
-  assert.match(css, /\.process-reference-step\.is-visible[\s\S]*animation-play-state:\s*running/i);
-  assert.match(css, /\.process-reference__steps\s*\{[^}]*overflow:\s*hidden(?:\s*!important)?/i);
+test('mobile drilling process uses one viewport-triggered controlled stage with a fast cycle', () => {
+  assert.match(landing, /const \[activeProcess, setActiveProcess\] = useState\(0\)/);
+  assert.match(landing, /const \[processInView, setProcessInView\] = useState\(false\)/);
+  assert.match(landing, /IntersectionObserver[\s\S]*setProcessInView/);
+  assert.match(landing, /window\.setInterval\([\s\S]*?1800\)/);
+  assert.match(landing, /MobileProcessFlip/);
+  assert.match(css, /\.process-reference__steps\s*\{\s*display:\s*none\s*!important/);
+  assert.match(css, /\.mobile-process-flip__stage\s*\{[\s\S]*?transition:/);
+  assert.doesNotMatch(css, /@keyframes\s+mobileProcessFlip|animation:\s*mobileProcessFlip/i);
 });
 
-test('mobile flip respects reduced motion', () => {
-  assert.match(css, /prefers-reduced-motion:\s*reduce[\s\S]*\.process-reference-step[\s\S]*animation:\s*none\s*!important/i);
+test('mobile controlled stage respects reduced motion', () => {
+  assert.match(css, /prefers-reduced-motion:\s*reduce[\s\S]*\.mobile-process-flip__stage[\s\S]*transition:\s*none\s*!important/i);
 });
