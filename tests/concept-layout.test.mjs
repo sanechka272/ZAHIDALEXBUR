@@ -8,12 +8,11 @@ const fixes = await readFile(new URL('../app/fixes.css', import.meta.url), 'utf8
 const packageJson = await readFile(new URL('../package.json', import.meta.url), 'utf8');
 const siteData = await readFile(new URL('../lib/site-data.ts', import.meta.url), 'utf8');
 
-const localMedia = [
+const productionMedia = [
   '../public/brand/zahidalexbur-logo.webp',
   '../public/generated/hero-drilling.webp',
   '../public/generated/approach-geology.webp',
   '../public/generated/package-private.webp',
-  '../public/generated/package-filter.webp',
   '../public/generated/package-industrial.webp',
   '../public/generated/water-hands.webp',
 ];
@@ -33,11 +32,12 @@ test('header and footer use the supplied ZAHIDALEXBUR logo asset', () => {
   assert.doesNotMatch(header, /<strong>ZAHIDALEXBUR<\/strong>/);
 });
 
-test('all photographic presets are repository-local and external image URLs are removed', async () => {
+test('all production photographic presets are repository-local and valid WebP files', async () => {
   assert.doesNotMatch(siteData, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
   assert.doesNotMatch(component, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
+  assert.doesNotMatch(siteData, /package-filter\.webp/);
 
-  for (const relativePath of localMedia) {
+  for (const relativePath of productionMedia) {
     const file = await readFile(new URL(relativePath, import.meta.url));
     assert.ok(file.byteLength > 5000, `${relativePath} should not be an empty placeholder`);
     assert.equal(file.subarray(0, 4).toString('ascii'), 'RIFF', `${relativePath} should be a valid WebP RIFF file`);
@@ -98,12 +98,10 @@ test('motion remains CSS-first without heavyweight animation dependencies', () =
   assert.doesNotMatch(packageJson, /framer-motion|gsap/);
 });
 
-test('landing includes three original-service package cards with local generated imagery', () => {
+test('landing includes three service cards and each receives a local image', () => {
   assert.match(component, /well-package-card/);
   assert.match(component, /service\.image/);
-  for (const asset of ['package-private.webp', 'package-filter.webp', 'package-industrial.webp']) {
-    assert.match(siteData, new RegExp(`/generated/${asset}`));
-  }
+  assert.match(siteData, /services:\s*\[[\s\S]*package-private\.webp[\s\S]*hero-drilling\.webp[\s\S]*package-industrial\.webp/);
 });
 
 test('service package cards render verified inclusions and premium CSS-first motion', () => {
