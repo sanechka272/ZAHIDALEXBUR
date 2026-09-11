@@ -1,0 +1,211 @@
+/* Mobile interaction layer — loaded after all other styles. */
+
+@keyframes mobileProcessFlip {
+  0%, 16% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotateX(0deg) scale(1);
+    filter: blur(0);
+  }
+  19% {
+    opacity: 0;
+    transform: translate3d(0, -16px, 0) rotateX(8deg) scale(.985);
+    filter: blur(4px);
+  }
+  19.01%, 100% {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) rotateX(-8deg) scale(.985);
+    filter: blur(4px);
+  }
+}
+
+@keyframes mobileProcessProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (max-width:767px) {
+  /* Services: real 1x1 grid — never a horizontal carousel on phones. */
+  .services-reference__grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 18px;
+    width: 100%;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+    padding-bottom: 0 !important;
+  }
+
+  .services-reference__grid::-webkit-scrollbar { display: none; }
+
+  .service-reference-card {
+    width: 100%;
+    min-width: 0 !important;
+    max-width: none;
+    scroll-snap-align: none !important;
+  }
+
+  .service-reference-card__photo {
+    height: clamp(300px, 82vw, 430px);
+    min-height: 0;
+  }
+
+  .service-reference-card__body {
+    padding: 24px 21px 19px;
+  }
+
+  /* Process: Aceternity Container Text Flip-inspired mobile stage. */
+  .process-reference__content {
+    min-width: 0;
+  }
+
+  .process-reference__cta {
+    margin: 0 0 22px;
+    justify-content: stretch;
+  }
+
+  .process-reference__cta .pill-button {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .process-reference__steps {
+    position: relative;
+    display: block !important;
+    grid-template-columns: none !important;
+    width: 100%;
+    min-height: 252px;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: 1px solid #d9d2c7;
+    border-radius: 24px;
+    background: linear-gradient(145deg, #f8f5ef, #eee9e0);
+    box-shadow: 0 18px 48px rgba(50, 39, 29, .08);
+    perspective: 900px;
+    isolation: isolate;
+  }
+
+  .process-reference__steps::before {
+    content: 'ЕТАПИ БУРІННЯ';
+    position: absolute;
+    z-index: 4;
+    left: 24px;
+    top: 20px;
+    color: #938779;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .14em;
+  }
+
+  .process-reference__steps::after {
+    content: '';
+    position: absolute;
+    z-index: 5;
+    left: 24px;
+    right: 24px;
+    bottom: 20px;
+    height: 1px;
+    background: #a9784f;
+    transform-origin: left center;
+    animation: mobileProcessProgress 15s linear infinite;
+  }
+
+  .process-reference-step,
+  .motion-ready .process-reference-step,
+  .motion-ready .process-reference-step.is-visible {
+    position: absolute;
+    inset: 0;
+    min-width: 0;
+    padding: 54px 24px 40px !important;
+    display: grid;
+    align-content: center;
+    border: 0 !important;
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: translate3d(0, 16px, 0) rotateX(-8deg) scale(.985);
+    filter: blur(4px);
+    transition: none !important;
+    animation: mobileProcessFlip 15s cubic-bezier(.22,.68,.22,1) infinite;
+    will-change: opacity, transform, filter;
+  }
+
+  .process-reference-step:nth-child(2) { animation-delay: 3s; }
+  .process-reference-step:nth-child(3) { animation-delay: 6s; }
+  .process-reference-step:nth-child(4) { animation-delay: 9s; }
+  .process-reference-step:nth-child(5) { animation-delay: 12s; }
+
+  .process-reference-step__top {
+    height: auto;
+    display: flex;
+    align-items: center;
+  }
+
+  .process-reference-step__icon {
+    width: 58px;
+    height: 58px;
+    flex-basis: 58px;
+    border-color: #cfc5b7;
+    color: #6f6255;
+    background: rgba(255,255,255,.45);
+  }
+
+  .process-reference-step__icon svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .process-reference-step__connector {
+    display: none;
+  }
+
+  .process-reference-step__number {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    margin: 0;
+    color: #a9784f;
+    font-family: var(--display);
+    font-size: 16px;
+    letter-spacing: .05em;
+  }
+
+  .process-reference-step > strong {
+    display: block;
+    margin-top: 24px;
+    max-width: 90%;
+    font-family: var(--ref-serif);
+    font-size: clamp(31px, 9vw, 42px);
+    font-weight: 400;
+    line-height: .98;
+    letter-spacing: -.035em;
+  }
+
+  .process-reference-step > p {
+    max-width: 310px;
+    margin: 13px 0 0;
+    color: #6b6459;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+}
+
+@media (max-width:767px) and (prefers-reduced-motion: reduce) {
+  .process-reference__steps::after {
+    animation: none !important;
+    transform: scaleX(.2);
+  }
+
+  .process-reference-step,
+  .motion-ready .process-reference-step,
+  .motion-ready .process-reference-step.is-visible {
+    animation: none !important;
+    opacity: 0 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .process-reference-step:first-child,
+  .motion-ready .process-reference-step:first-child,
+  .motion-ready .process-reference-step:first-child.is-visible {
+    opacity: 1 !important;
+  }
+}
