@@ -41,3 +41,18 @@ test('hero uses masked line choreography instead of only generic translate revea
 test('motion remains CSS-first without heavyweight animation dependencies', () => {
   assert.doesNotMatch(packageJson, /framer-motion|gsap/);
 });
+
+test('landing includes three original-service package cards with generated local imagery', () => {
+  assert.match(component, /well-packages/);
+  assert.match(component, /well-package-card/);
+  for (const asset of ['package-private.webp', 'package-filter.webp', 'package-industrial.webp']) {
+    assert.match(component, new RegExp(`/generated/${asset}`));
+  }
+});
+
+test('service package cards render verified inclusions and premium CSS-first motion', () => {
+  assert.match(component, /service\.included\.map/);
+  assert.match(css, /\.well-package-card::before/);
+  assert.match(css, /\.motion-ready\s+\.well-package-card/);
+  assert.match(css, /\.well-package-card:hover/);
+});
