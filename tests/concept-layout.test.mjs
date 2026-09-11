@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises';
 const component = await readFile(new URL('../components/LandingPage.tsx', import.meta.url), 'utf8');
 const css = await readFile(new URL('../app/globals.css', import.meta.url), 'utf8');
 const fixes = await readFile(new URL('../app/fixes.css', import.meta.url), 'utf8');
+const finalCss = await readFile(new URL('../app/final.css', import.meta.url), 'utf8');
 const packageJson = await readFile(new URL('../package.json', import.meta.url), 'utf8');
 const siteData = await readFile(new URL('../lib/site-data.ts', import.meta.url), 'utf8');
 
@@ -17,25 +18,18 @@ const productionMedia = [
   '../public/generated/water-hands.webp',
 ];
 
-test('header keeps phone and navigation but no CTA button', () => {
+test('header follows approved reference with centered navigation, phone, callback pill and hamburger', () => {
   const header = component.match(/<header[\s\S]*?<\/header>/)?.[0] ?? '';
   assert.match(header, /desktop-nav/);
   assert.match(header, /header-phone/);
-  assert.doesNotMatch(header, /header-cta/);
-});
-
-test('header and footer use the supplied ZAHIDALEXBUR logo asset', () => {
-  assert.match(siteData, /logo:\s*['"]\/brand\/zahidalexbur-logo\.webp['"]/);
-  const header = component.match(/<header[\s\S]*?<\/header>/)?.[0] ?? '';
-  assert.match(header, /brand-logo/);
-  assert.match(header, /src=\{assets\.logo\}/);
-  assert.doesNotMatch(header, /<strong>ZAHIDALEXBUR<\/strong>/);
+  assert.match(header, /Замовити дзвінок/);
+  assert.match(header, /menu-button/);
+  assert.match(header, /assets\.logo/);
 });
 
 test('all production photographic presets are repository-local and valid WebP files', async () => {
   assert.doesNotMatch(siteData, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
   assert.doesNotMatch(component, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
-  assert.doesNotMatch(siteData, /package-filter\.webp/);
 
   for (const relativePath of productionMedia) {
     const file = await readFile(new URL(relativePath, import.meta.url));
@@ -45,68 +39,66 @@ test('all production photographic presets are repository-local and valid WebP fi
   }
 });
 
-test('landing uses local concept imagery for the main photographic scenes', () => {
-  for (const asset of ['hero-drilling.webp', 'approach-geology.webp', 'water-hands.webp']) {
-    assert.match(siteData, new RegExp(`/generated/${asset}`));
-  }
-  assert.match(component, /assets\.hero/);
-  assert.match(component, /assets\.geology/);
-  assert.match(component, /assets\.water/);
+test('hero matches approved composition with video action, stats, process teaser and glass info card', () => {
+  assert.match(component, /className="hero reference-hero"/);
+  assert.match(component, /Дивитися відео/);
+  assert.match(component, /hero-stat-row/);
+  assert.match(component, /hero-process-teaser/);
+  assert.match(component, /GlassInfoCard/);
+  assert.match(component, /Вода ближче, ніж ви думаєте/);
 });
 
-test('landing keeps one primary three-card well-service section', () => {
+test('services render exactly three large reference cards with tabs controls checklists and project thumbnails', () => {
   assert.match(component, /id="services"/);
-  assert.match(component, /well-package-grid/);
+  assert.match(component, /service-filter-tabs/);
+  assert.match(component, /service-carousel-controls/);
   assert.match(component, /services\.map/);
-  assert.doesNotMatch(component, /concept-service-grid/);
+  assert.match(component, /ServiceCard/);
+  assert.match(component, /service\.included\.map/);
+  assert.match(component, /service-project-thumbs/);
+  assert.match(component, /Переглянути реалізовані проєкти/);
 });
 
-test('site has a real process section instead of pointing Process navigation to the facts band', () => {
-  assert.match(component, /className="process-section"/);
+test('about section is the approved dark split with regional story stats and testimonial', () => {
+  assert.match(component, /className="about-reference"/);
+  assert.match(component, /Локальна компанія/);
+  assert.match(component, /Люди/);
+  assert.match(component, /Регіон/);
+  assert.match(component, /Результат/);
+  assert.match(component, /TestimonialQuote/);
+  assert.match(component, /Олександр Герман/);
+});
+
+test('process section renders the approved five-step horizontal journey', () => {
+  assert.match(component, /className="process-reference"/);
   assert.match(component, /processSteps\.map/);
-  assert.match(component, /id="process"/);
-  assert.doesNotMatch(component, /<section className="proof-band" id="process">/);
+  assert.match(component, /ProcessStep/);
+  assert.match(component, /Від першої консультації/);
+  assert.match(component, /Залишити заявку/);
 });
 
-test('finished landing includes approach, services, process, facts, conversion and FAQ', () => {
-  for (const className of ['approach-section', 'well-packages', 'process-section', 'proof-band', 'conversion-split', 'faq-section']) {
-    assert.match(component, new RegExp(className));
-  }
-  assert.match(component, /faqs\.map/);
+test('reference visual layer includes glass cards, serif headings, large service cards and responsive collapse', () => {
+  assert.match(finalCss, /\.glass-info-card/);
+  assert.match(finalCss, /\.services-reference__title/);
+  assert.match(finalCss, /\.service-reference-card/);
+  assert.match(finalCss, /\.about-reference/);
+  assert.match(finalCss, /\.process-reference/);
+  assert.match(finalCss, /@media\s*\(max-width:\s*767px\)/);
 });
 
-test('motion layer uses progressive enhancement and reduced-motion fallback', () => {
+test('motion layer uses progressive enhancement, frame-scheduled parallax and reduced-motion fallback', () => {
   assert.match(component, /IntersectionObserver/);
-  assert.match(component, /motion-ready/);
-  assert.match(css, /\.motion-ready\s+\.reveal/);
-  assert.match(css, /prefers-reduced-motion:\s*reduce/);
-});
-
-test('scroll-linked motion is frame scheduled and capped to a CSS parallax variable', () => {
   assert.match(component, /requestAnimationFrame/);
   assert.match(component, /--hero-parallax/);
-  assert.match(css, /var\(--hero-parallax\)/);
-});
-
-test('hero uses masked line choreography instead of only generic translate reveals', () => {
-  assert.match(component, /hero-line/);
-  assert.match(css, /\.hero-line/);
-  assert.match(css, /overflow:\s*hidden/);
+  assert.match(css, /prefers-reduced-motion:\s*reduce/);
+  assert.match(finalCss, /\.motion-ready/);
 });
 
 test('motion remains CSS-first without heavyweight animation dependencies', () => {
   assert.doesNotMatch(packageJson, /framer-motion|gsap/);
 });
 
-test('landing includes three service cards and each receives a local image', () => {
-  assert.match(component, /well-package-card/);
-  assert.match(component, /service\.image/);
-  assert.match(siteData, /services:\s*\[[\s\S]*package-private\.webp[\s\S]*hero-drilling\.webp[\s\S]*package-industrial\.webp/);
-});
-
-test('service package cards render verified inclusions and premium CSS-first motion', () => {
-  assert.match(component, /service\.included\.map/);
-  assert.match(css, /\.well-package-card::before/);
-  assert.match(css, /\.motion-ready\s+\.well-package-card/);
-  assert.match(fixes, /\.well-package-card:hover/);
+test('existing premium bugfix layer remains loaded for global accessibility and image handling', () => {
+  assert.match(fixes, /brand-logo/);
+  assert.match(css, /focus-visible/);
 });
