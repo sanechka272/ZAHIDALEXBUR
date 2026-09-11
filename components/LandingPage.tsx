@@ -68,7 +68,7 @@ function StatBlock({ value, caption, dark = false }: { value: string; caption: s
 
 function GlassInfoCard({ onClick }: { onClick: () => void }) {
   return (
-    <button type="button" className="glass-info-card hero-enter hero-enter--5" onClick={onClick}>
+    <button type="button" aria-label="Вода ближче, ніж ви думаєте" className="glass-info-card hero-enter hero-enter--5" onClick={onClick}>
       <span className="glass-info-card__thumb"><img src={assets.services[2]} alt="Буріння свердловини у Львівській області" /></span>
       <span className="glass-info-card__copy">Вода ближче,<br />ніж ви думаєте</span>
       <span className="glass-info-card__arrow"><Arrow /></span>
@@ -89,7 +89,7 @@ function ServiceCard({ service, index, active, onOpen }: { service: (typeof serv
         <h3>{service.title}</h3>
         <p>{service.description}</p>
         <ul>
-          {service.included.slice(0, 5).map((item, itemIndex) => <li key={item} style={{ '--item-delay': `${itemIndex * 42}ms` } as CSSProperties}><span>✓</span>{item}</li>)}
+          {service.included.map((item, itemIndex) => <li key={item} style={{ '--item-delay': `${itemIndex * 42}ms` } as CSSProperties}><span>✓</span>{item}</li>).slice(0, 5)}
         </ul>
         <div className="service-reference-card__price"><strong>{service.shortPrice.replace('грн', '₴')}</strong><button type="button" aria-label={`Розрахувати ${service.title}`} onClick={onOpen}><Arrow /></button></div>
         <div className="service-project-thumbs">
