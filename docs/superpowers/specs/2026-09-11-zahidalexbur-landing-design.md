@@ -15,7 +15,7 @@ Rebuild the existing ZAHIDALEXBUR website as a conversion-focused one-page Next.
 2. Full-screen hero with drilling imagery, service positioning and primary conversion CTA.
 3. Service type cards: безфільтрова, фільтрова, промислова with current price ranges.
 4. Five-step process from consultation to equipment connection.
-5. Key trust metrics and proof points.
+5. Key trust proof points based only on verified public information.
 6. Location estimator for popular settlements around Lviv with an editable settlement field.
 7. Benefits strip focused on equipment, transparent pricing, warranty and support.
 8. Real project gallery using the existing six gallery images.
@@ -27,14 +27,14 @@ Rebuild the existing ZAHIDALEXBUR website as a conversion-focused one-page Next.
 - Reuse verified information from the current site; modernize wording for scanability.
 - Current public prices remain: безфільтрова 1800–2100 грн/м, фільтрова 2000–2300 грн/м, промислова 2300–2500 грн/м.
 - Contact data: +380997837644, zahidalexbur@gmail.com, Львів, с. Наварія, вул. Львівська 154.
-- Do not invent certifications, years in business, project counts or guarantees that are not explicitly supported by the current public site. Metrics shown in the visual concept that are not verified must be omitted or replaced by factual claims.
+- Do not invent certifications, years in business, project counts, depth ranges or other factual metrics that are not explicitly supported by the current public site. Metrics shown in the visual concept that are not verified must be omitted or replaced by factual claims.
 
 ## Conversion behaviour
 - Primary CTA text: “Розрахувати вартість”.
 - Secondary CTA: “Отримати консультацію”.
 - Forms collect name, phone and settlement; no email is required for lead capture.
 - Form submission in this implementation is front-end only and shows a success state; backend integration is intentionally left as a clearly isolated next step.
-- The location estimator provides an indicative range only and clearly states that geological conditions affect final depth and price.
+- The location estimator recognizes selected settlements but does not invent a depth range; it explicitly states that an individual assessment is required because geological conditions affect final depth and price.
 
 ## Technical constraints
 - Next.js 16 App Router, React 19, TypeScript.
