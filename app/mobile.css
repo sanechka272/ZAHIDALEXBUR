@@ -1,4 +1,28 @@
-/* Mobile interaction layer — loaded after all other styles. */
+/* Final service-header cleanup + mobile interaction layer. Loaded after all other styles. */
+
+/* Services no longer behave like a filtered carousel. Keep one centered editorial heading. */
+.services-reference__header {
+  grid-template-columns: 1fr !important;
+  justify-items: center;
+  align-items: center;
+  gap: 0 !important;
+  text-align: center;
+}
+
+.services-reference__header > div:first-child {
+  display: grid;
+  justify-items: center;
+}
+
+.services-reference__title {
+  max-width: 1120px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.services-reference__tools {
+  display: none !important;
+}
 
 @keyframes mobileProcessFlip {
   0%, 16% {
@@ -6,12 +30,12 @@
     transform: translate3d(0, 0, 0) rotateX(0deg) scale(1);
     filter: blur(0);
   }
-  19% {
+  20% {
     opacity: 0;
     transform: translate3d(0, -16px, 0) rotateX(8deg) scale(.985);
     filter: blur(4px);
   }
-  19.01%, 100% {
+  20.01%, 100% {
     opacity: 0;
     transform: translate3d(0, 16px, 0) rotateX(-8deg) scale(.985);
     filter: blur(4px);
@@ -107,6 +131,7 @@
     background: #a9784f;
     transform-origin: left center;
     animation: mobileProcessProgress 15s linear infinite;
+    animation-play-state: paused;
   }
 
   .process-reference-step:nth-child(1) { --flip-delay: 0s; }
@@ -131,7 +156,18 @@
     filter: blur(4px);
     transition: none !important;
     animation: mobileProcessFlip 15s cubic-bezier(.22,.68,.22,1) var(--flip-delay, 0s) infinite;
+    animation-play-state: paused;
     will-change: opacity, transform, filter;
+  }
+
+  /* Start the complete 01→05 sequence only when the process actually reaches the viewport. */
+  .process-reference-step.is-visible,
+  .motion-ready .process-reference-step.is-visible {
+    animation-play-state: running;
+  }
+
+  .process-reference__steps:has(.process-reference-step.is-visible)::after {
+    animation-play-state: running;
   }
 
   .process-reference-step__top {
