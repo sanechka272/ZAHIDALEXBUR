@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 286 78" role="img" aria-labelledby="title desc">
+  <title id="title">ZAHIDALEXBUR</title>
+  <desc id="desc">Angular ZA mark with ZAHIDALEXBUR wordmark</desc>
+  <g fill="none" fill-rule="evenodd">
+    <g transform="translate(2 8)">
+      <path d="M2 9h34L29 20H15l-7 12h18l-7 11H0l8-13 7-12H0L7 9Z" fill="#A9784F"/>
+      <path d="M38 3h10l28 49H64l-8-15H39L30 52H18L38 18l6 10h6L38 3Zm6 24-5 9h11l-6-9Z" fill="#D8B26B"/>
+      <path d="M49 3h9l28 49H74L49 8V3Z" fill="#F1E2CF" opacity=".86"/>
+    </g>
+    <text x="98" y="33" fill="#FFFFFF" font-family="Arial Narrow, Arial, sans-serif" font-size="21" font-weight="700" letter-spacing="1.7">ZAHIDALEXBUR</text>
+    <text x="99" y="51" fill="#D6B28F" font-family="Arial, sans-serif" font-size="7.5" font-weight="600" letter-spacing="2.1">БУРІННЯ СВЕРДЛОВИН</text>
+  </g>
+</svg>
