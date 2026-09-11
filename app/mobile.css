@@ -109,6 +109,12 @@
     animation: mobileProcessProgress 15s linear infinite;
   }
 
+  .process-reference-step:nth-child(1) { --flip-delay: 0s; }
+  .process-reference-step:nth-child(2) { --flip-delay: 3s; }
+  .process-reference-step:nth-child(3) { --flip-delay: 6s; }
+  .process-reference-step:nth-child(4) { --flip-delay: 9s; }
+  .process-reference-step:nth-child(5) { --flip-delay: 12s; }
+
   .process-reference-step,
   .motion-ready .process-reference-step,
   .motion-ready .process-reference-step.is-visible {
@@ -124,14 +130,9 @@
     transform: translate3d(0, 16px, 0) rotateX(-8deg) scale(.985);
     filter: blur(4px);
     transition: none !important;
-    animation: mobileProcessFlip 15s cubic-bezier(.22,.68,.22,1) infinite;
+    animation: mobileProcessFlip 15s cubic-bezier(.22,.68,.22,1) var(--flip-delay, 0s) infinite;
     will-change: opacity, transform, filter;
   }
-
-  .process-reference-step:nth-child(2) { animation-delay: 3s; }
-  .process-reference-step:nth-child(3) { animation-delay: 6s; }
-  .process-reference-step:nth-child(4) { animation-delay: 9s; }
-  .process-reference-step:nth-child(5) { animation-delay: 12s; }
 
   .process-reference-step__top {
     height: auto;
