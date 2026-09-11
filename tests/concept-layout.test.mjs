@@ -6,6 +6,8 @@ const component = await readFile(new URL('../components/LandingPage.tsx', import
 const css = await readFile(new URL('../app/globals.css', import.meta.url), 'utf8');
 const fixes = await readFile(new URL('../app/fixes.css', import.meta.url), 'utf8');
 const finalCss = await readFile(new URL('../app/final.css', import.meta.url), 'utf8');
+const mediaCss = await readFile(new URL('../app/media.css', import.meta.url), 'utf8');
+const layout = await readFile(new URL('../app/layout.tsx', import.meta.url), 'utf8');
 const packageJson = await readFile(new URL('../package.json', import.meta.url), 'utf8');
 const siteData = await readFile(new URL('../lib/site-data.ts', import.meta.url), 'utf8');
 
@@ -26,20 +28,23 @@ test('header follows approved reference with centered navigation, phone, callbac
   assert.match(header, /assets\.logo/);
 });
 
-test('brand uses a repository-local SVG logo and never crops it with negative offsets', async () => {
+test('brand uses a repository-local SVG logo and effective CSS never crops it with negative offsets', async () => {
   assert.match(siteData, /logo:\s*['"]\/brand\/zahidalexbur-logo\.svg['"]/);
   const svg = await readFile(new URL('../public/brand/zahidalexbur-logo.svg', import.meta.url), 'utf8');
   assert.match(svg, /<svg[\s>]/);
   assert.match(svg, /viewBox=/);
   assert.doesNotMatch(svg, /<image\b/i);
+  assert.match(layout, /import '\.\/media\.css';/);
 
-  const logoRule = finalCss.match(/\.reference-header \.brand-logo\s*\{[\s\S]*?\}/)?.[0] ?? '';
+  const logoRule = mediaCss.match(/\.reference-header \.brand-logo,[\s\S]*?\}/)?.[0] ?? '';
   assert.doesNotMatch(logoRule, /(?:left|top):\s*-/);
+  assert.match(logoRule, /position:\s*static/);
 });
 
 test('every production photo is a large repository-local JPEG instead of a tiny placeholder', async () => {
   assert.doesNotMatch(siteData, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
   assert.doesNotMatch(component, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
+  assert.doesNotMatch(siteData, /\/generated\//);
 
   for (const relativePath of productionPhotos) {
     const file = await readFile(new URL(relativePath, import.meta.url));
@@ -55,7 +60,7 @@ test('hero, three services and about section use distinct local photo assets', (
   assert.match(siteData, /about:\s*['"]\/media\/about-mountain-forest\.jpg['"]/);
   assert.match(siteData, /services:\s*\[[\s\S]*service-private-water\.jpg[\s\S]*service-filter-drilling\.jpg[\s\S]*service-industrial-rig\.jpg/);
   assert.doesNotMatch(siteData, /services:\s*\[[\s\S]*hero-waterwell\.jpg/);
-  assert.match(component, /assets\.about/);
+  assert.match(mediaCss, /url\(['"]?\/media\/about-mountain-forest\.jpg['"]?\)/);
 });
 
 test('hero matches approved composition with video action, stats, process teaser and glass info card', () => {
@@ -97,8 +102,9 @@ test('process section renders the approved five-step horizontal journey', () => 
 });
 
 test('reference visual layer includes robust image fitting, glass cards, serif headings and responsive collapse', () => {
-  assert.match(finalCss, /\.reference-page img/);
-  assert.match(finalCss, /object-fit:\s*cover/);
+  assert.match(mediaCss, /\.reference-page img/);
+  assert.match(mediaCss, /object-fit:\s*cover/);
+  assert.match(mediaCss, /\.service-reference-card__photo img/);
   assert.match(finalCss, /\.glass-info-card/);
   assert.match(finalCss, /\.services-reference__title/);
   assert.match(finalCss, /\.service-reference-card/);
