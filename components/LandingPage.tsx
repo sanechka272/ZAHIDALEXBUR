@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState, type CSSProperties } from 'react';
-import { contact, services } from '@/lib/site-data';
+import { assets, contact, faqs, processSteps, services } from '@/lib/site-data';
 
 const conceptNav = [
   { label: 'Послуги', href: '#services' },
@@ -9,12 +9,6 @@ const conceptNav = [
   { label: 'Процес', href: '#process' },
   { label: 'Роботи', href: '#works' },
   { label: 'Контакти', href: '#contact' },
-];
-
-const generatedPackageImages = [
-  '/generated/package-private.webp',
-  '/generated/package-filter.webp',
-  '/generated/package-industrial.webp',
 ];
 
 const proofItems = [
@@ -48,20 +42,35 @@ function CloseIcon() {
   );
 }
 
-function LeadForm({ onSuccess }: { onSuccess?: () => void }) {
+function LeadForm() {
   const [submitted, setSubmitted] = useState(false);
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const name = String(data.get('name') || 'Не вказано').trim();
+    const phone = String(data.get('phone') || '').trim();
+    const location = String(data.get('location') || 'Не вказано').trim();
+
+    const subject = encodeURIComponent(`Заявка з сайту ZAHIDALEXBUR — ${location}`);
+    const body = encodeURIComponent([
+      'Нова заявка з сайту ZAHIDALEXBUR',
+      '',
+      `Ім’я: ${name}`,
+      `Телефон: ${phone}`,
+      `Населений пункт: ${location}`,
+    ].join('\n'));
+
     setSubmitted(true);
-    onSuccess?.();
+    window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
   }
 
   if (submitted) {
     return (
       <div className="form-success" role="status">
-        <span>Заявку зафіксовано</span>
-        <strong>Дякуємо. Для миттєвого зв’язку зателефонуйте нам.</strong>
+        <span>Заявка підготовлена</span>
+        <strong>Ми відкрили ваш поштовий клієнт із заповненою заявкою. Для швидкого зв’язку можна зателефонувати.</strong>
         <a href={contact.phoneHref}>{contact.phoneDisplay}</a>
       </div>
     );
@@ -72,8 +81,8 @@ function LeadForm({ onSuccess }: { onSuccess?: () => void }) {
       <label><span>Ім’я</span><input name="name" autoComplete="name" placeholder="Олександр" /></label>
       <label><span>Телефон</span><input name="phone" type="tel" autoComplete="tel" inputMode="tel" required placeholder="+380 99 000 00 00" /></label>
       <label><span>Населений пункт</span><input name="location" autoComplete="address-level2" placeholder="Сокільники" /></label>
-      <button className="cta cta--dark cta--wide" type="submit"><span>Отримати розрахунок</span><Arrow /></button>
-      <small>Без зобов’язань. Контактні дані потрібні лише для зворотного зв’язку.</small>
+      <button className="cta cta--dark cta--wide" type="submit"><span>Надіслати заявку</span><Arrow /></button>
+      <small>Без зобов’язань. Контактні дані використовуються лише для відповіді на запит.</small>
     </form>
   );
 }
@@ -82,6 +91,7 @@ export default function LandingPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [leadOpen, setLeadOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeFaq, setActiveFaq] = useState<number | null>(0);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -110,7 +120,10 @@ export default function LandingPage() {
       else observer.observe(node);
     });
 
-    return () => { observer.disconnect(); root.classList.remove('motion-ready'); };
+    return () => {
+      observer.disconnect();
+      root.classList.remove('motion-ready');
+    };
   }, []);
 
   useEffect(() => {
@@ -123,17 +136,25 @@ export default function LandingPage() {
       frame = 0;
       const scrollY = window.scrollY;
       const nextScrolled = scrollY > 42;
-      if (nextScrolled !== lastScrolled) { lastScrolled = nextScrolled; setScrolled(nextScrolled); }
+      if (nextScrolled !== lastScrolled) {
+        lastScrolled = nextScrolled;
+        setScrolled(nextScrolled);
+      }
+
       const maxParallax = reducedMotion.matches ? 0 : window.innerWidth <= 620 ? 0 : window.innerWidth <= 880 ? 10 : 24;
       const heroParallax = Math.min(maxParallax, (Math.min(scrollY, 520) / 520) * maxParallax);
       root.style.setProperty('--hero-parallax', `${heroParallax.toFixed(2)}px`);
     };
 
-    const schedule = () => { if (!frame) frame = window.requestAnimationFrame(renderScrollState); };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(renderScrollState);
+    };
+
     renderScrollState();
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
     reducedMotion.addEventListener?.('change', schedule);
+
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener('scroll', schedule);
@@ -150,7 +171,9 @@ export default function LandingPage() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') { setMobileOpen(false); setLeadOpen(false); }
+      if (event.key !== 'Escape') return;
+      setMobileOpen(false);
+      setLeadOpen(false);
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
@@ -161,20 +184,26 @@ export default function LandingPage() {
       <header className={`site-header ${scrolled ? 'site-header--scrolled' : ''}`}>
         <div className="shell header-inner">
           <a className="brand-lockup brand-lockup--image" href="#top" aria-label="ZAHIDALEXBUR — головна">
-            <img className="brand-logo" src="/brand/zahidalexbur-logo.webp" alt="ZAHIDALEXBUR — буріння свердловин" />
+            <img className="brand-logo" src={assets.logo} alt="ZAHIDALEXBUR — буріння свердловин" />
           </a>
+
           <nav className="desktop-nav" aria-label="Головна навігація">
             {conceptNav.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
           </nav>
+
           <a className="header-phone" href={contact.phoneHref}>{contact.phoneDisplay}</a>
-          <button className="menu-button" type="button" aria-label="Відкрити меню" aria-expanded={mobileOpen} onClick={() => setMobileOpen(true)}><MenuIcon /></button>
+
+          <button className="menu-button" type="button" aria-label="Відкрити меню" aria-expanded={mobileOpen} onClick={() => setMobileOpen(true)}>
+            <MenuIcon />
+          </button>
         </div>
       </header>
 
       <section className="hero">
-        <div className="hero__media" style={{ backgroundImage: 'url(/generated/hero-drilling.webp)' }} aria-hidden="true" />
+        <div className="hero__media" style={{ backgroundImage: `url(${assets.hero})` }} aria-hidden="true" />
         <div className="hero__shade" aria-hidden="true" />
         <div className="hero__grain" aria-hidden="true" />
+
         <div className="shell hero__layout">
           <div className="hero__copy">
             <span className="hero-kicker hero-enter hero-enter--1">Надійне водопостачання починається тут</span>
@@ -184,11 +213,17 @@ export default function LandingPage() {
             </h1>
             <strong className="hero-location hero-enter hero-enter--3">Львів та Львівська область</strong>
             <p className="hero-lead hero-enter hero-enter--4">Проєктуємо та буримо свердловини для приватних будинків, бізнесу та промислових об’єктів.</p>
+
             <div className="hero-actions hero-enter hero-enter--5">
-              <button className="cta cta--bronze" type="button" onClick={() => setLeadOpen(true)}><span>Розрахувати вартість</span><Arrow /></button>
-              <div className="hero-types" aria-label="Типи свердловин"><span>Безфільтрові</span><i /><span>Фільтрові</span><i /><span>Промислові</span></div>
+              <button className="cta cta--bronze" type="button" onClick={() => setLeadOpen(true)}>
+                <span>Розрахувати вартість</span><Arrow />
+              </button>
+              <div className="hero-types" aria-label="Типи свердловин">
+                <span>Безфільтрові</span><i /><span>Фільтрові</span><i /><span>Промислові</span>
+              </div>
             </div>
           </div>
+
           <div className="hero-vertical hero-decor-enter" aria-hidden="true">WATER BECOMES THE SOURCE</div>
           <div className="hero-index hero-enter hero-enter--6"><strong>01</strong><span /><p>Більше<br />ніж просто<br />буріння</p></div>
         </div>
@@ -203,9 +238,12 @@ export default function LandingPage() {
             <div className="approach-note"><span /><strong>Геологія. Розрахунки. Досвід.<br />Реальний результат.</strong></div>
           </div>
         </div>
+
         <div className="approach-image reveal reveal--clip-right" id="works">
-          <img src="/generated/approach-geology.webp" alt="Геологічні шари ґрунту перед бурінням свердловини" />
-          <div className="approach-image__caption"><span>Львівська область</span><i /><strong>Ми знаємо,<br />що знаходиться<br />під вашою ділянкою</strong></div>
+          <img src={assets.geology} alt="Геологічні шари ґрунту перед бурінням свердловини" />
+          <div className="approach-image__caption">
+            <span>Львівська область</span><i /><strong>Ми знаємо,<br />що знаходиться<br />під вашою ділянкою</strong>
+          </div>
         </div>
       </section>
 
@@ -220,9 +258,10 @@ export default function LandingPage() {
             {services.map((service, index) => (
               <article className="well-package-card reveal" key={service.id} style={{ '--delay': `${index * 110}ms` } as CSSProperties}>
                 <div className="well-package-card__media">
-                  <img src={generatedPackageImages[index]} alt={service.title} loading="lazy" />
+                  <img src={service.image} alt={service.title} loading="lazy" />
                   <span className="well-package-card__index">0{index + 1}</span>
                 </div>
+
                 <div className="well-package-card__body">
                   <div className="well-package-card__title-row"><h3>{service.title}</h3><span>ZAB / 0{index + 1}</span></div>
                   <p>{service.description}</p>
@@ -231,10 +270,14 @@ export default function LandingPage() {
                   <div className="well-package-card__line" aria-hidden="true" />
                   <ul className="well-package-card__list">
                     {service.included.map((item, itemIndex) => (
-                      <li key={item} style={{ '--item-delay': `${itemIndex * 38}ms` } as CSSProperties}><span aria-hidden="true">✓</span>{item}</li>
+                      <li key={item} style={{ '--item-delay': `${itemIndex * 38}ms` } as CSSProperties}>
+                        <span aria-hidden="true">✓</span>{item}
+                      </li>
                     ))}
                   </ul>
-                  <button className="well-package-card__action" type="button" onClick={() => setLeadOpen(true)}><span>Уточнити розрахунок</span><Arrow /></button>
+                  <button className="well-package-card__action" type="button" onClick={() => setLeadOpen(true)}>
+                    <span>Уточнити розрахунок</span><Arrow />
+                  </button>
                 </div>
               </article>
             ))}
@@ -242,33 +285,95 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="proof-band" id="process">
+      <section className="process-section" id="process">
+        <div className="shell">
+          <div className="process-heading reveal reveal--from-left">
+            <div>
+              <span className="section-label">Як проходить робота</span>
+              <h2>Від ділянки<br />до стабільної води</h2>
+            </div>
+            <p>П’ять зрозумілих етапів без зайвого шуму: оцінка, технологія, буріння, перевірка та підготовка системи до роботи.</p>
+          </div>
+
+          <div className="process-grid">
+            {processSteps.map((step, index) => (
+              <article className="process-step reveal" key={step.id} style={{ '--delay': `${index * 75}ms` } as CSSProperties}>
+                <span className="process-step__index">{step.id}</span>
+                <div className="process-step__line" aria-hidden="true"><i /></div>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="proof-band" id="facts">
         <div className="shell proof-band__inner">
           <div className="proof-brand reveal reveal--proof"><span>ZAHIDALEXBUR</span><strong>у фактах</strong></div>
-          {proofItems.map((item, index) => <div className="proof-stat reveal reveal--proof" key={item.value} style={{ '--delay': `${index * 70}ms` } as CSSProperties}><strong>{item.value}</strong><span>{item.label}</span></div>)}
+          {proofItems.map((item, index) => (
+            <div className="proof-stat reveal reveal--proof" key={item.value} style={{ '--delay': `${index * 70}ms` } as CSSProperties}>
+              <strong>{item.value}</strong><span>{item.label}</span>
+            </div>
+          ))}
           <div className="proof-end reveal reveal--proof" style={{ '--delay': '300ms' } as CSSProperties}>Стабільна вода<br />для життя<br />і розвитку</div>
         </div>
       </section>
 
       <section className="conversion-split" id="contact">
         <div className="conversion-photo reveal reveal--clip-left">
-          <img src="/generated/water-hands.webp" alt="Чиста вода зі свердловини ZAHIDALEXBUR" />
+          <img src={assets.water} alt="Чиста вода зі свердловини ZAHIDALEXBUR" />
           <div className="conversion-photo__caption"><strong>Чиста вода.<br />Реальні можливості.<br />Впевнене завтра.</strong><span /></div>
         </div>
+
         <div className="conversion-copy reveal reveal--from-right">
           <div className="conversion-copy__inner">
             <span className="section-label">Готові обговорити ваш проєкт?</span>
             <h2>Розрахуємо<br />вашу свердловину<br />за 1 день</h2>
             <p>Залиште заявку — підготуємо попередній розрахунок під вашу ділянку та задачу.</p>
-            <div className="conversion-actions"><button className="cta cta--dark" type="button" onClick={() => setLeadOpen(true)}><span>Отримати розрахунок</span><Arrow /></button><small>Без зобов’язань.<br />Консультація безкоштовна.</small></div>
+            <div className="conversion-actions">
+              <button className="cta cta--dark" type="button" onClick={() => setLeadOpen(true)}><span>Отримати розрахунок</span><Arrow /></button>
+              <small>Без зобов’язань.<br />Консультація безкоштовна.</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="faq-section" id="faq">
+        <div className="shell faq-layout">
+          <div className="faq-heading reveal reveal--from-left">
+            <span className="section-label">Часті питання</span>
+            <h2>Перед бурінням<br />варто знати</h2>
+            <p>Коротко про вибір конструкції, формування ціни та те, що входить у комплекс робіт.</p>
+          </div>
+
+          <div className="faq-list reveal reveal--from-right">
+            {faqs.map((faq, index) => {
+              const open = activeFaq === index;
+              return (
+                <article className={`faq-item ${open ? 'is-open' : ''}`} key={faq.question}>
+                  <button type="button" aria-expanded={open} onClick={() => setActiveFaq(open ? null : index)}>
+                    <span>0{index + 1}</span>
+                    <strong>{faq.question}</strong>
+                    <i aria-hidden="true" />
+                  </button>
+                  <div className="faq-answer"><div><p>{faq.answer}</p></div></div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
 
       <footer className="site-footer">
         <div className="shell footer-inner">
-          <a className="footer-brand footer-brand--logo" href="#top"><img src="/brand/zahidalexbur-logo.webp" alt="ZAHIDALEXBUR" /></a>
-          <nav className="footer-nav" aria-label="Навігація у футері">{conceptNav.filter((item) => item.href !== '#process').map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}</nav>
+          <a className="footer-brand footer-brand--logo" href="#top" aria-label="ZAHIDALEXBUR — нагору">
+            <img src={assets.logo} alt="ZAHIDALEXBUR" />
+          </a>
+          <nav className="footer-nav" aria-label="Навігація у футері">
+            {conceptNav.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
+            <a href="#faq">Питання</a>
+          </nav>
           <div className="footer-contacts"><a href={contact.phoneHref}>{contact.phoneDisplay}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div>
         </div>
       </footer>
@@ -276,8 +381,14 @@ export default function LandingPage() {
       <div className={`mobile-drawer ${mobileOpen ? 'is-open' : ''}`} aria-hidden={!mobileOpen}>
         <button className="drawer-backdrop" type="button" aria-label="Закрити меню" onClick={() => setMobileOpen(false)} />
         <div className="drawer-panel">
-          <div className="drawer-head"><div className="drawer-logo-wrap"><img className="drawer-logo" src="/brand/zahidalexbur-logo.webp" alt="ZAHIDALEXBUR" /></div><button type="button" aria-label="Закрити меню" onClick={() => setMobileOpen(false)}><CloseIcon /></button></div>
-          <nav>{conceptNav.map((item) => <a key={item.href} href={item.href} onClick={() => setMobileOpen(false)}>{item.label}</a>)}</nav>
+          <div className="drawer-head">
+            <div className="drawer-logo-wrap"><img className="drawer-logo" src={assets.logo} alt="ZAHIDALEXBUR" /></div>
+            <button type="button" aria-label="Закрити меню" onClick={() => setMobileOpen(false)}><CloseIcon /></button>
+          </div>
+          <nav>
+            {conceptNav.map((item) => <a key={item.href} href={item.href} onClick={() => setMobileOpen(false)}>{item.label}</a>)}
+            <a href="#faq" onClick={() => setMobileOpen(false)}>Питання</a>
+          </nav>
           <a className="drawer-phone" href={contact.phoneHref}>{contact.phoneDisplay}</a>
         </div>
       </div>
@@ -286,7 +397,10 @@ export default function LandingPage() {
         <button className="modal-backdrop" type="button" aria-label="Закрити форму" onClick={() => setLeadOpen(false)} />
         <div className="modal-card" role="dialog" aria-modal="true" aria-label="Розрахунок свердловини">
           <button className="modal-close" type="button" aria-label="Закрити" onClick={() => setLeadOpen(false)}><CloseIcon /></button>
-          <span className="section-label">Попередній розрахунок</span><h2>Розкажіть,<br />де потрібна вода</h2><p>Залиште контакт — уточнимо локацію, потребу у воді та запропонуємо наступний крок.</p><LeadForm />
+          <span className="section-label">Попередній розрахунок</span>
+          <h2>Розкажіть,<br />де потрібна вода</h2>
+          <p>Залиште контакт — уточнимо локацію, потребу у воді та запропонуємо наступний крок.</p>
+          <LeadForm />
         </div>
       </div>
 
