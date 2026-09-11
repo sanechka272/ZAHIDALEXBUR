@@ -24,29 +24,16 @@ function jpegDimensions(buffer) {
   const sofMarkers = new Set([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf]);
 
   while (offset + 9 < buffer.length) {
-    if (buffer[offset] !== 0xff) {
-      offset += 1;
-      continue;
-    }
-
+    if (buffer[offset] !== 0xff) { offset += 1; continue; }
     const marker = buffer[offset + 1];
-    if (marker === 0xd8 || marker === 0xd9 || marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) {
-      offset += 2;
-      continue;
-    }
-
+    if (marker === 0xd8 || marker === 0xd9 || marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) { offset += 2; continue; }
     const length = buffer.readUInt16BE(offset + 2);
     if (sofMarkers.has(marker)) {
-      return {
-        height: buffer.readUInt16BE(offset + 5),
-        width: buffer.readUInt16BE(offset + 7),
-      };
+      return { height: buffer.readUInt16BE(offset + 5), width: buffer.readUInt16BE(offset + 7) };
     }
-
     if (length < 2) break;
     offset += 2 + length;
   }
-
   throw new Error('JPEG dimensions not found');
 }
 
@@ -66,7 +53,6 @@ test('brand uses a repository-local SVG logo and effective CSS never crops it wi
   assert.match(svg, /viewBox=/);
   assert.doesNotMatch(svg, /<image\b/i);
   assert.match(layout, /import '\.\/media\.css';/);
-
   const logoRule = mediaCss.match(/\.reference-header \.brand-logo,[\s\S]*?\}/)?.[0] ?? '';
   assert.doesNotMatch(logoRule, /(?:left|top):\s*-/);
   assert.match(logoRule, /position:\s*static/);
@@ -76,14 +62,12 @@ test('every production photo is a large high-resolution repository-local JPEG', 
   assert.doesNotMatch(siteData, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
   assert.doesNotMatch(component, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
   assert.doesNotMatch(siteData, /\/generated\//);
-
   for (const relativePath of productionPhotos) {
     const file = await readFile(new URL(relativePath, import.meta.url));
     assert.ok(file.byteLength > 100_000, `${relativePath} should be a real high-resolution photo, not a tiny placeholder`);
-    assert.equal(file[0], 0xff, `${relativePath} should be a JPEG`);
-    assert.equal(file[1], 0xd8, `${relativePath} should be a JPEG`);
-    assert.equal(file[2], 0xff, `${relativePath} should be a JPEG`);
-
+    assert.equal(file[0], 0xff);
+    assert.equal(file[1], 0xd8);
+    assert.equal(file[2], 0xff);
     const { width, height } = jpegDimensions(file);
     assert.ok(width >= 1600, `${relativePath} width should be at least 1600px, got ${width}px`);
     assert.ok(height >= 1200, `${relativePath} height should be at least 1200px, got ${height}px`);
@@ -107,10 +91,11 @@ test('hero matches approved composition with video action, stats, process teaser
   assert.match(component, /Вода ближче, ніж ви думаєте/);
 });
 
-test('services render exactly three large reference cards with tabs controls checklists and project thumbnails', () => {
+test('services render exactly three large reference cards without need filters or carousel controls', () => {
   assert.match(component, /id="services"/);
-  assert.match(component, /service-filter-tabs/);
-  assert.match(component, /service-carousel-controls/);
+  assert.doesNotMatch(component, /service-filter-tabs/);
+  assert.doesNotMatch(component, /service-carousel-controls/);
+  assert.doesNotMatch(component, /Для дому|Для бізнесу|Для промисловості/);
   assert.match(component, /services\.map/);
   assert.match(component, /ServiceCard/);
   assert.match(component, /service\.included\.map/);
@@ -128,10 +113,11 @@ test('about section is the approved dark split with regional story stats and tes
   assert.match(component, /Олександр Герман/);
 });
 
-test('process section renders the approved five-step horizontal journey', () => {
+test('process section renders desktop five-step journey and mobile controlled stage', () => {
   assert.match(component, /className="process-reference"/);
   assert.match(component, /processSteps\.map/);
   assert.match(component, /ProcessStep/);
+  assert.match(component, /MobileProcessFlip/);
   assert.match(component, /Від першої консультації/);
   assert.match(component, /Залишити заявку/);
 });
