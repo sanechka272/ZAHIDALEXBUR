@@ -32,6 +32,12 @@ const conceptServices = [
   },
 ];
 
+const generatedPackageImages = [
+  '/generated/package-private.webp',
+  '/generated/package-filter.webp',
+  '/generated/package-industrial.webp',
+];
+
 const proofItems = [
   { value: 'Львів + область', label: 'географія робіт' },
   { value: '3 типи', label: 'свердловин' },
@@ -305,7 +311,7 @@ export default function LandingPage() {
         <div className="shell">
           <div className="section-topline reveal reveal--fade">
             <span className="section-label">Наші послуги</span>
-            <a href="#contact">Всі послуги <Arrow /></a>
+            <a href="#well-types">Типи свердловин <Arrow /></a>
           </div>
 
           <div className="concept-service-grid">
@@ -328,13 +334,57 @@ export default function LandingPage() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="service-prices reveal reveal--fade">
-            {services.map((service) => (
-              <div key={service.id}>
-                <span>{service.title}</span>
-                <strong>{service.shortPrice}</strong>
-              </div>
+      <section className="well-packages" id="well-types">
+        <div className="shell">
+          <div className="well-packages__heading reveal reveal--from-left">
+            <div>
+              <span className="section-label">Типи свердловин</span>
+              <h2>Оберіть рішення<br />під вашу ділянку</h2>
+            </div>
+            <p>Ціна залежить від геології конкретної ділянки, конструкції свердловини та розташування об’єкта. У вказані діапазони входять матеріали.</p>
+          </div>
+
+          <div className="well-package-grid">
+            {services.map((service, index) => (
+              <article
+                className="well-package-card reveal"
+                key={service.id}
+                style={{ '--delay': `${index * 110}ms` } as CSSProperties}
+              >
+                <div className="well-package-card__media">
+                  <img src={generatedPackageImages[index]} alt={service.title} loading="lazy" />
+                  <span className="well-package-card__index">{service.id}</span>
+                </div>
+
+                <div className="well-package-card__body">
+                  <div className="well-package-card__title-row">
+                    <h3>{service.title}</h3>
+                    <span>0{index + 1}</span>
+                  </div>
+                  <p>{service.description}</p>
+                  <strong className="well-package-card__price">{service.price}</strong>
+                  <span className="well-package-card__price-note">Матеріали включені у діапазон ціни</span>
+
+                  <div className="well-package-card__line" aria-hidden="true" />
+
+                  <ul className="well-package-card__list">
+                    {service.included.map((item, itemIndex) => (
+                      <li key={item} style={{ '--item-delay': `${itemIndex * 38}ms` } as CSSProperties}>
+                        <span aria-hidden="true">✓</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button className="well-package-card__action" type="button" onClick={() => setLeadOpen(true)}>
+                    <span>Уточнити розрахунок</span>
+                    <Arrow />
+                  </button>
+                </div>
+              </article>
             ))}
           </div>
         </div>
