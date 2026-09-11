@@ -1,0 +1,76 @@
+name: Add blog and contact sections
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-blog-contact.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Patch landing page and styles
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          component = Path('components/LandingPage.tsx')
+          text = component.read_text()
+
+          text = text.replace("{ label: 'Блог', href: 'https://zahidalexbur.com.ua/blog' },", "{ label: 'Блог', href: '#blog' },")
+
+          marker = "const serviceFilters = ['Для дому', 'Для бізнесу', 'Для промисловості'];\n"
+          blog_data = '''const blogArticles = [\n  {\n    tag: 'ПЛАНУВАННЯ',\n    title: 'Як вибрати місце для свердловини на ділянці',\n    excerpt: 'Що врахувати до заїзду техніки: рельєф, санітарні відстані, доступ і геологію ділянки.',\n    image: assets.services[0],\n    readTime: '6 хв читання',\n  },\n  {\n    tag: 'ГЕОЛОГІЯ',\n    title: 'Яка глибина свердловини потрібна у Львівській області',\n    excerpt: 'Чому сусідні населені пункти можуть мати різні горизонти і чому точну глибину не варто вгадувати наперед.',\n    image: assets.hero,\n    readTime: '7 хв читання',\n  },\n  {\n    tag: 'ТЕХНОЛОГІЯ',\n    title: 'Фільтрова чи безфільтрова свердловина: що обрати',\n    excerpt: 'Порівнюємо два основні рішення та пояснюємо, від яких геологічних умов залежить правильний вибір.',\n    image: assets.services[1],\n    readTime: '5 хв читання',\n  },\n];\n'''
+          if 'const blogArticles =' not in text:
+              text = text.replace(marker, marker + '\n' + blog_data)
+
+          marker = "function ServiceCard({ service, index, active, onOpen }:"
+          blog_component = '''function BlogCard({ article, index }: { article: (typeof blogArticles)[number]; index: number }) {\n  return (\n    <article className="blog-reference-card reveal" style={{ '--delay': `${index * 90}ms` } as CSSProperties}>\n      <a className="blog-reference-card__media" href="https://zahidalexbur.com.ua/blog" target="_blank" rel="noreferrer" aria-label={article.title}>\n        <img src={article.image} alt={article.title} loading="lazy" />\n        <span>0{index + 1}</span>\n      </a>\n      <div className="blog-reference-card__body">\n        <div className="blog-reference-card__meta"><span>{article.tag}</span><small>{article.readTime}</small></div>\n        <h3>{article.title}</h3>\n        <p>{article.excerpt}</p>\n        <a className="blog-reference-card__link" href="https://zahidalexbur.com.ua/blog" target="_blank" rel="noreferrer">Читати матеріал <Arrow /></a>\n      </div>\n    </article>\n  );\n}\n\n'''
+          if 'function BlogCard(' not in text:
+              text = text.replace(marker, blog_component + marker)
+
+          footer_marker = '      <footer className="reference-footer" id="contact">'
+          sections = '''      <section className="blog-reference" id="blog">\n        <div className="reference-shell">\n          <div className="blog-reference__header reveal">\n            <div><EyebrowLabel>БЛОГ</EyebrowLabel><h2>Корисно знати до того,<br />як почнеться буріння</h2></div>\n            <a className="blog-reference__all" href="https://zahidalexbur.com.ua/blog" target="_blank" rel="noreferrer">Усі матеріали <Arrow /></a>\n          </div>\n          <div className="blog-reference__grid">{blogArticles.map((article, index) => <BlogCard key={article.title} article={article} index={index} />)}</div>\n        </div>\n      </section>\n\n      <section className="contact-reference" id="contact">\n        <div className="reference-shell contact-reference__layout">\n          <div className="contact-reference__copy reveal reveal--from-left">\n            <EyebrowLabel light>КОНТАКТИ</EyebrowLabel>\n            <h2>Поговорімо про<br />вашу ділянку</h2>\n            <p>Опишіть задачу або просто зателефонуйте. Уточнимо локацію, тип обʼєкта та підкажемо, з чого почати.</p>\n            <div className="contact-reference__details">\n              <a href={contact.phoneHref}><span>ТЕЛЕФОН</span><strong>{contact.phoneDisplay}</strong></a>\n              <a href={`mailto:${contact.email}`}><span>EMAIL</span><strong>{contact.email}</strong></a>\n              <div><span>АДРЕСА</span><strong>{contact.address}</strong></div>\n              <div><span>ГРАФІК</span><strong>Пн–Сб 8:00–20:00</strong></div>\n            </div>\n          </div>\n          <div className="contact-reference__form reveal reveal--from-right">\n            <EyebrowLabel>ШВИДКИЙ СТАРТ</EyebrowLabel>\n            <h3>Отримати попередній розрахунок</h3>\n            <p>Залиште телефон і населений пункт — дані вже підготовлені для швидкого контакту з командою.</p>\n            <LeadForm />\n          </div>\n        </div>\n      </section>\n\n      <footer className="reference-footer">'''
+          if 'className="blog-reference" id="blog"' not in text:
+              text = text.replace(footer_marker, sections)
+
+          component.write_text(text)
+
+          layout = Path('app/layout.tsx')
+          layout_text = layout.read_text()
+          if "import './content.css';" not in layout_text:
+              layout_text = layout_text.replace("import './media.css';", "import './media.css';\nimport './content.css';")
+          layout.write_text(layout_text)
+
+          Path('app/content.css').write_text(r'''/* Blog + contact production layer */
+.blog-reference{background:#f2efe9;color:#17140f;padding:clamp(84px,9vw,150px) 0;overflow:hidden}.blog-reference__header{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:44px}.blog-reference__header h2{margin:12px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:clamp(42px,5vw,78px);font-weight:400;line-height:.98;letter-spacing:-.045em}.blog-reference__all{display:inline-flex;align-items:center;gap:14px;padding-bottom:8px;border-bottom:1px solid rgba(23,20,15,.28);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}.blog-reference__all .arrow{width:18px}.blog-reference__grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}.blog-reference-card{grid-column:span 4;min-width:0;background:#fff;border:1px solid rgba(23,20,15,.08);border-radius:24px;overflow:hidden;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s ease}.blog-reference-card:nth-child(2){transform:translateY(28px)}.motion-ready .blog-reference-card:nth-child(2):not(.is-visible){transform:translateY(56px)}.blog-reference-card:hover{transform:translateY(-7px);box-shadow:0 28px 70px rgba(37,29,21,.12)}.blog-reference-card:nth-child(2):hover{transform:translateY(21px)}.blog-reference-card__media{position:relative;display:block;aspect-ratio:1.18/1;overflow:hidden;background:#181511}.blog-reference-card__media:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 48%,rgba(12,10,8,.35))}.blog-reference-card__media img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1);filter:saturate(.9) contrast(1.03)}.blog-reference-card:hover .blog-reference-card__media img{transform:scale(1.035)}.blog-reference-card__media>span{position:absolute;z-index:2;left:22px;top:18px;color:#f1e5d5;font-family:Oswald,sans-serif;font-size:36px;letter-spacing:-.04em}.blog-reference-card__body{padding:26px 26px 30px}.blog-reference-card__meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px;color:#7f634e;font-size:11px;font-weight:800;letter-spacing:.12em}.blog-reference-card__meta small{font-size:11px;color:#827b72;font-weight:500;letter-spacing:0}.blog-reference-card h3{margin:0;font-size:clamp(24px,2.1vw,34px);line-height:1.05;letter-spacing:-.035em}.blog-reference-card p{margin:16px 0 28px;color:#6b6459;font-size:15px;line-height:1.6}.blog-reference-card__link{display:flex;align-items:center;justify-content:space-between;padding-top:18px;border-top:1px solid #e2ded4;font-size:13px;font-weight:800}.blog-reference-card__link .arrow{width:18px;transition:transform .25s ease}.blog-reference-card__link:hover .arrow{transform:translateX(4px)}
+.contact-reference{position:relative;background:#151310;color:#fff;padding:clamp(88px,9vw,150px) 0;overflow:hidden}.contact-reference:before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 12% 15%,rgba(169,120,79,.18),transparent 34%),linear-gradient(120deg,rgba(255,255,255,.025),transparent 42%);pointer-events:none}.contact-reference__layout{position:relative;display:grid;grid-template-columns:minmax(0,.9fr) minmax(430px,.72fr);gap:clamp(48px,7vw,120px);align-items:start}.contact-reference__copy h2{margin:16px 0 24px;font-family:Georgia,'Times New Roman',serif;font-size:clamp(48px,6vw,90px);font-weight:400;line-height:.94;letter-spacing:-.052em}.contact-reference__copy>p{max-width:560px;margin:0;color:#b6afa5;font-size:17px;line-height:1.65}.contact-reference__details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:52px;border-top:1px solid rgba(255,255,255,.13);border-left:1px solid rgba(255,255,255,.13)}.contact-reference__details>a,.contact-reference__details>div{display:flex;flex-direction:column;gap:10px;min-height:118px;padding:24px;border-right:1px solid rgba(255,255,255,.13);border-bottom:1px solid rgba(255,255,255,.13);transition:background-color .25s ease}.contact-reference__details>a:hover{background:rgba(169,120,79,.12)}.contact-reference__details span{color:#8f887f;font-size:10px;font-weight:800;letter-spacing:.15em}.contact-reference__details strong{font-size:15px;line-height:1.45}.contact-reference__form{background:#f2efe9;color:#17140f;padding:clamp(30px,4vw,54px);border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.2)}.contact-reference__form h3{margin:14px 0 14px;font-size:clamp(34px,3.4vw,54px);line-height:.98;letter-spacing:-.045em}.contact-reference__form>p{margin:0 0 32px;color:#6b6459;line-height:1.55}.contact-reference__form .reference-lead-form{display:grid;gap:12px}.contact-reference__form .reference-lead-form label{display:grid;gap:7px}.contact-reference__form .reference-lead-form label>span{font-size:10px;font-weight:800;letter-spacing:.12em;color:#766d62}.contact-reference__form .reference-lead-form input{width:100%;height:58px;border:1px solid #d9d3c9;background:#fff;padding:0 16px;color:#17140f;outline:none;transition:border-color .2s ease,box-shadow .2s ease}.contact-reference__form .reference-lead-form input:focus{border-color:#a9784f;box-shadow:0 0 0 3px rgba(169,120,79,.12)}.contact-reference__form .reference-lead-form button{height:58px;margin-top:8px;border:0;background:#17140f;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-weight:800}.contact-reference__form .reference-lead-form button .arrow{width:19px}.contact-reference__form .reference-form-success{color:#17140f}
+@media(max-width:980px){.blog-reference__grid{grid-template-columns:repeat(2,1fr)}.blog-reference-card{grid-column:auto}.blog-reference-card:nth-child(3){grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr}.blog-reference-card:nth-child(3) .blog-reference-card__media{aspect-ratio:auto;min-height:320px}.contact-reference__layout{grid-template-columns:1fr}.contact-reference__copy>p{max-width:680px}}
+@media(max-width:767px){.blog-reference{padding:72px 0 88px}.blog-reference__header{align-items:flex-start;flex-direction:column;margin-bottom:28px}.blog-reference__header h2{font-size:43px}.blog-reference__grid{display:grid;grid-template-columns:1fr;gap:16px}.blog-reference-card,.blog-reference-card:nth-child(2),.blog-reference-card:nth-child(3){grid-column:auto;display:block;transform:none}.motion-ready .blog-reference-card:nth-child(2):not(.is-visible){transform:translateY(20px)}.blog-reference-card:hover,.blog-reference-card:nth-child(2):hover{transform:none}.blog-reference-card__media{aspect-ratio:1.28/1}.blog-reference-card__body{padding:22px}.contact-reference{padding:76px 0 96px}.contact-reference__copy h2{font-size:49px}.contact-reference__details{grid-template-columns:1fr}.contact-reference__form{padding:26px 20px;border-radius:22px}.contact-reference__form h3{font-size:38px}}
+@media(prefers-reduced-motion:reduce){.blog-reference-card,.blog-reference-card__media img,.blog-reference-card__link .arrow{transition:none!important;transform:none!important}}
+''')
+
+          Path('tests/blog-contact.test.mjs').write_text('''import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport { readFile } from 'node:fs/promises';\n\nconst component = await readFile(new URL('../components/LandingPage.tsx', import.meta.url), 'utf8');\nconst css = await readFile(new URL('../app/content.css', import.meta.url), 'utf8');\nconst layout = await readFile(new URL('../app/layout.tsx', import.meta.url), 'utf8');\n\ntest('blog and contacts are real landing sections and navigation targets them', () => {\n  assert.match(component, /label: 'Блог', href: '#blog'/);\n  assert.match(component, /className="blog-reference" id="blog"/);\n  assert.match(component, /blogArticles\\.map/);\n  assert.match(component, /className="contact-reference" id="contact"/);\n  assert.match(component, /contact\\.phoneDisplay/);\n  assert.match(component, /contact\\.email/);\n  assert.match(component, /contact\\.address/);\n  assert.match(component, /<LeadForm \\/>/);\n});\n\ntest('blog uses repository-local image assets and production responsive styles', () => {\n  assert.doesNotMatch(component, /https?:\\/\\/[^'\"]+\\.(?:png|jpe?g|webp|gif)/i);\n  assert.match(component, /image: assets\\.services\\[0\\]/);\n  assert.match(component, /image: assets\\.hero/);\n  assert.match(css, /\\.blog-reference-card/);\n  assert.match(css, /\\.contact-reference/);\n  assert.match(css, /@media\\(max-width:767px\\)/);\n  assert.match(css, /prefers-reduced-motion:reduce/);\n  assert.match(layout, /import '\\.\\/content\\.css';/);\n});\n''')
+          PY
+      - name: Verify
+        run: |
+          npm install
+          npm test
+          npm run build
+      - name: Commit production sections
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add components/LandingPage.tsx app/layout.tsx app/content.css tests/blog-contact.test.mjs
+          git commit -m 'feat: add premium blog and contact sections'
+          git push origin HEAD:main
