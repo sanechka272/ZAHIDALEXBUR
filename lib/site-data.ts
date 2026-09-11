@@ -6,34 +6,22 @@ export const contact = {
 };
 
 export const assets = {
-  logo: 'https://zahidalexbur.com.ua/images/logo.png',
-  legacyHero: 'https://zahidalexbur.com.ua/images/banner-images/banner-image-1.jpg',
-  gallery: [
-    'https://zahidalexbur.com.ua/images/gallery-images/1.jpg',
-    'https://zahidalexbur.com.ua/images/gallery-images/2.jpg',
-    'https://zahidalexbur.com.ua/images/gallery-images/3.jpg',
-    'https://zahidalexbur.com.ua/images/gallery-images/4.jpg',
-    'https://zahidalexbur.com.ua/images/gallery-images/5.jpg',
-    'https://zahidalexbur.com.ua/images/gallery-images/6.jpg',
-  ],
-  blog: [
-    'https://zahidalexbur.com.ua/images/blog/blog_1.jpg',
-    'https://zahidalexbur.com.ua/images/blog/blog_2.jpg',
-    'https://zahidalexbur.com.ua/images/blog/blog_3.jpg',
-    'https://zahidalexbur.com.ua/images/blog/blog_4.jpg',
-    'https://zahidalexbur.com.ua/images/blog/blog_5.jpg',
-    'https://zahidalexbur.com.ua/images/blog/blog_6.jpg',
-    'https://zahidalexbur.com.ua/images/blog/blog_7.jpg',
-    'https://zahidalexbur.com.ua/images/blog/blog_8.jpg',
-    'https://zahidalexbur.com.ua/images/blog/blog_9.jpg',
+  logo: '/brand/zahidalexbur-logo.webp',
+  hero: '/generated/hero-drilling.webp',
+  geology: '/generated/approach-geology.webp',
+  water: '/generated/water-hands.webp',
+  services: [
+    '/generated/package-private.webp',
+    '/generated/package-filter.webp',
+    '/generated/package-industrial.webp',
   ],
 };
 
 export const navigation = [
   { label: 'Послуги', href: '#services' },
+  { label: 'Про нас', href: '#approach' },
   { label: 'Процес', href: '#process' },
   { label: 'Роботи', href: '#works' },
-  { label: 'FAQ', href: '#faq' },
   { label: 'Контакти', href: '#contact' },
 ];
 
@@ -44,8 +32,15 @@ export const services = [
     price: '1 800–2 100 грн/м',
     shortPrice: 'від 1 800 грн/м',
     description: 'Для приватних будинків і ділянок, де геологічні умови дозволяють працювати без фільтрової колони.',
-    image: assets.gallery[0],
-    included: ['Буріння свердловини', 'Доставка техніки та водовозки', 'Монтаж обсадної колони', 'Прокачування', 'Вимірювання дебіту', 'Розрахунок потужності насоса'],
+    image: assets.services[0],
+    included: [
+      'Буріння свердловини',
+      'Доставка техніки та водовозки',
+      'Монтаж обсадної колони',
+      'Прокачування',
+      'Вимірювання дебіту',
+      'Розрахунок потужності насоса',
+    ],
   },
   {
     id: '02',
@@ -53,8 +48,16 @@ export const services = [
     price: '2 000–2 300 грн/м',
     shortPrice: 'від 2 000 грн/м',
     description: 'Надійне рішення для водоносних горизонтів, де потрібна фільтрова колона та захист від замулення.',
-    image: assets.gallery[4],
-    included: ['Буріння свердловини', 'Доставка техніки та водовозки', 'Монтаж труби-кондуктора', 'Фільтрова колона з обсипкою', 'Прокачування', 'Вимірювання дебіту', 'Розрахунок потужності насоса'],
+    image: assets.services[1],
+    included: [
+      'Буріння свердловини',
+      'Доставка техніки та водовозки',
+      'Монтаж труби-кондуктора',
+      'Фільтрова колона з обсипкою',
+      'Прокачування',
+      'Вимірювання дебіту',
+      'Розрахунок потужності насоса',
+    ],
   },
   {
     id: '03',
@@ -62,15 +65,22 @@ export const services = [
     price: '2 300–2 500 грн/м',
     shortPrice: 'від 2 300 грн/м',
     description: 'Для бізнесу, виробництва та обʼєктів, де потрібна вища продуктивність і більший діаметр конструкції.',
-    image: assets.gallery[5],
-    included: ['Буріння свердловини', 'Доставка техніки з водовозкою', 'Обсадна або фільтрова колона 120–160 мм', 'Прокачування', 'Вимірювання дебіту', 'Розрахунок потужності насоса'],
+    image: assets.services[2],
+    included: [
+      'Буріння свердловини',
+      'Доставка техніки з водовозкою',
+      'Обсадна або фільтрова колона 120–160 мм',
+      'Прокачування',
+      'Вимірювання дебіту',
+      'Розрахунок потужності насоса',
+    ],
   },
 ];
 
 export const processSteps = [
   { id: '01', title: 'Консультація', text: 'Уточнюємо локацію, потребу у воді та умови на ділянці.' },
-  { id: '02', title: 'Підбір технології', text: 'Визначаємо тип конструкції та орієнтовну вартість.' },
-  { id: '03', title: 'Буріння', text: 'Працюємо сучасною технікою та контролюємо кожен етап.' },
+  { id: '02', title: 'Підбір технології', text: 'Визначаємо конструкцію свердловини та попередній бюджет.' },
+  { id: '03', title: 'Буріння', text: 'Заїжджаємо технікою та контролюємо ключові етапи робіт.' },
   { id: '04', title: 'Прокачування', text: 'Прокачуємо свердловину та вимірюємо фактичний дебіт.' },
   { id: '05', title: 'Підключення', text: 'Розраховуємо насос і готуємо систему до експлуатації.' },
 ];
@@ -85,7 +95,7 @@ export const benefits = [
 export const faqs = [
   {
     question: 'Яку свердловину краще обрати?',
-    answer: 'Вибір між фільтровою та безфільтровою конструкцією залежить від геології конкретної ділянки, водоносного горизонту та потрібної продуктивності. Остаточний тип краще визначати після оцінки місцевості.',
+    answer: 'Вибір між фільтровою та безфільтровою конструкцією залежить від геології конкретної ділянки, водоносного горизонту та потрібної продуктивності. Остаточний тип визначаємо після оцінки умов.',
   },
   {
     question: 'Від чого залежить ціна за метр?',
@@ -97,6 +107,6 @@ export const faqs = [
   },
   {
     question: 'Чи працюєте після завершення буріння?',
-    answer: 'Так. Компанія виконує післягарантійне обслуговування: очищення, діагностику, ремонт, відновлення та модернізацію свердловин.',
+    answer: 'Так. Після буріння доступні очищення, діагностика, ремонт, відновлення та модернізація свердловин.',
   },
 ];
