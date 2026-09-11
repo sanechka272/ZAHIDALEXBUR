@@ -1,0 +1,52 @@
+/* Last-mile production safeguards loaded after the main design layers. */
+
+.brand-lockup--image {
+  width: 142px;
+  height: 90px;
+  flex-basis: 142px;
+}
+.brand-logo {
+  width: 168px;
+  left: -14px;
+  top: -32px;
+}
+.site-header--scrolled .brand-lockup--image {
+  width: 110px;
+  height: 72px;
+  flex-basis: 110px;
+}
+.site-header--scrolled .brand-logo {
+  width: 131px;
+  left: -11px;
+  top: -25px;
+}
+
+.site-footer {
+  color: #f7f1e8;
+  background: #11110f;
+  border-top-color: rgba(255,255,255,.1);
+}
+.footer-nav a { color: rgba(247,241,232,.72); }
+.footer-nav a:hover { color: #fff; opacity: 1; }
+.footer-contacts a:last-child { color: rgba(247,241,232,.5); }
+.footer-brand--logo {
+  width: 138px;
+  height: 90px;
+}
+.footer-brand--logo img {
+  width: 164px;
+  left: -14px;
+  top: -31px;
+}
+
+@media (max-width: 880px) {
+  .brand-lockup--image { width: 110px; height: 70px; flex-basis: 110px; }
+  .brand-logo { width: 131px; left: -11px; top: -25px; }
+}
+
+@media (max-width: 620px) {
+  .brand-lockup--image { width: 102px; height: 66px; flex-basis: 102px; }
+  .brand-logo { width: 122px; left: -10px; top: -23px; }
+  .footer-brand--logo { width: 112px; height: 72px; }
+  .footer-brand--logo img { width: 134px; left: -11px; top: -25px; }
+}
