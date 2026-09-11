@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 
 const component = await readFile(new URL('../components/LandingPage.tsx', import.meta.url), 'utf8');
 const css = await readFile(new URL('../app/globals.css', import.meta.url), 'utf8');
+const fixes = await readFile(new URL('../app/fixes.css', import.meta.url), 'utf8');
 const packageJson = await readFile(new URL('../package.json', import.meta.url), 'utf8');
 
 test('header keeps phone and navigation but no CTA button', () => {
@@ -14,7 +15,7 @@ test('header keeps phone and navigation but no CTA button', () => {
 });
 
 test('header and footer use the supplied ZAHIDALEXBUR logo asset', () => {
-  assert.match(component, /\/brand\/zahidalexbur-logo-lockup\.webp/);
+  assert.match(component, /\/brand\/zahidalexbur-logo\.webp/);
   const header = component.match(/<header[\s\S]*?<\/header>/)?.[0] ?? '';
   assert.match(header, /brand-logo/);
   assert.doesNotMatch(header, /<strong>ZAHIDALEXBUR<\/strong>/);
@@ -34,9 +35,7 @@ test('landing keeps one primary three-card well-service section', () => {
 });
 
 test('landing includes concept sections', () => {
-  for (const className of ['approach-section', 'well-packages', 'proof-band', 'conversion-split']) {
-    assert.match(component, new RegExp(className));
-  }
+  for (const className of ['approach-section', 'well-packages', 'proof-band', 'conversion-split']) assert.match(component, new RegExp(className));
 });
 
 test('motion layer uses progressive enhancement and reduced-motion fallback', () => {
@@ -63,16 +62,13 @@ test('motion remains CSS-first without heavyweight animation dependencies', () =
 });
 
 test('landing includes three original-service package cards with generated local imagery', () => {
-  assert.match(component, /well-packages/);
   assert.match(component, /well-package-card/);
-  for (const asset of ['package-private.webp', 'package-filter.webp', 'package-industrial.webp']) {
-    assert.match(component, new RegExp(`/generated/${asset}`));
-  }
+  for (const asset of ['package-private.webp', 'package-filter.webp', 'package-industrial.webp']) assert.match(component, new RegExp(`/generated/${asset}`));
 });
 
 test('service package cards render verified inclusions and premium CSS-first motion', () => {
   assert.match(component, /service\.included\.map/);
   assert.match(css, /\.well-package-card::before/);
   assert.match(css, /\.motion-ready\s+\.well-package-card/);
-  assert.match(css, /\.well-package-card:hover/);
+  assert.match(fixes, /\.well-package-card:hover/);
 });
