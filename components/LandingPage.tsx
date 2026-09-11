@@ -110,7 +110,19 @@ export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    const root = document.documentElement;
     const nodes = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    root.classList.add('motion-ready');
+
+    const revealImmediately = () => nodes.forEach((node) => node.classList.add('is-visible'));
+
+    if (reducedMotion.matches || !('IntersectionObserver' in window)) {
+      revealImmediately();
+      return () => root.classList.remove('motion-ready');
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -119,27 +131,88 @@ export default function LandingPage() {
           observer.unobserve(entry.target);
         });
       },
-      { threshold: 0.14, rootMargin: '0px 0px -8% 0px' },
+      {
+        threshold: 0.06,
+        rootMargin: '0px 0px 18% 0px',
+      },
     );
 
-    nodes.forEach((node) => observer.observe(node));
-    return () => observer.disconnect();
+    const earlyRevealBoundary = window.innerHeight * 1.16;
+    nodes.forEach((node) => {
+      const rect = node.getBoundingClientRect();
+      if (rect.top < earlyRevealBoundary && rect.bottom > -80) {
+        node.classList.add('is-visible');
+      } else {
+        observer.observe(node);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+      root.classList.remove('motion-ready');
+    };
   }, []);
 
   useEffect(() => {
-    const update = () => {
-      setScrolled(window.scrollY > 42);
-      document.documentElement.style.setProperty('--page-scroll', `${Math.min(window.scrollY, 900)}px`);
+    const root = document.documentElement;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let frame = 0;
+    let lastScrolled = false;
+
+    const renderScrollState = () => {
+      frame = 0;
+      const scrollY = window.scrollY;
+      const nextScrolled = scrollY > 42;
+
+      if (nextScrolled !== lastScrolled) {
+        lastScrolled = nextScrolled;
+        setScrolled(nextScrolled);
+      }
+
+      const maxParallax = reducedMotion.matches
+        ? 0
+        : window.innerWidth <= 620
+          ? 0
+          : window.innerWidth <= 880
+            ? 10
+            : 24;
+      const heroParallax = Math.min(maxParallax, (Math.min(scrollY, 520) / 520) * maxParallax);
+      root.style.setProperty('--hero-parallax', `${heroParallax.toFixed(2)}px`);
     };
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    return () => window.removeEventListener('scroll', update);
+
+    const schedule = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(renderScrollState);
+    };
+
+    renderScrollState();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    reducedMotion.addEventListener?.('change', schedule);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      reducedMotion.removeEventListener?.('change', schedule);
+      root.style.removeProperty('--hero-parallax');
+    };
   }, []);
 
   useEffect(() => {
     document.body.classList.toggle('no-scroll', mobileOpen || leadOpen);
     return () => document.body.classList.remove('no-scroll');
   }, [mobileOpen, leadOpen]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      setMobileOpen(false);
+      setLeadOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   return (
     <main id="top">
@@ -156,7 +229,13 @@ export default function LandingPage() {
 
           <a className="header-phone" href={contact.phoneHref}>{contact.phoneDisplay}</a>
 
-          <button className="menu-button" type="button" aria-label="Відкрити меню" onClick={() => setMobileOpen(true)}>
+          <button
+            className="menu-button"
+            type="button"
+            aria-label="Відкрити меню"
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen(true)}
+          >
             <MenuIcon />
           </button>
         </div>
@@ -170,7 +249,10 @@ export default function LandingPage() {
         <div className="shell hero__layout">
           <div className="hero__copy">
             <span className="hero-kicker hero-enter hero-enter--1">Надійне водопостачання починається тут</span>
-            <h1 className="hero-enter hero-enter--2">Буріння<br />свердловин</h1>
+            <h1 className="hero-title" aria-label="Буріння свердловин">
+              <span className="hero-line hero-line--1"><span>Буріння</span></span>
+              <span className="hero-line hero-line--2"><span>свердловин</span></span>
+            </h1>
             <strong className="hero-location hero-enter hero-enter--3">Львів та Львівська область</strong>
             <p className="hero-lead hero-enter hero-enter--4">Проєктуємо та буримо свердловини для приватних будинків, бізнесу та промислових об’єктів.</p>
 
@@ -186,7 +268,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="hero-vertical" aria-hidden="true">WATER BECOMES THE SOURCE</div>
+          <div className="hero-vertical hero-decor-enter" aria-hidden="true">WATER BECOMES THE SOURCE</div>
 
           <div className="hero-index hero-enter hero-enter--6">
             <strong>01</strong>
@@ -197,7 +279,7 @@ export default function LandingPage() {
       </section>
 
       <section className="approach-section" id="approach">
-        <div className="approach-copy reveal">
+        <div className="approach-copy reveal reveal--from-left">
           <div className="approach-copy__inner">
             <span className="section-label">Наш підхід</span>
             <h2>Вода починається<br />не з буріння.</h2>
@@ -209,7 +291,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div className="approach-image reveal reveal--image" id="works">
+        <div className="approach-image reveal reveal--clip-right" id="works">
           <img src={assets.blog[1]} alt="Підготовка та оцінка умов для буріння свердловини" />
           <div className="approach-image__caption">
             <span>Львівська область</span>
@@ -221,7 +303,7 @@ export default function LandingPage() {
 
       <section className="concept-services" id="services">
         <div className="shell">
-          <div className="section-topline reveal">
+          <div className="section-topline reveal reveal--fade">
             <span className="section-label">Наші послуги</span>
             <a href="#contact">Всі послуги <Arrow /></a>
           </div>
@@ -229,7 +311,7 @@ export default function LandingPage() {
           <div className="concept-service-grid">
             {conceptServices.map((service, index) => (
               <article
-                className="concept-service reveal"
+                className="concept-service reveal reveal--service"
                 key={service.id}
                 style={{ '--delay': `${index * 90}ms` } as CSSProperties}
               >
@@ -247,7 +329,7 @@ export default function LandingPage() {
             ))}
           </div>
 
-          <div className="service-prices reveal">
+          <div className="service-prices reveal reveal--fade">
             {services.map((service) => (
               <div key={service.id}>
                 <span>{service.title}</span>
@@ -260,22 +342,22 @@ export default function LandingPage() {
 
       <section className="proof-band" id="process">
         <div className="shell proof-band__inner">
-          <div className="proof-brand reveal">
+          <div className="proof-brand reveal reveal--proof">
             <span>ZAHIDALEXBUR</span>
             <strong>у фактах</strong>
           </div>
           {proofItems.map((item, index) => (
-            <div className="proof-stat reveal" key={item.value} style={{ '--delay': `${index * 75}ms` } as CSSProperties}>
+            <div className="proof-stat reveal reveal--proof" key={item.value} style={{ '--delay': `${index * 70}ms` } as CSSProperties}>
               <strong>{item.value}</strong>
               <span>{item.label}</span>
             </div>
           ))}
-          <div className="proof-end reveal">Стабільна вода<br />для життя<br />і розвитку</div>
+          <div className="proof-end reveal reveal--proof" style={{ '--delay': '300ms' } as CSSProperties}>Стабільна вода<br />для життя<br />і розвитку</div>
         </div>
       </section>
 
       <section className="conversion-split" id="contact">
-        <div className="conversion-photo reveal reveal--image">
+        <div className="conversion-photo reveal reveal--clip-left">
           <img src={assets.gallery[3]} alt="Вода зі свердловини ZAHIDALEXBUR" />
           <div className="conversion-photo__caption">
             <strong>Чиста вода.<br />Реальні можливості.<br />Впевнене завтра.</strong>
@@ -283,7 +365,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div className="conversion-copy reveal">
+        <div className="conversion-copy reveal reveal--from-right">
           <div className="conversion-copy__inner">
             <span className="section-label">Готові обговорити ваш проєкт?</span>
             <h2>Розрахуємо<br />вашу свердловину<br />за 1 день</h2>
