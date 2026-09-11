@@ -13,8 +13,28 @@ test('header keeps phone and navigation but no CTA button', () => {
   assert.doesNotMatch(header, /header-cta/);
 });
 
+test('header and footer use the supplied ZAHIDALEXBUR logo asset', () => {
+  assert.match(component, /\/brand\/zahidalexbur-logo-lockup\.webp/);
+  const header = component.match(/<header[\s\S]*?<\/header>/)?.[0] ?? '';
+  assert.match(header, /brand-logo/);
+  assert.doesNotMatch(header, /<strong>ZAHIDALEXBUR<\/strong>/);
+});
+
+test('landing uses generated concept imagery for the main photographic scenes', () => {
+  for (const asset of ['hero-drilling.webp', 'approach-geology.webp', 'water-hands.webp']) {
+    assert.match(component, new RegExp(`/generated/${asset}`));
+  }
+});
+
+test('landing keeps one primary three-card well-service section', () => {
+  assert.match(component, /id="services"/);
+  assert.match(component, /well-package-grid/);
+  assert.match(component, /services\.map/);
+  assert.doesNotMatch(component, /concept-service-grid/);
+});
+
 test('landing includes concept sections', () => {
-  for (const className of ['approach-section', 'concept-services', 'proof-band', 'conversion-split']) {
+  for (const className of ['approach-section', 'well-packages', 'proof-band', 'conversion-split']) {
     assert.match(component, new RegExp(className));
   }
 });
