@@ -1,0 +1,142 @@
+/* Media integrity layer. Loaded after final.css so broken legacy raster/crop rules cannot leak into production. */
+
+.reference-page img {
+  display: block;
+  max-width: 100%;
+  image-rendering: auto;
+}
+
+/* Crisp transparent SVG lockup: no negative offsets, no clipping container. */
+.reference-header .brand-lockup--image {
+  position: relative;
+  width: 184px;
+  height: 54px;
+  flex: 0 0 184px;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+}
+
+.reference-header .brand-logo,
+.reference-header.site-header--scrolled .brand-logo {
+  position: static;
+  width: 184px;
+  height: auto;
+  max-width: 100%;
+  left: auto;
+  top: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, .18));
+}
+
+.reference-header.site-header--scrolled .brand-lockup--image {
+  width: 158px;
+  height: 46px;
+  flex-basis: 158px;
+}
+
+.reference-header.site-header--scrolled .brand-logo {
+  width: 158px;
+}
+
+.reference-footer__brand img,
+.drawer-head img {
+  width: 184px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Hero is a real high-resolution local photo. Keep the rig readable without stretching. */
+.reference-hero__media {
+  background-size: cover;
+  background-position: 50% 54%;
+  background-repeat: no-repeat;
+}
+
+/* All service photos fill the media frame without deformation or empty bars. */
+.service-reference-card__photo img,
+.glass-info-card__thumb img,
+.service-project-thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.service-reference-card:nth-child(1) .service-reference-card__photo img {
+  object-position: 50% 52%;
+}
+
+.service-reference-card:nth-child(2) .service-reference-card__photo img {
+  object-position: 50% 48%;
+}
+
+.service-reference-card:nth-child(3) .service-reference-card__photo img {
+  object-position: 50% 44%;
+}
+
+/* Dedicated landscape for the about split; never reuse the hero asset here. */
+.about-reference__media {
+  background-image:
+    linear-gradient(90deg, rgba(20,18,15,.76), rgba(20,18,15,.16)),
+    url('/media/about-mountain-forest.jpg') !important;
+  background-size: cover !important;
+  background-position: center 48% !important;
+  background-repeat: no-repeat !important;
+}
+
+@media (max-width: 1180px) {
+  .reference-header .brand-lockup--image {
+    width: 160px;
+    height: 48px;
+    flex-basis: 160px;
+  }
+  .reference-header .brand-logo,
+  .reference-header.site-header--scrolled .brand-logo {
+    width: 160px;
+  }
+  .reference-hero__media {
+    background-position: 54% 50%;
+  }
+}
+
+@media (max-width: 880px) {
+  .reference-header .brand-lockup--image,
+  .reference-header.site-header--scrolled .brand-lockup--image {
+    width: 146px;
+    height: 44px;
+    flex-basis: 146px;
+  }
+  .reference-header .brand-logo,
+  .reference-header.site-header--scrolled .brand-logo {
+    width: 146px;
+  }
+  .reference-hero__media {
+    background-position: 54% 48%;
+  }
+  .about-reference__media {
+    background-position: 58% center !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .reference-header .brand-lockup--image,
+  .reference-header.site-header--scrolled .brand-lockup--image {
+    width: 136px;
+    height: 42px;
+    flex-basis: 136px;
+  }
+  .reference-header .brand-logo,
+  .reference-header.site-header--scrolled .brand-logo {
+    width: 136px;
+  }
+  .drawer-head img,
+  .reference-footer__brand img {
+    width: 156px;
+  }
+  .reference-hero__media {
+    background-position: 51% 48%;
+  }
+  .service-reference-card__photo {
+    min-height: 330px;
+  }
+}
