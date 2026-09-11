@@ -19,6 +19,37 @@ const productionPhotos = [
   '../public/media/about-mountain-forest.jpg',
 ];
 
+function jpegDimensions(buffer) {
+  let offset = 2;
+  const sofMarkers = new Set([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf]);
+
+  while (offset + 9 < buffer.length) {
+    if (buffer[offset] !== 0xff) {
+      offset += 1;
+      continue;
+    }
+
+    const marker = buffer[offset + 1];
+    if (marker === 0xd8 || marker === 0xd9 || marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) {
+      offset += 2;
+      continue;
+    }
+
+    const length = buffer.readUInt16BE(offset + 2);
+    if (sofMarkers.has(marker)) {
+      return {
+        height: buffer.readUInt16BE(offset + 5),
+        width: buffer.readUInt16BE(offset + 7),
+      };
+    }
+
+    if (length < 2) break;
+    offset += 2 + length;
+  }
+
+  throw new Error('JPEG dimensions not found');
+}
+
 test('header follows approved reference with centered navigation, phone, callback pill and hamburger', () => {
   const header = component.match(/<header[\s\S]*?<\/header>/)?.[0] ?? '';
   assert.match(header, /desktop-nav/);
@@ -41,7 +72,7 @@ test('brand uses a repository-local SVG logo and effective CSS never crops it wi
   assert.match(logoRule, /position:\s*static/);
 });
 
-test('every production photo is a large repository-local JPEG instead of a tiny placeholder', async () => {
+test('every production photo is a large high-resolution repository-local JPEG', async () => {
   assert.doesNotMatch(siteData, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
   assert.doesNotMatch(component, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
   assert.doesNotMatch(siteData, /\/generated\//);
@@ -52,6 +83,10 @@ test('every production photo is a large repository-local JPEG instead of a tiny 
     assert.equal(file[0], 0xff, `${relativePath} should be a JPEG`);
     assert.equal(file[1], 0xd8, `${relativePath} should be a JPEG`);
     assert.equal(file[2], 0xff, `${relativePath} should be a JPEG`);
+
+    const { width, height } = jpegDimensions(file);
+    assert.ok(width >= 1600, `${relativePath} width should be at least 1600px, got ${width}px`);
+    assert.ok(height >= 1200, `${relativePath} height should be at least 1200px, got ${height}px`);
   }
 });
 
