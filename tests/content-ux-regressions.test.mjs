@@ -34,13 +34,15 @@ test('blog contains five internal articles and cards link to their real routes',
 test('mobile process uses one controlled active stage and a faster smooth transition', () => {
   assert.match(landing, /activeProcess/);
   assert.match(landing, /processInView/);
-  assert.match(landing, /setInterval[\s\S]*?1[6789]00|setInterval[\s\S]*?2000/);
+  assert.match(landing, /setInterval[\s\S]*?1800/);
   assert.match(landing, /mobile-process-flip/);
   assert.doesNotMatch(mobileCss, /animation:\s*mobileProcessFlip\s+15s/i);
   assert.match(mobileCss, /\.mobile-process-flip__stage[\s\S]*transition:/i);
 });
 
-test('blog animation no longer offsets a single card with conflicting nth-child transforms', () => {
-  assert.doesNotMatch(contentCss, /blog-reference-card:nth-child\(2\).*transform:/);
-  assert.match(contentCss, /blog-reference-card[\s\S]*--delay/i);
+test('blog animation no longer offsets only the second card with a conflicting transform', () => {
+  const secondCardRule = contentCss.match(/\.blog-reference-card:nth-child\(2\)\s*\{[^}]*\}/)?.[0] ?? '';
+  assert.ok(secondCardRule, 'second blog card may define layout but must not have a unique motion transform');
+  assert.doesNotMatch(secondCardRule, /transform\s*:/i);
+  assert.match(contentCss, /\.motion-ready \.blog-reference-card[\s\S]*var\(--delay,0ms\)/i);
 });
