@@ -1,0 +1,102 @@
+export const contact = {
+  phoneDisplay: '+38 099 783 76 44',
+  phoneHref: 'tel:+380997837644',
+  email: 'zahidalexbur@gmail.com',
+  address: 'Львів, с. Наварія, вул. Львівська 154',
+};
+
+export const assets = {
+  logo: 'https://zahidalexbur.com.ua/images/logo.png',
+  legacyHero: 'https://zahidalexbur.com.ua/images/banner-images/banner-image-1.jpg',
+  gallery: [
+    'https://zahidalexbur.com.ua/images/gallery-images/1.jpg',
+    'https://zahidalexbur.com.ua/images/gallery-images/2.jpg',
+    'https://zahidalexbur.com.ua/images/gallery-images/3.jpg',
+    'https://zahidalexbur.com.ua/images/gallery-images/4.jpg',
+    'https://zahidalexbur.com.ua/images/gallery-images/5.jpg',
+    'https://zahidalexbur.com.ua/images/gallery-images/6.jpg',
+  ],
+  blog: [
+    'https://zahidalexbur.com.ua/images/blog/blog_1.jpg',
+    'https://zahidalexbur.com.ua/images/blog/blog_2.jpg',
+    'https://zahidalexbur.com.ua/images/blog/blog_3.jpg',
+    'https://zahidalexbur.com.ua/images/blog/blog_4.jpg',
+    'https://zahidalexbur.com.ua/images/blog/blog_5.jpg',
+    'https://zahidalexbur.com.ua/images/blog/blog_6.jpg',
+    'https://zahidalexbur.com.ua/images/blog/blog_7.jpg',
+    'https://zahidalexbur.com.ua/images/blog/blog_8.jpg',
+    'https://zahidalexbur.com.ua/images/blog/blog_9.jpg',
+  ],
+};
+
+export const navigation = [
+  { label: 'Послуги', href: '#services' },
+  { label: 'Процес', href: '#process' },
+  { label: 'Роботи', href: '#works' },
+  { label: 'FAQ', href: '#faq' },
+  { label: 'Контакти', href: '#contact' },
+];
+
+export const services = [
+  {
+    id: '01',
+    title: 'Безфільтрова свердловина',
+    price: '1 800–2 100 грн/м',
+    shortPrice: 'від 1 800 грн/м',
+    description: 'Для приватних будинків і ділянок, де геологічні умови дозволяють працювати без фільтрової колони.',
+    image: assets.gallery[0],
+    included: ['Буріння свердловини', 'Доставка техніки та водовозки', 'Монтаж обсадної колони', 'Прокачування', 'Вимірювання дебіту', 'Розрахунок потужності насоса'],
+  },
+  {
+    id: '02',
+    title: 'Фільтрова свердловина',
+    price: '2 000–2 300 грн/м',
+    shortPrice: 'від 2 000 грн/м',
+    description: 'Надійне рішення для водоносних горизонтів, де потрібна фільтрова колона та захист від замулення.',
+    image: assets.gallery[4],
+    included: ['Буріння свердловини', 'Доставка техніки та водовозки', 'Монтаж труби-кондуктора', 'Фільтрова колона з обсипкою', 'Прокачування', 'Вимірювання дебіту', 'Розрахунок потужності насоса'],
+  },
+  {
+    id: '03',
+    title: 'Промислова свердловина',
+    price: '2 300–2 500 грн/м',
+    shortPrice: 'від 2 300 грн/м',
+    description: 'Для бізнесу, виробництва та обʼєктів, де потрібна вища продуктивність і більший діаметр конструкції.',
+    image: assets.gallery[5],
+    included: ['Буріння свердловини', 'Доставка техніки з водовозкою', 'Обсадна або фільтрова колона 120–160 мм', 'Прокачування', 'Вимірювання дебіту', 'Розрахунок потужності насоса'],
+  },
+];
+
+export const processSteps = [
+  { id: '01', title: 'Консультація', text: 'Уточнюємо локацію, потребу у воді та умови на ділянці.' },
+  { id: '02', title: 'Підбір технології', text: 'Визначаємо тип конструкції та орієнтовну вартість.' },
+  { id: '03', title: 'Буріння', text: 'Працюємо власною технікою та контролюємо кожен етап.' },
+  { id: '04', title: 'Прокачування', text: 'Прокачуємо свердловину та вимірюємо фактичний дебіт.' },
+  { id: '05', title: 'Підключення', text: 'Розраховуємо насос і готуємо систему до експлуатації.' },
+];
+
+export const benefits = [
+  { title: 'Складні обʼєкти', text: 'Працюємо з приватними ділянками та великими комерційними обʼєктами.' },
+  { title: 'Безпека та гарантія', text: 'Виконуємо роботи з перевіреними матеріалами та надаємо офіційну гарантію.' },
+  { title: 'Раціональний підхід', text: 'Підбираємо конструкцію під геологію, потребу у воді та бюджет.' },
+  { title: 'Обслуговування', text: 'Після буріння доступні очищення, діагностика, ремонт і модернізація.' },
+];
+
+export const faqs = [
+  {
+    question: 'Яку свердловину краще обрати?',
+    answer: 'Вибір між фільтровою та безфільтровою конструкцією залежить від геології конкретної ділянки, водоносного горизонту та потрібної продуктивності. Остаточний тип краще визначати після оцінки місцевості.',
+  },
+  {
+    question: 'Від чого залежить ціна за метр?',
+    answer: 'На ціну впливають геологічні умови, тип свердловини, діаметр і конструкція колони, глибина та розташування обʼєкта. На сайті вказані орієнтовні діапазони разом із матеріалами.',
+  },
+  {
+    question: 'Що входить у буріння?',
+    answer: 'У базовий комплекс входять буріння, доставка техніки, монтаж відповідної колони, прокачування, вимірювання дебіту та розрахунок потрібної потужності насоса. Деталі залежать від типу свердловини.',
+  },
+  {
+    question: 'Чи працюєте після завершення буріння?',
+    answer: 'Так. Компанія виконує післягарантійне обслуговування: очищення, діагностику, ремонт, відновлення та модернізацію свердловин.',
+  },
+];
