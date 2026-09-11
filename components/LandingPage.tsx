@@ -8,7 +8,7 @@ const navItems = [
   { label: 'Послуги', href: '#services' },
   { label: 'Про нас', href: '#about' },
   { label: 'Процес', href: '#process' },
-  { label: 'Блог', href: 'https://zahidalexbur.com.ua/blog' },
+  { label: 'Блог', href: '#blog' },
   { label: 'Відгуки', href: '#about' },
   { label: 'Контакти', href: '#contact' },
 ];
@@ -28,6 +28,30 @@ const heroProcess = [
 
 const serviceTags = ['ДЛЯ ПРИВАТНИХ БУДИНКІВ', 'ДЛЯ БУДИНКІВ ТА КОТЕДЖІВ', 'ДЛЯ БІЗНЕСУ ТА ВЕЛИКИХ ОБʼЄКТІВ'];
 const serviceFilters = ['Для дому', 'Для бізнесу', 'Для промисловості'];
+
+const blogArticles = [
+  {
+    tag: 'ПЛАНУВАННЯ',
+    title: 'Як вибрати місце для свердловини на ділянці',
+    excerpt: 'Що врахувати до заїзду техніки: рельєф, санітарні відстані, доступ і геологію ділянки.',
+    image: assets.services[0],
+    readTime: '6 хв читання',
+  },
+  {
+    tag: 'ГЕОЛОГІЯ',
+    title: 'Яка глибина свердловини потрібна у Львівській області',
+    excerpt: 'Чому сусідні населені пункти можуть мати різні горизонти і чому точну глибину не варто вгадувати наперед.',
+    image: assets.hero,
+    readTime: '7 хв читання',
+  },
+  {
+    tag: 'ТЕХНОЛОГІЯ',
+    title: 'Фільтрова чи безфільтрова свердловина: що обрати',
+    excerpt: 'Порівнюємо два основні рішення та пояснюємо, від яких геологічних умов залежить правильний вибір.',
+    image: assets.services[1],
+    readTime: '5 хв читання',
+  },
+];
 
 function Arrow({ direction = 'right' }: { direction?: 'left' | 'right' | 'down' }) {
   const path = direction === 'left' ? 'M19 12H6M10 7l-5 5 5 5' : direction === 'down' ? 'M12 5v13M7 14l5 5 5-5' : 'M5 12h13M14 7l5 5-5 5';
@@ -73,6 +97,23 @@ function GlassInfoCard({ onClick }: { onClick: () => void }) {
       <span className="glass-info-card__copy">Вода ближче,<br />ніж ви думаєте</span>
       <span className="glass-info-card__arrow"><Arrow /></span>
     </button>
+  );
+}
+
+function BlogCard({ article, index }: { article: (typeof blogArticles)[number]; index: number }) {
+  return (
+    <article className="blog-reference-card reveal" style={{ '--delay': `${index * 90}ms` } as CSSProperties}>
+      <a className="blog-reference-card__media" href="https://zahidalexbur.com.ua/blog" target="_blank" rel="noreferrer" aria-label={article.title}>
+        <img src={article.image} alt={article.title} loading="lazy" />
+        <span>0{index + 1}</span>
+      </a>
+      <div className="blog-reference-card__body">
+        <div className="blog-reference-card__meta"><span>{article.tag}</span><small>{article.readTime}</small></div>
+        <h3>{article.title}</h3>
+        <p>{article.excerpt}</p>
+        <a className="blog-reference-card__link" href="https://zahidalexbur.com.ua/blog" target="_blank" rel="noreferrer">Читати матеріал <Arrow /></a>
+      </div>
+    </article>
   );
 }
 
@@ -253,7 +294,7 @@ export default function LandingPage() {
         <div className="about-reference__copy reveal reveal--from-left">
           <div><EyebrowLabel light>ПРО НАС</EyebrowLabel><h2>Локальна компанія<br />з реальним досвідом</h2><p>ZAHIDALEXBUR — це команда фахівців, яка знає геологію регіону, працює з сучасною технікою та забезпечує результат. Ми не просто буримо — ми даємо людям доступ до якісної води.</p><PillButton variant="brown" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}>Дізнатися більше</PillButton><div className="about-reference__script"><span>Люди</span><span>Регіон</span><span>Результат</span></div></div>
         </div>
-        <div className="about-reference__media" style={{ backgroundImage: `linear-gradient(90deg, rgba(20,18,15,.74), rgba(20,18,15,.18)), url(${assets.hero})` }}>
+        <div className="about-reference__media" style={{ backgroundImage: `linear-gradient(90deg, rgba(20,18,15,.74), rgba(20,18,15,.18)), url(${assets.about})` }}>
           <div className="about-reference__stats reveal">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label === 'років досвіду' ? 'років досвіду у регіоні' : stat.label} dark />)}</div>
           <TestimonialQuote />
         </div>
@@ -266,7 +307,39 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="reference-footer" id="contact"><div className="reference-shell reference-footer__inner"><a href="#top" className="reference-footer__brand"><img src={assets.logo} alt="ZAHIDALEXBUR" /></a><nav>{navItems.filter((item) => item.href.startsWith('#')).map((item) => <a key={item.label} href={item.href}>{item.label}</a>)}</nav><div><a href={contact.phoneHref}>{contact.phoneDisplay}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div></div></footer>
+      <section className="blog-reference" id="blog">
+        <div className="reference-shell">
+          <div className="blog-reference__header reveal">
+            <div><EyebrowLabel>БЛОГ</EyebrowLabel><h2>Корисно знати до того,<br />як почнеться буріння</h2></div>
+            <a className="blog-reference__all" href="https://zahidalexbur.com.ua/blog" target="_blank" rel="noreferrer">Усі матеріали <Arrow /></a>
+          </div>
+          <div className="blog-reference__grid">{blogArticles.map((article, index) => <BlogCard key={article.title} article={article} index={index} />)}</div>
+        </div>
+      </section>
+
+      <section className="contact-reference" id="contact">
+        <div className="reference-shell contact-reference__layout">
+          <div className="contact-reference__copy reveal reveal--from-left">
+            <EyebrowLabel light>КОНТАКТИ</EyebrowLabel>
+            <h2>Поговорімо про<br />вашу ділянку</h2>
+            <p>Опишіть задачу або просто зателефонуйте. Уточнимо локацію, тип обʼєкта та підкажемо, з чого почати.</p>
+            <div className="contact-reference__details">
+              <a href={contact.phoneHref}><span>ТЕЛЕФОН</span><strong>{contact.phoneDisplay}</strong></a>
+              <a href={`mailto:${contact.email}`}><span>EMAIL</span><strong>{contact.email}</strong></a>
+              <div><span>АДРЕСА</span><strong>{contact.address}</strong></div>
+              <div><span>ГРАФІК</span><strong>Пн–Сб 8:00–20:00</strong></div>
+            </div>
+          </div>
+          <div className="contact-reference__form reveal reveal--from-right">
+            <EyebrowLabel>ШВИДКИЙ СТАРТ</EyebrowLabel>
+            <h3>Отримати попередній розрахунок</h3>
+            <p>Залиште телефон і населений пункт — дані вже підготовлені для швидкого контакту з командою.</p>
+            <LeadForm />
+          </div>
+        </div>
+      </section>
+
+      <footer className="reference-footer"><div className="reference-shell reference-footer__inner"><a href="#top" className="reference-footer__brand"><img src={assets.logo} alt="ZAHIDALEXBUR" /></a><nav>{navItems.filter((item) => item.href.startsWith('#')).map((item) => <a key={item.label} href={item.href}>{item.label}</a>)}</nav><div><a href={contact.phoneHref}>{contact.phoneDisplay}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div></div></footer>
 
       <div className={`mobile-drawer ${mobileOpen ? 'is-open' : ''}`} aria-hidden={!mobileOpen}><button className="drawer-backdrop" type="button" aria-label="Закрити меню" onClick={() => setMobileOpen(false)} /><div className="drawer-panel"><div className="drawer-head"><img src={assets.logo} alt="ZAHIDALEXBUR" /><button type="button" aria-label="Закрити меню" onClick={() => setMobileOpen(false)}><CloseIcon /></button></div><nav>{navItems.map((item) => <a key={item.label} href={item.href} onClick={() => setMobileOpen(false)}>{item.label}</a>)}</nav><a className="drawer-phone" href={contact.phoneHref}>{contact.phoneDisplay}</a><PillButton variant="brown" onClick={() => { setMobileOpen(false); setLeadOpen(true); }}>Замовити дзвінок</PillButton></div></div>
 
