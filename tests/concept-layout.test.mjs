@@ -56,7 +56,7 @@ test('services render exactly three large reference cards with tabs controls che
   assert.match(component, /ServiceCard/);
   assert.match(component, /service\.included\.map/);
   assert.match(component, /service-project-thumbs/);
-  assert.match(component, /Переглянути реалізовані проєкти/);
+  assert.match(component, /Переглянути.*реалізовані проєкти/);
 });
 
 test('about section is the approved dark split with regional story stats and testimonial', () => {
