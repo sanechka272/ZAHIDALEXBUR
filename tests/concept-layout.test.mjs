@@ -6,6 +6,17 @@ const component = await readFile(new URL('../components/LandingPage.tsx', import
 const css = await readFile(new URL('../app/globals.css', import.meta.url), 'utf8');
 const fixes = await readFile(new URL('../app/fixes.css', import.meta.url), 'utf8');
 const packageJson = await readFile(new URL('../package.json', import.meta.url), 'utf8');
+const siteData = await readFile(new URL('../lib/site-data.ts', import.meta.url), 'utf8');
+
+const localMedia = [
+  '../public/brand/zahidalexbur-logo.webp',
+  '../public/generated/hero-drilling.webp',
+  '../public/generated/approach-geology.webp',
+  '../public/generated/package-private.webp',
+  '../public/generated/package-filter.webp',
+  '../public/generated/package-industrial.webp',
+  '../public/generated/water-hands.webp',
+];
 
 test('header keeps phone and navigation but no CTA button', () => {
   const header = component.match(/<header[\s\S]*?<\/header>/)?.[0] ?? '';
@@ -21,6 +32,18 @@ test('header and footer use the supplied ZAHIDALEXBUR logo asset', () => {
   assert.doesNotMatch(header, /<strong>ZAHIDALEXBUR<\/strong>/);
 });
 
+test('all photographic presets are repository-local and external image URLs are removed', async () => {
+  assert.doesNotMatch(siteData, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
+  assert.doesNotMatch(component, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
+
+  for (const relativePath of localMedia) {
+    const file = await readFile(new URL(relativePath, import.meta.url));
+    assert.ok(file.byteLength > 5000, `${relativePath} should not be an empty placeholder`);
+    assert.equal(file.subarray(0, 4).toString('ascii'), 'RIFF', `${relativePath} should be a valid WebP RIFF file`);
+    assert.equal(file.subarray(8, 12).toString('ascii'), 'WEBP', `${relativePath} should be a valid WebP file`);
+  }
+});
+
 test('landing uses generated concept imagery for the main photographic scenes', () => {
   for (const asset of ['hero-drilling.webp', 'approach-geology.webp', 'water-hands.webp']) {
     assert.match(component, new RegExp(`/generated/${asset}`));
@@ -34,8 +57,18 @@ test('landing keeps one primary three-card well-service section', () => {
   assert.doesNotMatch(component, /concept-service-grid/);
 });
 
-test('landing includes concept sections', () => {
-  for (const className of ['approach-section', 'well-packages', 'proof-band', 'conversion-split']) assert.match(component, new RegExp(className));
+test('site has a real process section instead of pointing Process navigation to the facts band', () => {
+  assert.match(component, /className="process-section"/);
+  assert.match(component, /processSteps\.map/);
+  assert.match(component, /id="process"/);
+  assert.doesNotMatch(component, /<section className="proof-band" id="process">/);
+});
+
+test('finished landing includes approach, services, process, facts, conversion and FAQ', () => {
+  for (const className of ['approach-section', 'well-packages', 'process-section', 'proof-band', 'conversion-split', 'faq-section']) {
+    assert.match(component, new RegExp(className));
+  }
+  assert.match(component, /faqs\.map/);
 });
 
 test('motion layer uses progressive enhancement and reduced-motion fallback', () => {
