@@ -12,7 +12,7 @@ export const assets = {
   water: '/generated/water-hands.webp',
   services: [
     '/generated/package-private.webp',
-    '/generated/package-filter.webp',
+    '/generated/hero-drilling.webp',
     '/generated/package-industrial.webp',
   ],
 };
