@@ -7,7 +7,7 @@ const layout = readFileSync(new URL('../app/layout.tsx', import.meta.url), 'utf8
 const processCssUrl = new URL('../app/process.css', import.meta.url);
 
 test('how-we-work is a single dark cinematic story section with glass process card', () => {
-  assert.match(landing, /className="process-story"\s+id="process"/);
+  assert.match(landing, /className="process-story(?:\s+reveal)?"\s+id="process"/);
   assert.match(landing, /process-story__media/);
   assert.match(landing, /process-story__glass/);
   assert.match(landing, /Від першої[\s\S]*консультації[\s\S]*до чистої води/);
