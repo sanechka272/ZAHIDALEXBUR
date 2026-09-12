@@ -129,33 +129,22 @@ function ProcessIcon({ index }: { index: number }) {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">{icons[index]}</svg>;
 }
 
-function ProcessStep({ step, index }: { step: (typeof processSteps)[number]; index: number }) {
-  return (
-    <div className="process-reference-step reveal" style={{ '--delay': `${index * 80}ms` } as CSSProperties}>
-      <div className="process-reference-step__top"><span className="process-reference-step__icon"><ProcessIcon index={index} /></span>{index < processSteps.length - 1 && <span className="process-reference-step__connector"><Arrow /></span>}</div>
-      <span className="process-reference-step__number">0{index + 1}</span>
-      <strong>{step.title}</strong>
-      <p>{step.text}</p>
-    </div>
-  );
+function ProcessMetricIcon({ type }: { type: 'people' | 'house' | 'shield' }) {
+  if (type === 'people') {
+    return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm6.5-1.5a2.4 2.4 0 1 0 0-4.8M4 19v-1.4A4.6 4.6 0 0 1 8.6 13h.8a4.6 4.6 0 0 1 4.6 4.6V19m1-6h.8a4.2 4.2 0 0 1 4.2 4.2V19" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" /></svg>;
+  }
+  if (type === 'house') {
+    return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m4 11 8-7 8 7v9H4v-9Zm5 9v-6h6v6" stroke="currentColor" strokeWidth="1.35" strokeLinejoin="round" /></svg>;
+  }
+  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 19 6v5c0 4.5-2.8 8-7 10-4.2-2-7-5.5-7-10V6l7-3Zm-3 8.6 2 2 4-4" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" /></svg>;
 }
 
-function MobileProcessFlip({ activeProcess, flipping }: { activeProcess: number; flipping: boolean }) {
-  const step = processSteps[activeProcess];
+function ProcessStoryStep({ step, index }: { step: (typeof processSteps)[number]; index: number }) {
   return (
-    <div className="mobile-process-flip" aria-live="polite">
-      <span className="mobile-process-flip__label">ЕТАПИ БУРІННЯ</span>
-      <div className={`mobile-process-flip__stage ${flipping ? 'is-flipping' : ''}`} key={step.id}>
-        <div className="mobile-process-flip__top">
-          <span className="mobile-process-flip__icon"><ProcessIcon index={activeProcess} /></span>
-          <span className="mobile-process-flip__number">0{activeProcess + 1}</span>
-        </div>
-        <strong>{step.title}</strong>
-        <p>{step.text}</p>
-      </div>
-      <div className="mobile-process-flip__progress" aria-hidden="true">
-        {processSteps.map((item, index) => <span key={item.id} className={index === activeProcess ? 'is-active' : ''} />)}
-      </div>
+    <div className="process-story__step" style={{ '--delay': `${180 + index * 95}ms` } as CSSProperties}>
+      <span className="process-story__step-number">{step.id}</span>
+      <span className="process-story__step-icon"><ProcessIcon index={index} /></span>
+      <div className="process-story__step-copy"><strong>{step.title}</strong><p>{step.text}</p></div>
     </div>
   );
 }
@@ -183,9 +172,6 @@ export default function LandingPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [leadOpen, setLeadOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeProcess, setActiveProcess] = useState(0);
-  const [processInView, setProcessInView] = useState(false);
-  const [processFlipping, setProcessFlipping] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -235,31 +221,6 @@ export default function LandingPage() {
     return () => { document.body.classList.remove('no-scroll'); window.removeEventListener('keydown', esc); };
   }, [mobileOpen, leadOpen]);
 
-  useEffect(() => {
-    const section = document.getElementById('process');
-    if (!section || !('IntersectionObserver' in window)) return;
-    const mobile = window.matchMedia('(max-width: 767px)');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const observer = new IntersectionObserver(([entry]) => {
-      setProcessInView(mobile.matches && !reducedMotion.matches && entry.isIntersecting);
-    }, { threshold: 0.3 });
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!processInView) return;
-    let swapTimeout = 0;
-    const interval = window.setInterval(() => {
-      setProcessFlipping(true);
-      swapTimeout = window.setTimeout(() => {
-        setActiveProcess((current) => (current + 1) % processSteps.length);
-        requestAnimationFrame(() => setProcessFlipping(false));
-      }, 150);
-    }, 1800);
-    return () => { window.clearInterval(interval); window.clearTimeout(swapTimeout); setProcessFlipping(false); };
-  }, [processInView]);
-
   return (
     <main id="top" className="reference-page">
       <header className={`site-header reference-header ${scrolled ? 'site-header--scrolled' : ''}`}>
@@ -296,63 +257,48 @@ export default function LandingPage() {
 
       <section className="services-reference" id="services">
         <div className="reference-shell">
-          <div className="services-reference__header reveal">
-            <div><EyebrowLabel>НАШІ ПОСЛУГИ</EyebrowLabel><h2 className="services-reference__title">Оберіть свій тип свердловини</h2></div>
-          </div>
+          <div className="services-reference__header reveal"><div><EyebrowLabel>НАШІ ПОСЛУГИ</EyebrowLabel><h2 className="services-reference__title">Оберіть свій тип свердловини</h2></div></div>
           <div className="services-reference__grid">{services.map((service, index) => <ServiceCard key={service.id} service={service} index={index} onOpen={() => setLeadOpen(true)} />)}</div>
         </div>
       </section>
 
       <section className="about-reference" id="about">
-        <div className="about-reference__copy reveal reveal--from-left">
-          <div><EyebrowLabel light>ПРО НАС</EyebrowLabel><h2>Локальна компанія<br />з реальним досвідом</h2><p>ZAHIDALEXBUR — це команда фахівців, яка знає геологію регіону, працює з сучасною технікою та забезпечує результат. Ми не просто буримо — ми даємо людям доступ до якісної води.</p><PillButton variant="brown" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}>Дізнатися більше</PillButton><div className="about-reference__script"><span>Люди</span><span>Регіон</span><span>Результат</span></div></div>
-        </div>
-        <div className="about-reference__media" style={{ backgroundImage: `linear-gradient(90deg, rgba(20,18,15,.74), rgba(20,18,15,.18)), url(${assets.about})` }}>
-          <div className="about-reference__stats reveal">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label === 'років досвіду' ? 'років досвіду у регіоні' : stat.label} dark />)}</div>
-          <TestimonialQuote />
-        </div>
+        <div className="about-reference__copy reveal reveal--from-left"><div><EyebrowLabel light>ПРО НАС</EyebrowLabel><h2>Локальна компанія<br />з реальним досвідом</h2><p>ZAHIDALEXBUR — це команда фахівців, яка знає геологію регіону, працює з сучасною технікою та забезпечує результат. Ми не просто буримо — ми даємо людям доступ до якісної води.</p><PillButton variant="brown" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}>Дізнатися більше</PillButton><div className="about-reference__script"><span>Люди</span><span>Регіон</span><span>Результат</span></div></div></div>
+        <div className="about-reference__media" style={{ backgroundImage: `linear-gradient(90deg, rgba(20,18,15,.74), rgba(20,18,15,.18)), url(${assets.about})` }}><div className="about-reference__stats reveal">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label === 'років досвіду' ? 'років досвіду у регіоні' : stat.label} dark />)}</div><TestimonialQuote /></div>
       </section>
 
-      <section className="process-reference" id="process">
-        <div className="reference-shell process-reference__layout">
-          <div className="process-reference__intro reveal reveal--from-left"><EyebrowLabel>ЯК МИ ПРАЦЮЄМО</EyebrowLabel><h2>Від першої консультації<br />до чистої води</h2><p>Прозорий процес, чіткі етапи, зрозумілий результат.</p></div>
-          <div className="process-reference__content">
-            <div className="process-reference__cta"><PillButton variant="brown" onClick={() => setLeadOpen(true)}>Залишити заявку</PillButton></div>
-            <div className="process-reference__steps">{processSteps.map((step, index) => <ProcessStep key={step.id} step={step} index={index} />)}</div>
-            <MobileProcessFlip activeProcess={activeProcess} flipping={processFlipping} />
+      <section className="process-story reveal" id="process">
+        <div className="process-story__media" aria-hidden="true" />
+        <div className="process-story__veil" aria-hidden="true" />
+        <div className="reference-shell process-story__layout">
+          <div className="process-story__copy reveal reveal--from-left">
+            <div className="process-story__eyebrow">ЯК МИ ПРАЦЮЄМО</div>
+            <h2><span>Від першої</span><span>консультації</span><span>до чистої води</span></h2>
+            <p className="process-story__lead">Прозорий процес. Надійний результат.</p>
+            <PillButton variant="brown" className="process-story__cta" onClick={() => setLeadOpen(true)}>Залишити заявку</PillButton>
+            <div className="process-story__stats">
+              <div className="process-story__stat"><span className="process-story__stat-icon"><ProcessMetricIcon type="people" /></span><strong>250+</strong><p>задоволених клієнтів</p></div>
+              <div className="process-story__stat"><span className="process-story__stat-icon"><ProcessMetricIcon type="house" /></span><strong>5+</strong><p>років досвіду</p></div>
+              <div className="process-story__stat"><span className="process-story__stat-icon"><ProcessMetricIcon type="shield" /></span><strong>100%</strong><p>гарантія якості</p></div>
+            </div>
+          </div>
+          <div className="process-story__glass reveal reveal--from-right" aria-label="Етапи роботи">
+            {processSteps.map((step, index) => <ProcessStoryStep key={step.id} step={step} index={index} />)}
           </div>
         </div>
       </section>
 
       <section className="blog-reference" id="blog">
         <div className="reference-shell">
-          <div className="blog-reference__header reveal">
-            <div><EyebrowLabel>БЛОГ</EyebrowLabel><h2>Корисно знати до того,<br />як почнеться буріння</h2></div>
-            <a className="blog-reference__all" href="/blog">Усі матеріали <Arrow /></a>
-          </div>
+          <div className="blog-reference__header reveal"><div><EyebrowLabel>БЛОГ</EyebrowLabel><h2>Корисно знати до того,<br />як почнеться буріння</h2></div><a className="blog-reference__all" href="/blog">Усі матеріали <Arrow /></a></div>
           <div className="blog-reference__grid">{blogArticles.map((article, index) => <BlogCard key={article.slug} article={article} index={index} />)}</div>
         </div>
       </section>
 
       <section className="contact-reference" id="contact">
         <div className="reference-shell contact-reference__layout">
-          <div className="contact-reference__copy reveal reveal--from-left">
-            <EyebrowLabel light>КОНТАКТИ</EyebrowLabel>
-            <h2>Поговорімо про<br />вашу ділянку</h2>
-            <p>Опишіть задачу або просто зателефонуйте. Уточнимо локацію, тип обʼєкта та підкажемо, з чого почати.</p>
-            <div className="contact-reference__details">
-              <a href={contact.phoneHref}><span>ТЕЛЕФОН</span><strong>{contact.phoneDisplay}</strong></a>
-              <a href={`mailto:${contact.email}`}><span>EMAIL</span><strong>{contact.email}</strong></a>
-              <div><span>АДРЕСА</span><strong>{contact.address}</strong></div>
-              <div><span>ГРАФІК</span><strong>Пн–Сб 8:00–20:00</strong></div>
-            </div>
-          </div>
-          <div className="contact-reference__form reveal reveal--from-right">
-            <EyebrowLabel>ШВИДКИЙ СТАРТ</EyebrowLabel>
-            <h3>Отримати попередній розрахунок</h3>
-            <p>Залиште телефон і населений пункт — дані вже підготовлені для швидкого контакту з командою.</p>
-            <LeadForm />
-          </div>
+          <div className="contact-reference__copy reveal reveal--from-left"><EyebrowLabel light>КОНТАКТИ</EyebrowLabel><h2>Поговорімо про<br />вашу ділянку</h2><p>Опишіть задачу або просто зателефонуйте. Уточнимо локацію, тип обʼєкта та підкажемо, з чого почати.</p><div className="contact-reference__details"><a href={contact.phoneHref}><span>ТЕЛЕФОН</span><strong>{contact.phoneDisplay}</strong></a><a href={`mailto:${contact.email}`}><span>EMAIL</span><strong>{contact.email}</strong></a><div><span>АДРЕСА</span><strong>{contact.address}</strong></div><div><span>ГРАФІК</span><strong>Пн–Сб 8:00–20:00</strong></div></div></div>
+          <div className="contact-reference__form reveal reveal--from-right"><EyebrowLabel>ШВИДКИЙ СТАРТ</EyebrowLabel><h3>Отримати попередній розрахунок</h3><p>Залиште телефон і населений пункт — дані вже підготовлені для швидкого контакту з командою.</p><LeadForm /></div>
         </div>
       </section>
 
