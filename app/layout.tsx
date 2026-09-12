@@ -5,6 +5,7 @@ import './final.css';
 import './media.css';
 import './content.css';
 import './mobile.css';
+import './process.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://zahidalexbur.com.ua'),
