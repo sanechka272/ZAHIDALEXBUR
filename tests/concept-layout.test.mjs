@@ -7,6 +7,7 @@ const css = await readFile(new URL('../app/globals.css', import.meta.url), 'utf8
 const fixes = await readFile(new URL('../app/fixes.css', import.meta.url), 'utf8');
 const finalCss = await readFile(new URL('../app/final.css', import.meta.url), 'utf8');
 const mediaCss = await readFile(new URL('../app/media.css', import.meta.url), 'utf8');
+const processCss = await readFile(new URL('../app/process.css', import.meta.url), 'utf8');
 const layout = await readFile(new URL('../app/layout.tsx', import.meta.url), 'utf8');
 const packageJson = await readFile(new URL('../package.json', import.meta.url), 'utf8');
 const siteData = await readFile(new URL('../lib/site-data.ts', import.meta.url), 'utf8');
@@ -113,13 +114,14 @@ test('about section is the approved dark split with regional story stats and tes
   assert.match(component, /Олександр Герман/);
 });
 
-test('process section renders desktop five-step journey and mobile controlled stage', () => {
-  assert.match(component, /className="process-reference"/);
+test('process section is the approved dark cinematic glass journey on all breakpoints', () => {
+  assert.match(component, /className="process-story reveal"/);
   assert.match(component, /processSteps\.map/);
-  assert.match(component, /ProcessStep/);
-  assert.match(component, /MobileProcessFlip/);
-  assert.match(component, /Від першої консультації/);
+  assert.match(component, /ProcessStoryStep/);
+  assert.match(component, /process-story__glass/);
+  assert.match(component, /Від першої[\s\S]*консультації[\s\S]*до чистої води/);
   assert.match(component, /Залишити заявку/);
+  assert.doesNotMatch(component, /MobileProcessFlip|process-reference-step/);
 });
 
 test('reference visual layer includes robust image fitting, glass cards, serif headings and responsive collapse', () => {
@@ -130,8 +132,8 @@ test('reference visual layer includes robust image fitting, glass cards, serif h
   assert.match(finalCss, /\.services-reference__title/);
   assert.match(finalCss, /\.service-reference-card/);
   assert.match(finalCss, /\.about-reference/);
-  assert.match(finalCss, /\.process-reference/);
-  assert.match(finalCss, /@media\s*\(max-width:\s*767px\)/);
+  assert.match(processCss, /\.process-story__glass/);
+  assert.match(processCss, /@media\s*\(max-width:\s*767px\)/);
 });
 
 test('motion layer uses progressive enhancement, frame-scheduled parallax and reduced-motion fallback', () => {
@@ -140,6 +142,7 @@ test('motion layer uses progressive enhancement, frame-scheduled parallax and re
   assert.match(component, /--hero-parallax/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(finalCss, /\.motion-ready/);
+  assert.match(processCss, /prefers-reduced-motion:\s*reduce/);
 });
 
 test('motion remains CSS-first without heavyweight animation dependencies', () => {
