@@ -5,6 +5,7 @@ import { existsSync, readFileSync } from 'node:fs';
 const landing = readFileSync(new URL('../components/LandingPage.tsx', import.meta.url), 'utf8');
 const mobileCss = readFileSync(new URL('../app/mobile.css', import.meta.url), 'utf8');
 const contentCss = readFileSync(new URL('../app/content.css', import.meta.url), 'utf8');
+const processCss = readFileSync(new URL('../app/process.css', import.meta.url), 'utf8');
 
 const blogDataUrl = new URL('../lib/blog-data.ts', import.meta.url);
 const blogIndexUrl = new URL('../app/blog/page.tsx', import.meta.url);
@@ -31,13 +32,13 @@ test('blog contains five internal articles and cards link to their real routes',
   assert.match(blogPage, /generateStaticParams/);
 });
 
-test('mobile process uses one controlled active stage and a faster smooth transition', () => {
-  assert.match(landing, /activeProcess/);
-  assert.match(landing, /processInView/);
-  assert.match(landing, /setInterval[\s\S]*?1800/);
-  assert.match(landing, /mobile-process-flip/);
-  assert.doesNotMatch(mobileCss, /animation:\s*mobileProcessFlip\s+15s/i);
-  assert.match(mobileCss, /\.mobile-process-flip__stage[\s\S]*transition:/i);
+test('process is one responsive glass journey instead of a rotating mobile stage', () => {
+  assert.match(landing, /process-story__glass/);
+  assert.match(landing, /processSteps\.map/);
+  assert.match(processCss, /\.process-story__step/);
+  assert.match(processCss, /@media\s*\(max-width:\s*767px\)/);
+  assert.doesNotMatch(landing, /activeProcess|processInView|processFlipping|MobileProcessFlip|mobile-process-flip/);
+  assert.doesNotMatch(landing, /setInterval[\s\S]*process/i);
 });
 
 test('blog animation no longer offsets only the second card with a conflicting transform', () => {
