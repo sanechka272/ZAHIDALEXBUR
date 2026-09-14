@@ -1,11 +1,12 @@
 import { randomUUID } from 'node:crypto';
-import type { TrackEventInput } from './contracts';
+import type { CreateLeadInput, TrackEventInput } from './contracts';
 import { parseAttribution } from './attribution';
 import { classifyDevice } from './device';
 import { resolveGeo } from './geo';
 import { getSqlClient } from '@/lib/db/client';
 
 const SESSION_TTL_MS = 30 * 60 * 1000;
+const LEAD_SUPPRESSION_MS = 10 * 60 * 1000;
 
 export type AnalyticsContext = {
   visitorId?: string | null;
@@ -19,6 +20,14 @@ export type AnalyticsRecordResult = {
   visitorId: string;
   sessionId: string;
   duplicate: boolean;
+};
+
+export type CreateLeadResult = {
+  id: string;
+  createdAt: Date;
+  duplicate: boolean;
+  visitorId: string;
+  sessionId: string;
 };
 
 type VisitorAttributionRow = {
@@ -41,6 +50,20 @@ type VisitorAttributionRow = {
   last_ttclid: string | null;
 };
 
+type SessionAttributionRow = {
+  id: string;
+  visitor_id: string;
+  last_activity_at: Date;
+  source: string;
+  medium: string;
+  campaign: string | null;
+  content: string | null;
+  term: string | null;
+  gclid: string | null;
+  fbclid: string | null;
+  ttclid: string | null;
+};
+
 function safeQuery(urlString: string) {
   const url = new URL(urlString);
   const allowed = new Set(['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid']);
@@ -50,6 +73,16 @@ function safeQuery(urlString: string) {
   }
   const result = sanitized.toString();
   return result ? `?${result}` : null;
+}
+
+export function normalizeLeadPhone(rawPhone: string) {
+  const trimmed = rawPhone.trim();
+  const digits = trimmed.replace(/\D/g, '');
+  if (digits.length < 7 || digits.length > 15) throw new Error('invalid_phone');
+  if (digits.length === 10 && digits.startsWith('0')) return `+38${digits}`;
+  if (digits.startsWith('380')) return `+${digits}`;
+  if (trimmed.startsWith('+')) return `+${digits}`;
+  return digits;
 }
 
 export async function recordAnalyticsEvent(input: TrackEventInput, context: AnalyticsContext = {}): Promise<AnalyticsRecordResult> {
@@ -163,5 +196,123 @@ export async function recordAnalyticsEvent(input: TrackEventInput, context: Anal
     }
 
     return { visitorId, sessionId, duplicate: false };
+  });
+}
+
+export async function createLead(input: CreateLeadInput, context: AnalyticsContext = {}): Promise<CreateLeadResult> {
+  const sql = getSqlClient();
+  const now = context.now ?? new Date();
+  const phone = normalizeLeadPhone(input.phone);
+  const device = classifyDevice(context.userAgent ?? '');
+  const geo = await resolveGeo(context.ip ?? null);
+
+  return sql.begin(async (tx) => {
+    const duplicateAfter = new Date(now.getTime() - LEAD_SUPPRESSION_MS);
+    const [existing] = await tx<{ id: string; created_at: Date; visitor_id: string | null; session_id: string | null }[]>`
+      select id, created_at, visitor_id, session_id
+      from leads
+      where phone = ${phone} and created_at >= ${duplicateAfter}
+      order by created_at desc
+      limit 1
+    `;
+    if (existing?.visitor_id && existing?.session_id) {
+      return {
+        id: existing.id,
+        createdAt: new Date(existing.created_at),
+        duplicate: true,
+        visitorId: existing.visitor_id,
+        sessionId: existing.session_id,
+      };
+    }
+
+    let visitor: VisitorAttributionRow | undefined;
+    if (context.visitorId) {
+      [visitor] = await tx<VisitorAttributionRow[]>`
+        select id,
+          first_source, first_medium, first_campaign, first_content, first_term, first_gclid, first_fbclid, first_ttclid,
+          last_source, last_medium, last_campaign, last_content, last_term, last_gclid, last_fbclid, last_ttclid
+        from visitors where id = ${context.visitorId} limit 1 for update
+      `;
+    }
+
+    let visitorId = visitor?.id;
+    if (!visitorId) {
+      visitorId = randomUUID();
+      await tx`
+        insert into visitors (
+          id, created_at, first_seen_at, last_seen_at,
+          first_landing_page, first_source, first_medium,
+          last_landing_page, last_source, last_medium
+        ) values (
+          ${visitorId}, ${now}, ${now}, ${now},
+          ${input.originatingPage}, 'direct', 'none',
+          ${input.originatingPage}, 'direct', 'none'
+        )
+      `;
+      [visitor] = await tx<VisitorAttributionRow[]>`
+        select id,
+          first_source, first_medium, first_campaign, first_content, first_term, first_gclid, first_fbclid, first_ttclid,
+          last_source, last_medium, last_campaign, last_content, last_term, last_gclid, last_fbclid, last_ttclid
+        from visitors where id = ${visitorId} limit 1
+      `;
+    } else {
+      await tx`update visitors set last_seen_at = ${now} where id = ${visitorId}`;
+    }
+
+    let session: SessionAttributionRow | undefined;
+    if (context.sessionId) {
+      [session] = await tx<SessionAttributionRow[]>`
+        select id, visitor_id, last_activity_at, source, medium, campaign, content, term, gclid, fbclid, ttclid
+        from sessions
+        where id = ${context.sessionId} and visitor_id = ${visitorId}
+        limit 1 for update
+      `;
+      if (session && now.getTime() - new Date(session.last_activity_at).getTime() > SESSION_TTL_MS) session = undefined;
+    }
+
+    if (!session) {
+      const sessionId = randomUUID();
+      await tx`
+        insert into sessions (
+          id, visitor_id, started_at, last_activity_at, landing_page,
+          source, medium, device_type, browser_family, os_family,
+          country_code, country_name, region_code, region_name, city
+        ) values (
+          ${sessionId}, ${visitorId}, ${now}, ${now}, ${input.originatingPage},
+          'direct', 'none', ${device.deviceType}, ${device.browserFamily}, ${device.osFamily},
+          ${geo.countryCode}, ${geo.countryName}, ${geo.regionCode}, ${geo.regionName}, ${geo.city}
+        )
+      `;
+      [session] = await tx<SessionAttributionRow[]>`
+        select id, visitor_id, last_activity_at, source, medium, campaign, content, term, gclid, fbclid, ttclid
+        from sessions where id = ${sessionId} limit 1
+      `;
+    } else {
+      await tx`update sessions set last_activity_at = ${now} where id = ${session.id}`;
+    }
+
+    if (!visitor || !session) throw new Error('lead_tracking_context_unavailable');
+
+    const leadId = randomUUID();
+    await tx`
+      insert into leads (
+        id, name, phone, service, location, status, originating_page, created_at, visitor_id, session_id,
+        source, medium, campaign, content, term, gclid, fbclid, ttclid,
+        first_source, first_medium, first_campaign, first_content, first_term, first_gclid, first_fbclid, first_ttclid,
+        last_source, last_medium, last_campaign, last_content, last_term, last_gclid, last_fbclid, last_ttclid
+      ) values (
+        ${leadId}, ${input.name ?? null}, ${phone}, ${input.service ?? null}, ${input.location ?? null}, 'new', ${input.originatingPage}, ${now}, ${visitorId}, ${session.id},
+        ${session.source}, ${session.medium}, ${session.campaign}, ${session.content}, ${session.term}, ${session.gclid}, ${session.fbclid}, ${session.ttclid},
+        ${visitor.first_source}, ${visitor.first_medium}, ${visitor.first_campaign}, ${visitor.first_content}, ${visitor.first_term}, ${visitor.first_gclid}, ${visitor.first_fbclid}, ${visitor.first_ttclid},
+        ${visitor.last_source}, ${visitor.last_medium}, ${visitor.last_campaign}, ${visitor.last_content}, ${visitor.last_term}, ${visitor.last_gclid}, ${visitor.last_fbclid}, ${visitor.last_ttclid}
+      )
+    `;
+
+    await tx`
+      insert into analytics_events (event_id, visitor_id, session_id, event_name, page_path, metadata_json, occurred_at)
+      values (${randomUUID()}, ${visitorId}, ${session.id}, 'lead_submit', ${input.originatingPage}, ${tx.json({ leadId })}, ${now})
+    `;
+
+    return { id: leadId, createdAt: now, duplicate: false, visitorId, sessionId: session.id };
   });
 }
