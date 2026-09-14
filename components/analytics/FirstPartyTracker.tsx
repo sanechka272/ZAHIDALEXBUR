@@ -10,17 +10,19 @@ function eventId() {
 
 function sendPageView(pathname: string, search: string) {
   if (pathname.startsWith('/analytics')) return;
+  const pagePath = `${pathname}${search ? `?${search}` : ''}`.slice(0, 2048);
   const url = `${window.location.origin}${pathname}${search ? `?${search}` : ''}`;
   const payload = JSON.stringify({
     eventId: eventId(),
     eventName: 'page_view',
-    path: `${pathname}${search ? `?${search}` : ''}`.slice(0, 2048),
+    path: pagePath,
     title: document.title.slice(0, 300),
     referrer: document.referrer || null,
     url,
     clientTimestamp: new Date().toISOString(),
   });
 
+  window.dispatchEvent(new CustomEvent('zab:page_view', { detail: { pagePath } }));
   fetch('/api/analytics/track', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
