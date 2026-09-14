@@ -288,7 +288,9 @@ export async function getDevices(range: ResolvedPeriod): Promise<DeviceRow[]> {
     select device_type, visitors,
            round(visitors::numeric * 100 / nullif(sum(visitors) over (), 0), 2) percentage
     from grouped
-    order by visitors desc, device_type asc
+    order by visitors desc,
+      case device_type when 'Mobile' then 1 when 'Desktop' then 2 when 'Tablet' then 3 else 4 end,
+      device_type asc
   `;
   return rows.map((row) => ({ deviceType: row.device_type, visitors: numeric(row.visitors), percentage: numeric(row.percentage) }));
 }
