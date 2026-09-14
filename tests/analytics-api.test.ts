@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { POST as trackPost } from '../app/api/analytics/track/route';
 import { POST as leadPost } from '../app/api/leads/route';
+import { POST as loginPost } from '../app/api/analytics/auth/login/route';
 
 test('tracking API rejects malformed analytics payloads', async () => {
   const request = new Request('https://zahidalexbur.com.ua/api/analytics/track', {
@@ -48,4 +49,13 @@ test('lead API rejects cross-origin posts', async () => {
     body: JSON.stringify({ phone: '+380991234567', originatingPage: '/', startedAtMs: Date.now() - 5000, honeypot: '' }),
   }));
   assert.equal(response.status, 403);
+});
+
+test('admin login API rejects malformed payloads before credential lookup', async () => {
+  const response = await loginPost(new Request('https://zahidalexbur.com.ua/api/analytics/auth/login', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', origin: 'https://zahidalexbur.com.ua' },
+    body: JSON.stringify({ email: 'not-an-email' }),
+  }));
+  assert.equal(response.status, 400);
 });
