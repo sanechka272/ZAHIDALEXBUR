@@ -9,6 +9,24 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: zahidalexbur_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d zahidalexbur_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/zahidalexbur_test
+      ANALYTICS_SESSION_SECRET: ci-only-session-secret-at-least-32-bytes
+      GEOIP_CITY_DB_PATH: ./tests/fixtures/empty.mmdb
     steps:
       - name: Checkout
         uses: actions/checkout@v4
