@@ -67,8 +67,11 @@ export default function AnalyticsSettings({ adminEmail }: { adminEmail: string }
 
         <section className="analytics-settings-grid">
           <article className="analytics-card analytics-settings-card">
-            <div className="analytics-settings-card__heading"><div><span>INTEGRATION 01</span><h2>Google Tag Manager</h2><p>Optional event bridge for advertising pixels and external measurement. First-party analytics keeps working when GTM is disabled.</p></div><label className="analytics-switch"><input type="checkbox" checked={gtmEnabled} onChange={(event) => setGtmEnabled(event.target.checked)} /><span /></label></div>
-            <div className="analytics-settings-field"><label htmlFor="gtm-id">Container ID</label><div><input id="gtm-id" value={gtmContainerId} onChange={(event) => setGtmContainerId(event.target.value.toUpperCase())} placeholder="GTM-XXXXXXX" disabled={!gtmEnabled} /><small>Format: GTM-XXXXXXX</small></div></div>
+            <div className="analytics-settings-card__heading">
+              <div><span>INTEGRATION 01</span><h2>Google Tag Manager</h2><p>Optional event bridge for advertising pixels and external measurement. First-party analytics keeps working when GTM is disabled.</p></div>
+              <label className="analytics-switch" aria-label="Enable GTM"><span className="analytics-switch__label">Enable GTM</span><input type="checkbox" checked={gtmEnabled} onChange={(event) => setGtmEnabled(event.target.checked)} /><span /></label>
+            </div>
+            <div className="analytics-settings-field"><label htmlFor="gtm-id">GTM Container ID</label><div><input id="gtm-id" value={gtmContainerId} onChange={(event) => setGtmContainerId(event.target.value.toUpperCase())} placeholder="GTM-XXXXXXX" disabled={!gtmEnabled} /><small>Format: GTM-XXXXXXX</small></div></div>
             <div className="analytics-settings-events"><span>Events pushed to dataLayer</span><div><code>page_view</code><code>lead_submit</code></div></div>
             {status === 'error' ? <p className="analytics-settings-error">Could not save settings. Check the GTM container ID.</p> : null}
             <div className="analytics-settings-actions"><button type="button" className="analytics-settings-save" disabled={status === 'saving' || status === 'loading'} onClick={save}>{status === 'saving' ? 'Saving…' : status === 'saved' ? 'Saved ✓' : 'Save changes'}</button></div>
