@@ -49,6 +49,17 @@ export default function DashboardHeader({
   onMenu: () => void;
   onExport: () => void;
 }) {
+  function exportFullPeriod() {
+    const params = new URLSearchParams({ preset, type: 'overview' });
+    if (preset === 'custom') {
+      params.set('from', customFrom);
+      params.set('to', customTo);
+    }
+    window.location.assign(`/api/analytics/export?${params.toString()}`);
+  }
+
+  void onExport;
+
   return (
     <header className="analytics-header">
       <div className="analytics-header__title-block">
@@ -73,7 +84,7 @@ export default function DashboardHeader({
             <input aria-label="Custom range end" type="date" value={customTo} onChange={(event) => onCustomToChange(event.target.value)} />
           </div>
         ) : null}
-        <button type="button" className="analytics-export-button" onClick={onExport}><DownloadIcon /><span>Export</span></button>
+        <button type="button" className="analytics-export-button" onClick={exportFullPeriod}><DownloadIcon /><span>Export</span></button>
         <div className="analytics-admin-profile">
           <span className="analytics-admin-profile__avatar">{initials(adminEmail)}</span>
           <span className="analytics-admin-profile__copy"><strong>Administrator</strong><small>{adminEmail}</small></span>
