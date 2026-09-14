@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { FirstPartyTracker } from '@/components/analytics/FirstPartyTracker';
+import { GtmBridge } from '@/components/analytics/GtmBridge';
 import './globals.css';
 import './fixes.css';
 import './final.css';
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         {children}
         <FirstPartyTracker />
+        <GtmBridge />
       </body>
     </html>
   );
