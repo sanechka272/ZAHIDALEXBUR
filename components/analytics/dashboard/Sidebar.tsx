@@ -3,11 +3,11 @@
 import type { ReactNode } from 'react';
 
 const navItems = [
-  { label: 'Analytics', href: '/analytics#analytics-overview', icon: 'analytics' },
-  { label: 'Leads', href: '/analytics#recent-leads', icon: 'leads' },
-  { label: 'Traffic Sources', href: '/analytics#traffic-sources', icon: 'traffic' },
-  { label: 'Geography', href: '/analytics#geography', icon: 'geo' },
-  { label: 'Pages', href: '/analytics#popular-pages', icon: 'pages' },
+  { label: 'Analytics', href: '/analytics', icon: 'analytics' },
+  { label: 'Leads', href: '/analytics/leads', icon: 'leads' },
+  { label: 'Traffic Sources', href: '/analytics/traffic', icon: 'traffic' },
+  { label: 'Geography', href: '/analytics/geography', icon: 'geo' },
+  { label: 'Pages', href: '/analytics/pages', icon: 'pages' },
   { label: 'Settings', href: '/analytics/settings', icon: 'settings' },
 ] as const;
 
