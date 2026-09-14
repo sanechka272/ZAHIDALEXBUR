@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import postgres from 'postgres';
-import { recordAnalyticsEvent } from '../lib/analytics/repository';
+import { createLead, recordAnalyticsEvent } from '../lib/analytics/repository';
 
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) throw new Error('DATABASE_URL is required for analytics repository tests');
@@ -79,6 +79,55 @@ test('session expires after 30 minutes and direct return preserves last attribut
     select first_source, last_source, last_campaign from visitors where id = ${first.visitorId}
   `;
   assert.deepEqual(visitor, { first_source: 'meta', last_source: 'meta', last_campaign: 'retargeting' });
+});
+
+test('lead snapshots current, first-touch and last-attributable-touch in one transaction', async () => {
+  const first = await recordAnalyticsEvent({
+    eventId: randomUUID(), eventName: 'page_view', path: '/',
+    url: 'https://zahidalexbur.com.ua/?utm_source=google&utm_medium=cpc&utm_campaign=search-first',
+  }, { now: new Date('2026-09-14T10:00:00Z'), userAgent: 'Mozilla/5.0', ip: null });
+
+  const last = await recordAnalyticsEvent({
+    eventId: randomUUID(), eventName: 'page_view', path: '/services',
+    url: 'https://zahidalexbur.com.ua/services?utm_source=meta&utm_medium=paid_social&utm_campaign=retarget-last',
+  }, { visitorId: first.visitorId, sessionId: first.sessionId, now: new Date('2026-09-14T10:31:00Z'), userAgent: 'Mozilla/5.0', ip: null });
+
+  const result = await createLead({
+    name: 'Олександр', phone: '+380 99 111 22 33', location: 'Львів', service: 'Фільтрова свердловина',
+    originatingPage: '/services', honeypot: '', startedAtMs: Date.parse('2026-09-14T10:30:50Z'),
+  }, { visitorId: first.visitorId, sessionId: last.sessionId, now: new Date('2026-09-14T10:31:10Z'), userAgent: 'Mozilla/5.0', ip: null });
+
+  assert.match(result.id, /^[0-9a-f-]{36}$/);
+  const [lead] = await sql<{
+    status: string; phone: string; visitor_id: string; session_id: string; originating_page: string;
+    source: string; medium: string; campaign: string; first_source: string; first_campaign: string;
+    last_source: string; last_campaign: string;
+  }[]>`
+    select status, phone, visitor_id, session_id, originating_page, source, medium, campaign,
+      first_source, first_campaign, last_source, last_campaign
+    from leads where id = ${result.id}
+  `;
+  assert.deepEqual(lead, {
+    status: 'new', phone: '+380991112233', visitor_id: first.visitorId, session_id: last.sessionId,
+    originating_page: '/services', source: 'meta', medium: 'paid_social', campaign: 'retarget-last',
+    first_source: 'google', first_campaign: 'search-first', last_source: 'meta', last_campaign: 'retarget-last',
+  });
+  const [{ count }] = await sql<{ count: number }[]>`
+    select count(*)::int count from analytics_events where event_name = 'lead_submit'
+  `;
+  assert.equal(count, 1);
+});
+
+test('obvious duplicate lead inside suppression window returns existing lead without double insert', async () => {
+  const tracked = await recordAnalyticsEvent({ eventId: randomUUID(), eventName: 'page_view', path: '/', url: 'https://zahidalexbur.com.ua/' },
+    { now: new Date('2026-09-14T12:00:00Z'), userAgent: 'Mozilla/5.0', ip: null });
+  const input = { phone: '+380991234567', originatingPage: '/', honeypot: '', startedAtMs: Date.parse('2026-09-14T11:59:50Z') };
+  const first = await createLead(input, { visitorId: tracked.visitorId, sessionId: tracked.sessionId, now: new Date('2026-09-14T12:00:10Z') });
+  const second = await createLead(input, { visitorId: tracked.visitorId, sessionId: tracked.sessionId, now: new Date('2026-09-14T12:02:10Z') });
+  assert.equal(second.id, first.id);
+  assert.equal(second.duplicate, true);
+  const [{ count }] = await sql<{ count: number }[]>`select count(*)::int count from leads`;
+  assert.equal(count, 1);
 });
 
 test.after(async () => { await sql.end({ timeout: 2 }); });
