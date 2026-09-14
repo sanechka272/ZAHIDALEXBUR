@@ -10,6 +10,8 @@
 .analytics-settings-note h2 { margin: 0; color: #2d2824; font-family: Georgia,"Times New Roman",serif; font-size: 21px; font-weight: 500; letter-spacing: -.015em; }
 .analytics-settings-card__heading p,
 .analytics-settings-note p { max-width: 620px; margin: 8px 0 0; color: #887f76; font-size: 10px; line-height: 1.55; }
+.analytics-settings-toggle { display: inline-flex; align-items: center; gap: 10px; flex: 0 0 auto; }
+.analytics-settings-toggle > span { color: #71685f; font-size: 9px; font-weight: 650; white-space: nowrap; }
 .analytics-switch { position: relative; width: 44px; height: 25px; flex: 0 0 44px; cursor: pointer; }
 .analytics-switch input { position: absolute; opacity: 0; pointer-events: none; }
 .analytics-switch span { position: absolute; inset: 0; border-radius: 999px; background: #ddd6cd; transition: background-color .22s ease; }
@@ -53,6 +55,7 @@
 @media (max-width: 767px) {
   .analytics-settings-grid { gap: 12px; padding-top: 14px; }
   .analytics-settings-card__heading { gap: 14px; }
+  .analytics-settings-toggle { align-items: flex-end; flex-direction: column; gap: 5px; }
   .analytics-settings-field { grid-template-columns: 1fr; gap: 7px; }
   .analytics-settings-field > label { padding-top: 0; }
   .analytics-settings-field input { width: 100%; }
