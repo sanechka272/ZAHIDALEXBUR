@@ -38,6 +38,9 @@ export default function DashboardHeader({
   onCustomToChange,
   onMenu,
   onExport,
+  title = 'Analytics',
+  subtitle = 'Key website performance metrics',
+  exportType = 'overview',
 }: {
   preset: PeriodPreset;
   customFrom: string;
@@ -48,9 +51,12 @@ export default function DashboardHeader({
   onCustomToChange: (value: string) => void;
   onMenu: () => void;
   onExport: () => void;
+  title?: string;
+  subtitle?: string;
+  exportType?: 'overview' | 'leads';
 }) {
   function exportFullPeriod() {
-    const params = new URLSearchParams({ preset, type: 'overview' });
+    const params = new URLSearchParams({ preset, type: exportType });
     if (preset === 'custom') {
       params.set('from', customFrom);
       params.set('to', customTo);
@@ -66,8 +72,8 @@ export default function DashboardHeader({
         <button type="button" className="analytics-mobile-menu" aria-label="Open analytics menu" onClick={onMenu}><MenuIcon /></button>
         <div>
           <span className="analytics-header__eyebrow">ZAHIDALEXBUR / INTELLIGENCE</span>
-          <h1>Analytics</h1>
-          <p>Key website performance metrics</p>
+          <h1>{title}</h1>
+          <p>{subtitle}</p>
         </div>
       </div>
       <div className="analytics-header__actions">
