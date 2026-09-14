@@ -69,7 +69,7 @@ export default function AnalyticsSettings({ adminEmail }: { adminEmail: string }
           <article className="analytics-card analytics-settings-card">
             <div className="analytics-settings-card__heading">
               <div><span>INTEGRATION 01</span><h2>Google Tag Manager</h2><p>Optional event bridge for advertising pixels and external measurement. First-party analytics keeps working when GTM is disabled.</p></div>
-              <label className="analytics-switch" aria-label="Enable GTM"><span className="analytics-switch__label">Enable GTM</span><input type="checkbox" checked={gtmEnabled} onChange={(event) => setGtmEnabled(event.target.checked)} /><span /></label>
+              <div className="analytics-settings-toggle"><span>Enable GTM</span><label className="analytics-switch" aria-label="Enable GTM"><input type="checkbox" checked={gtmEnabled} onChange={(event) => setGtmEnabled(event.target.checked)} /><span /></label></div>
             </div>
             <div className="analytics-settings-field"><label htmlFor="gtm-id">GTM Container ID</label><div><input id="gtm-id" value={gtmContainerId} onChange={(event) => setGtmContainerId(event.target.value.toUpperCase())} placeholder="GTM-XXXXXXX" disabled={!gtmEnabled} /><small>Format: GTM-XXXXXXX</small></div></div>
             <div className="analytics-settings-events"><span>Events pushed to dataLayer</span><div><code>page_view</code><code>lead_submit</code></div></div>
