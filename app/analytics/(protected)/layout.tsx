@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { requireAdmin, UnauthorizedError } from '@/lib/analytics/auth';
 import '../../analytics.css';
+import '../../analytics-settings.css';
 
 export default async function ProtectedAnalyticsLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   try {
