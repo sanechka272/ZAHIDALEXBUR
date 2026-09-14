@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 type Settings = { gtmEnabled: boolean; gtmContainerId: string | null };
 
@@ -20,7 +21,10 @@ function push(event: Record<string, unknown>) {
 }
 
 export function GtmBridge() {
+  const pathname = usePathname();
+
   useEffect(() => {
+    if (pathname?.startsWith('/analytics')) return;
     let active = true;
     let script: HTMLScriptElement | null = null;
     let frame: HTMLIFrameElement | null = null;
@@ -74,7 +78,7 @@ export function GtmBridge() {
       script?.remove();
       frame?.remove();
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }
