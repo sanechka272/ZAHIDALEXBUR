@@ -35,6 +35,10 @@ export function LeadForm() {
         body: JSON.stringify(payload),
       });
       if (!response.ok) throw new Error('lead_submit_failed');
+      const result = await response.json() as { id?: string };
+      window.dispatchEvent(new CustomEvent('zab:lead_submit', {
+        detail: { leadId: result.id ?? null, pagePath: payload.originatingPage },
+      }));
       setStatus('sent');
     } catch {
       setStatus('error');
