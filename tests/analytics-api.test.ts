@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { POST as trackPost } from '../app/api/analytics/track/route';
 import { POST as leadPost } from '../app/api/leads/route';
 import { POST as loginPost } from '../app/api/analytics/auth/login/route';
+import { GET as summaryGet } from '../app/api/analytics/summary/route';
 
 test('tracking API rejects malformed analytics payloads', async () => {
   const request = new Request('https://zahidalexbur.com.ua/api/analytics/track', {
@@ -58,4 +59,10 @@ test('admin login API rejects malformed payloads before credential lookup', asyn
     body: JSON.stringify({ email: 'not-an-email' }),
   }));
   assert.equal(response.status, 400);
+});
+
+test('protected analytics summary API rejects unauthenticated requests', async () => {
+  const response = await summaryGet(new Request('https://zahidalexbur.com.ua/api/analytics/summary?preset=last30'));
+  assert.equal(response.status, 401);
+  assert.deepEqual(await response.json(), { error: { code: 'unauthorized', message: 'Authentication required' } });
 });
