@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { POST as trackPost } from '../app/api/analytics/track/route';
+import { POST as leadPost } from '../app/api/leads/route';
 
 test('tracking API rejects malformed analytics payloads', async () => {
   const request = new Request('https://zahidalexbur.com.ua/api/analytics/track', {
@@ -21,5 +22,30 @@ test('tracking API rejects cross-origin posts', async () => {
     }),
   });
   const response = await trackPost(request);
+  assert.equal(response.status, 403);
+});
+
+test('lead API rejects honeypot and unrealistically fast submissions', async () => {
+  const base = {
+    phone: '+380991234567', originatingPage: '/', startedAtMs: Date.now(),
+  };
+  const honeypot = await leadPost(new Request('https://zahidalexbur.com.ua/api/leads', {
+    method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://zahidalexbur.com.ua' },
+    body: JSON.stringify({ ...base, honeypot: 'spam' }),
+  }));
+  assert.equal(honeypot.status, 400);
+
+  const tooFast = await leadPost(new Request('https://zahidalexbur.com.ua/api/leads', {
+    method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://zahidalexbur.com.ua' },
+    body: JSON.stringify({ ...base, honeypot: '' }),
+  }));
+  assert.equal(tooFast.status, 400);
+});
+
+test('lead API rejects cross-origin posts', async () => {
+  const response = await leadPost(new Request('https://zahidalexbur.com.ua/api/leads', {
+    method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://evil.example' },
+    body: JSON.stringify({ phone: '+380991234567', originatingPage: '/', startedAtMs: Date.now() - 5000, honeypot: '' }),
+  }));
   assert.equal(response.status, 403);
 });
