@@ -3,11 +3,11 @@
 import type { ReactNode } from 'react';
 
 const navItems = [
-  { label: 'Analytics', href: '#analytics-overview', icon: 'analytics' },
-  { label: 'Leads', href: '#recent-leads', icon: 'leads' },
-  { label: 'Traffic Sources', href: '#traffic-sources', icon: 'traffic' },
-  { label: 'Geography', href: '#geography', icon: 'geo' },
-  { label: 'Pages', href: '#popular-pages', icon: 'pages' },
+  { label: 'Analytics', href: '/analytics#analytics-overview', icon: 'analytics' },
+  { label: 'Leads', href: '/analytics#recent-leads', icon: 'leads' },
+  { label: 'Traffic Sources', href: '/analytics#traffic-sources', icon: 'traffic' },
+  { label: 'Geography', href: '/analytics#geography', icon: 'geo' },
+  { label: 'Pages', href: '/analytics#popular-pages', icon: 'pages' },
   { label: 'Settings', href: '/analytics/settings', icon: 'settings' },
 ] as const;
 
@@ -30,7 +30,7 @@ function BrandMark() {
   );
 }
 
-export default function Sidebar({ open, onClose, footer }: { open: boolean; onClose: () => void; footer?: ReactNode }) {
+export default function Sidebar({ open, onClose, footer, active = 'Analytics' }: { open: boolean; onClose: () => void; footer?: ReactNode; active?: string }) {
   return (
     <>
       <button type="button" className={`analytics-sidebar-backdrop ${open ? 'is-open' : ''}`} aria-label="Close analytics menu" onClick={onClose} />
@@ -40,17 +40,20 @@ export default function Sidebar({ open, onClose, footer }: { open: boolean; onCl
           <button type="button" className="analytics-sidebar__close" aria-label="Close menu" onClick={onClose}>×</button>
         </div>
         <nav className="analytics-nav" aria-label="Analytics navigation">
-          {navItems.map((item, index) => (
-            <a key={item.label} href={item.href} className={index === 0 ? 'is-active' : ''} onClick={onClose}>
-              <span className="analytics-nav__icon"><NavIcon type={item.icon} /></span>
-              <span>{item.label}</span>
-              {index === 0 ? <i aria-hidden="true" /> : null}
-            </a>
-          ))}
+          {navItems.map((item) => {
+            const selected = item.label === active;
+            return (
+              <a key={item.label} href={item.href} className={selected ? 'is-active' : ''} onClick={onClose}>
+                <span className="analytics-nav__icon"><NavIcon type={item.icon} /></span>
+                <span>{item.label}</span>
+                {selected ? <i aria-hidden="true" /> : null}
+              </a>
+            );
+          })}
         </nav>
         <div className="analytics-sidebar__spacer" />
         <div className="analytics-sidebar-story">
-          <img src="/media/hero-waterwell.jpg" alt="" aria-hidden="true" />
+          <img src="/media/service-industrial-rig.jpg" alt="" aria-hidden="true" />
           <div className="analytics-sidebar-story__shade" />
           <div className="analytics-sidebar-story__copy">
             <span>01 / FIELD DATA</span>
