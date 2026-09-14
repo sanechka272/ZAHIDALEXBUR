@@ -60,11 +60,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 20px 18px;
+  padding: 18px 18px 14px;
   border-bottom: 1px solid rgba(255,255,255,.06);
 }
 
 .analytics-brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.analytics-brand--logo { width: 188px; height: 53px; overflow: hidden; flex: 0 0 188px; text-decoration: none; }
+.analytics-brand--logo img { display: block; width: 188px; height: 51px; object-fit: contain; object-position: left center; }
 .analytics-brand__mark {
   width: 38px; height: 38px; flex: 0 0 38px; display: grid; place-items: center;
   border: 1px solid rgba(207,170,105,.44); border-radius: 10px;
@@ -279,6 +281,8 @@
   .analytics-layout { grid-template-columns: 86px minmax(0, 1fr); }
   .analytics-sidebar { width: 86px; }
   .analytics-sidebar__top { justify-content: center; padding-inline: 12px; }
+  .analytics-brand--logo { width: 54px; height: 52px; flex-basis: 54px; }
+  .analytics-brand--logo img { width: 190px; height: 52px; max-width: none; }
   .analytics-brand__text,
   .analytics-nav a > span:not(.analytics-nav__icon),
   .analytics-sidebar-story__copy,
@@ -316,6 +320,8 @@
   }
   .analytics-sidebar.is-open { transform: translateX(0); }
   .analytics-sidebar__top { justify-content: space-between; padding-inline: 18px; }
+  .analytics-brand--logo { width: 188px; height: 53px; flex-basis: 188px; }
+  .analytics-brand--logo img { width: 188px; height: 51px; }
   .analytics-brand__text,
   .analytics-nav a > span:not(.analytics-nav__icon),
   .analytics-sidebar-story__copy,
