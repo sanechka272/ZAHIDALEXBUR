@@ -10,6 +10,13 @@ const dashboardUrl = new URL('../components/analytics/dashboard/AnalyticsDashboa
 const sidebarUrl = new URL('../components/analytics/dashboard/Sidebar.tsx', import.meta.url);
 const headerUrl = new URL('../components/analytics/dashboard/DashboardHeader.tsx', import.meta.url);
 const pageUrl = new URL('../app/analytics/(protected)/page.tsx', import.meta.url);
+const detailPages = [
+  ['leads', '../app/analytics/(protected)/leads/page.tsx'],
+  ['traffic', '../app/analytics/(protected)/traffic/page.tsx'],
+  ['geography', '../app/analytics/(protected)/geography/page.tsx'],
+  ['pages', '../app/analytics/(protected)/pages/page.tsx'],
+  ['settings', '../app/analytics/(protected)/settings/page.tsx'],
+];
 
 test('analytics runtime is server-capable and isolated from public CSS', () => {
   assert.doesNotMatch(nextConfig, /output:\s*['"]export['"]/);
@@ -48,6 +55,23 @@ test('analytics dashboard matches the branded navigation and KPI contract', () =
   assert.match(css, /--analytics-canvas:\s*#f4f0e8/i);
   assert.match(css, /grid-template-columns:\s*240px\s+minmax\(0,\s*1fr\)/);
   assert.match(css, /@media\s*\(max-width:\s*767px\)/);
+});
+
+test('analytics navigation has production detail routes', () => {
+  const sidebar = readFileSync(sidebarUrl, 'utf8');
+  for (const [name, path] of detailPages) {
+    const url = new URL(path, import.meta.url);
+    assert.equal(existsSync(url), true, `${name} detail page must exist`);
+  }
+  for (const href of ['/analytics/leads', '/analytics/traffic', '/analytics/geography', '/analytics/pages', '/analytics/settings']) {
+    assert.match(sidebar, new RegExp(href.replaceAll('/', '\\/')));
+  }
+  const leads = readFileSync(new URL('../components/analytics/dashboard/AnalyticsLeads.tsx', import.meta.url), 'utf8');
+  assert.match(leads, /First Touch/);
+  assert.match(leads, /Last Touch/);
+  const settings = readFileSync(new URL('../components/analytics/dashboard/AnalyticsSettings.tsx', import.meta.url), 'utf8');
+  assert.match(settings, /GTM Container ID/);
+  assert.match(settings, /Enable GTM/);
 });
 
 test('dashboard avoids generic blue SaaS styling and provides reduced-motion safeguards', () => {
