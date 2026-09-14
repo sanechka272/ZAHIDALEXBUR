@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { FirstPartyTracker } from '@/components/analytics/FirstPartyTracker';
 import './globals.css';
 import './fixes.css';
 import './final.css';
@@ -29,7 +30,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="uk">
-      <body>{children}</body>
+      <body>
+        {children}
+        <FirstPartyTracker />
+      </body>
     </html>
   );
 }
