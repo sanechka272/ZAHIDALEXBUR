@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 type Settings = { gtmEnabled: boolean; gtmContainerId: string | null };
+type PageEvent = { pagePath?: string };
+type LeadEvent = { leadId?: string | null; pagePath?: string };
 
 declare global {
   interface Window {
@@ -29,16 +31,29 @@ export function GtmBridge() {
     let script: HTMLScriptElement | null = null;
     let frame: HTMLIFrameElement | null = null;
     let enabled = false;
+    let pendingPagePath = `${window.location.pathname}${window.location.search}`;
+    let lastPagePath: string | null = null;
+    let pendingLead: LeadEvent | null = null;
+
+    const pushPage = (pagePath: string) => {
+      if (lastPagePath === pagePath) return;
+      lastPagePath = pagePath;
+      push({ event: 'page_view', page_path: pagePath });
+    };
 
     const onPageView = (event: Event) => {
-      if (!enabled) return;
-      const detail = (event as CustomEvent<{ pagePath?: string }>).detail;
-      push({ event: 'page_view', page_path: detail?.pagePath ?? window.location.pathname });
+      const detail = (event as CustomEvent<PageEvent>).detail;
+      const pagePath = detail?.pagePath ?? `${window.location.pathname}${window.location.search}`;
+      pendingPagePath = pagePath;
+      if (enabled) pushPage(pagePath);
     };
     const onLead = (event: Event) => {
-      if (!enabled) return;
-      const detail = (event as CustomEvent<{ leadId?: string; pagePath?: string }>).detail;
-      push({ event: 'lead_submit', lead_id: detail?.leadId ?? null, page_path: detail?.pagePath ?? window.location.pathname });
+      const detail = (event as CustomEvent<LeadEvent>).detail ?? {};
+      if (!enabled) {
+        pendingLead = detail;
+        return;
+      }
+      push({ event: 'lead_submit', lead_id: detail.leadId ?? null, page_path: detail.pagePath ?? window.location.pathname });
     };
 
     window.addEventListener('zab:page_view', onPageView);
@@ -68,6 +83,12 @@ export function GtmBridge() {
         frame.title = 'Google Tag Manager';
         frame.dataset.zabGtm = id;
         document.body.prepend(frame);
+
+        pushPage(pendingPagePath);
+        if (pendingLead) {
+          push({ event: 'lead_submit', lead_id: pendingLead.leadId ?? null, page_path: pendingLead.pagePath ?? window.location.pathname });
+          pendingLead = null;
+        }
       })
       .catch(() => undefined);
 
