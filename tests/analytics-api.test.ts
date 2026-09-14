@@ -4,6 +4,8 @@ import { POST as trackPost } from '../app/api/analytics/track/route';
 import { POST as leadPost } from '../app/api/leads/route';
 import { POST as loginPost } from '../app/api/analytics/auth/login/route';
 import { GET as summaryGet } from '../app/api/analytics/summary/route';
+import { GET as exportGet } from '../app/api/analytics/export/route';
+import { GET as settingsGet, PUT as settingsPut } from '../app/api/analytics/settings/route';
 
 test('tracking API rejects malformed analytics payloads', async () => {
   const request = new Request('https://zahidalexbur.com.ua/api/analytics/track', {
@@ -65,4 +67,22 @@ test('protected analytics summary API rejects unauthenticated requests', async (
   const response = await summaryGet(new Request('https://zahidalexbur.com.ua/api/analytics/summary?preset=last30'));
   assert.equal(response.status, 401);
   assert.deepEqual(await response.json(), { error: { code: 'unauthorized', message: 'Authentication required' } });
+});
+
+test('analytics export requires an authenticated admin session', async () => {
+  const response = await exportGet(new Request('https://zahidalexbur.com.ua/api/analytics/export?preset=last30&type=overview'));
+  assert.equal(response.status, 401);
+  assert.deepEqual(await response.json(), { error: { code: 'unauthorized', message: 'Authentication required' } });
+});
+
+test('analytics settings read and write endpoints require authentication', async () => {
+  const getResponse = await settingsGet(new Request('https://zahidalexbur.com.ua/api/analytics/settings'));
+  assert.equal(getResponse.status, 401);
+
+  const putResponse = await settingsPut(new Request('https://zahidalexbur.com.ua/api/analytics/settings', {
+    method: 'PUT',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ gtmEnabled: true, gtmContainerId: 'GTM-ABC123' }),
+  }));
+  assert.equal(putResponse.status, 401);
 });
