@@ -1,4 +1,5 @@
 import { leadInputSchema } from '@/lib/analytics/contracts';
+import { geoTokenFromEdgeHeaders } from '@/lib/analytics/edge-geo';
 import { createLead } from '@/lib/analytics/repository';
 
 export const runtime = 'nodejs';
@@ -30,8 +31,12 @@ function parseCookies(header: string | null) {
   return result;
 }
 
-function clientIp(request: Request) {
-  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || null;
+function clientGeoKey(request: Request) {
+  const edgeGeo = geoTokenFromEdgeHeaders(request.headers);
+  if (edgeGeo) return edgeGeo;
+  const forwarded = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  const candidate = forwarded || request.headers.get('x-real-ip') || null;
+  return candidate?.startsWith('zab-edge:') ? null : candidate;
 }
 
 function cookie(name: string, value: string, maxAge: number) {
@@ -76,7 +81,7 @@ export async function POST(request: Request) {
       visitorId: cookies.get(VISITOR_COOKIE) ?? null,
       sessionId: cookies.get(SESSION_COOKIE) ?? null,
       userAgent: request.headers.get('user-agent') ?? '',
-      ip: clientIp(request),
+      ip: clientGeoKey(request),
     });
 
     const headers = new Headers({ 'cache-control': 'no-store' });
