@@ -71,6 +71,31 @@ function warnOnce(error: unknown) {
   console.warn('[analytics] GeoIP database unavailable; geography will be recorded as unknown.', error instanceof Error ? error.message : error);
 }
 
+function cleanTokenValue(value: unknown, max: number) {
+  return typeof value === 'string' && value.trim() ? value.trim().slice(0, max) : null;
+}
+
+function decodeEdgeGeoToken(value: string): GeoInfo | null {
+  if (!value.startsWith('zab-edge:')) return null;
+  try {
+    const parsed = JSON.parse(Buffer.from(value.slice('zab-edge:'.length), 'base64url').toString('utf8')) as Record<string, unknown>;
+    const countryCode = cleanTokenValue(parsed.countryCode, 2)?.toUpperCase() ?? null;
+    const regionName = cleanTokenValue(parsed.regionName, 160);
+    const rawRegionCode = cleanTokenValue(parsed.regionCode, 16);
+    const city = cleanTokenValue(parsed.city, 160);
+    if (!countryCode && !regionName && !rawRegionCode && !city) return null;
+    return {
+      countryCode,
+      countryName: cleanTokenValue(parsed.countryName, 160),
+      regionCode: normalizeUkraineRegion(countryCode, rawRegionCode, regionName),
+      regionName,
+      city,
+    };
+  } catch {
+    return null;
+  }
+}
+
 async function getReader() {
   if (!readerPromise) {
     readerPromise = (async () => {
@@ -100,6 +125,8 @@ export function normalizeUkraineRegion(countryCode: string | null | undefined, i
 export async function resolveGeo(ip: string | null | undefined): Promise<GeoInfo> {
   const empty: GeoInfo = { countryCode: null, countryName: null, regionCode: null, regionName: null, city: null };
   if (!ip) return empty;
+  const edgeGeo = decodeEdgeGeoToken(ip);
+  if (edgeGeo) return edgeGeo;
   const reader = await getReader();
   if (!reader) return empty;
   try {
