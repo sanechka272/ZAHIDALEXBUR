@@ -4,7 +4,7 @@ This document applies to branch `feature/first-party-analytics-dashboard` and th
 
 ## Runtime topology
 
-The analytics build is no longer a static export. Public pages, `/analytics/*`, and `/api/analytics/*` must run in the same deployment / same site so first-party cookies, attribution and lead tracking stay same-origin. The application is built as a Next.js standalone Node server and packaged by `Dockerfile`.
+The analytics build is no longer a static export. Public pages, `/analytics/*`, and `/api/analytics/*` must run in the same deployment / same site so first-party cookies, attribution and lead tracking stay same-origin. The application is built as a Next.js standalone Node server and packaged by `Dockerfile`. Outside Cloudflare, the same server-capable build can be operated on a conventional Node host with `npm start` after `npm run build`.
 
 For the existing Cloudflare setup, the supported release path is **Cloudflare Containers** behind a Worker proxy. Containers require the **Workers Paid** plan. The Worker forwards every request to one singleton Next.js container, injects Cloudflare country / region / city metadata into private headers, and passes runtime secrets into the container. The old static `./out` assets deployment must not be used for this branch.
 
