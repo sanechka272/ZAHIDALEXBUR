@@ -26,3 +26,10 @@ test('production environment contract documents analytics secrets without commit
   assert.doesNotMatch(env, /postgres:\/\/[^\n]*:[^@\n]+@/i);
   assert.doesNotMatch(env, /ANALYTICS_SESSION_SECRET=\S{16,}/);
 });
+
+test('CI validates the deployable Docker image and Wrangler bundle', () => {
+  const workflow = read('.github/workflows/ci.yml');
+  assert.match(workflow, /docker build/);
+  assert.match(workflow, /wrangler deploy --dry-run/);
+  assert.match(workflow, /Audit production dependencies/);
+});
