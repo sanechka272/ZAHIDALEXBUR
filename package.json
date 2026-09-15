@@ -10,7 +10,10 @@
     "test": "tsx --test tests/*.test.ts && node --test tests/*.test.mjs",
     "db:migrate": "tsx lib/db/migrate.ts",
     "analytics:create-admin": "tsx scripts/create-analytics-admin.ts",
-    "deploy": "npx wrangler deploy"
+    "analytics:retention": "tsx scripts/analytics-retention.ts",
+    "security:audit": "npm audit --omit=dev --audit-level=high",
+    "deploy": "node -e \"console.error('This branch requires a server-side Next.js deployment with PostgreSQL. See docs/analytics-operations.md'); process.exit(1)\"",
+    "deploy:legacy-static": "npx wrangler deploy"
   },
   "dependencies": {
     "@svg-maps/ukraine": "2.0.0",
