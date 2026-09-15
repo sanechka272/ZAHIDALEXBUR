@@ -50,3 +50,9 @@ jobs:
 
       - name: Audit production dependencies
         run: npm run security:audit
+
+      - name: Build production Docker image
+        run: docker build -t zahidalexbur-ci .
+
+      - name: Validate Wrangler deployment bundle
+        run: npx wrangler deploy --dry-run --outdir .wrangler-dry-run
