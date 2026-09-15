@@ -23,3 +23,9 @@ export function geoFromEdgeHeaders(headers: Headers, trusted = Boolean(process.e
     city,
   };
 }
+
+export function geoTokenFromEdgeHeaders(headers: Headers, trusted = Boolean(process.env.CLOUDFLARE_APPLICATION_ID)) {
+  const geo = geoFromEdgeHeaders(headers, trusted);
+  if (!geo) return null;
+  return `zab-edge:${Buffer.from(JSON.stringify(geo), 'utf8').toString('base64url')}`;
+}
