@@ -6,6 +6,7 @@ import { POST as loginPost } from '../app/api/analytics/auth/login/route';
 import { GET as summaryGet } from '../app/api/analytics/summary/route';
 import { GET as exportGet } from '../app/api/analytics/export/route';
 import { GET as settingsGet, PUT as settingsPut } from '../app/api/analytics/settings/route';
+import { GET as healthGet } from '../app/api/health/route';
 
 test('tracking API rejects malformed analytics payloads', async () => {
   const request = new Request('https://zahidalexbur.com.ua/api/analytics/track', {
@@ -85,4 +86,10 @@ test('analytics settings read and write endpoints require authentication', async
     body: JSON.stringify({ gtmEnabled: true, gtmContainerId: 'GTM-ABC123' }),
   }));
   assert.equal(putResponse.status, 401);
+});
+
+test('health endpoint verifies the database without exposing secrets', async () => {
+  const response = await healthGet();
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { status: 'ok', database: 'ok' });
 });
