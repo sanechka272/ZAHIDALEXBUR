@@ -10,6 +10,7 @@ import './content.css';
 import './mobile.css';
 import './process.css';
 import './layout-overrides.css';
+import './blog-knowledge.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://zahidalexbur.com.ua'),
