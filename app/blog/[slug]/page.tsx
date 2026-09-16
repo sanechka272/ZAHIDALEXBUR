@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { blogArticles, getBlogArticle } from '@/lib/blog-data';
@@ -44,8 +45,15 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
               <h1>{article.title}</h1>
               <p>{article.intro}</p>
             </div>
-            <div className="article-page__cover">
-              <img src={article.image} alt={article.title} />
+            <div className="article-page__cover" style={{ position: 'relative' }}>
+              <Image
+                src={article.image}
+                alt={article.title}
+                fill
+                sizes="(max-width: 900px) 100vw, 54vw"
+                quality={90}
+                fetchPriority="high"
+              />
             </div>
           </div>
         </section>
