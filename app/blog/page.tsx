@@ -2,6 +2,9 @@ import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
 
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export default function BlogIndexPage() {
   return (
     <main className="blog-page">
