@@ -8,9 +8,9 @@ import { LeadForm } from '@/components/LeadForm';
 
 const navItems = [
   { label: 'Головна', href: '#top' },
+  { label: 'Процес', href: '#process' },
   { label: 'Послуги', href: '#services' },
   { label: 'Про нас', href: '#about' },
-  { label: 'Процес', href: '#process' },
   { label: 'Блог', href: '#blog' },
   { label: 'Відгуки', href: '#about' },
   { label: 'Контакти', href: '#contact' },
@@ -234,20 +234,8 @@ export default function LandingPage() {
 
           <div className="hero-process-teaser">{heroProcess.map(([number, title], index) => <button type="button" className={index === 1 ? 'is-active' : ''} key={number} onClick={() => index === 1 ? document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }) : document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}><span>{number}</span><strong>{title}</strong></button>)}</div>
           <div className="reference-hero__caption"><span>Стабільна вода —</span><strong>стабільне майбутнє.</strong></div>
-          <button className="reference-hero__scroll" type="button" aria-label="Прокрутити до послуг" onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}><Arrow direction="down" /></button>
+          <button className="reference-hero__scroll" type="button" aria-label="Прокрутити до процесу" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}><Arrow direction="down" /></button>
         </div>
-      </section>
-
-      <section className="services-reference" id="services">
-        <div className="reference-shell">
-          <div className="services-reference__header reveal"><div><EyebrowLabel>НАШІ ПОСЛУГИ</EyebrowLabel><h2 className="services-reference__title">Оберіть свій тип свердловини</h2></div></div>
-          <div className="services-reference__grid">{services.map((service, index) => <ServiceCard key={service.id} service={service} index={index} onOpen={() => setLeadOpen(true)} />)}</div>
-        </div>
-      </section>
-
-      <section className="about-reference" id="about">
-        <div className="about-reference__copy reveal reveal--from-left"><div><EyebrowLabel light>ПРО НАС</EyebrowLabel><h2>Локальна компанія<br />з реальним досвідом</h2><p>ZAHIDALEXBUR — це команда фахівців, яка знає геологію регіону, працює з сучасною технікою та забезпечує результат. Ми не просто буримо — ми даємо людям доступ до якісної води.</p><PillButton variant="brown" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}>Дізнатися більше</PillButton><div className="about-reference__script"><span>Люди</span><span>Регіон</span><span>Результат</span></div></div></div>
-        <div className="about-reference__media"><Image src={assets.about} alt="" fill sizes="(max-width: 900px) 100vw, 60vw" quality={90} style={{ objectFit: 'cover', objectPosition: 'center 48%' }} /><div className="about-reference__stats reveal">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label === 'років досвіду' ? 'років досвіду у регіоні' : stat.label} dark />)}</div><TestimonialQuote /></div>
       </section>
 
       <section className="process-story reveal" id="process">
@@ -269,6 +257,18 @@ export default function LandingPage() {
             {processSteps.map((step, index) => <ProcessStoryStep key={step.id} step={step} index={index} />)}
           </div>
         </div>
+      </section>
+
+      <section className="services-reference" id="services">
+        <div className="reference-shell">
+          <div className="services-reference__header reveal"><div><EyebrowLabel>НАШІ ПОСЛУГИ</EyebrowLabel><h2 className="services-reference__title">Оберіть свій тип свердловини</h2></div></div>
+          <div className="services-reference__grid">{services.map((service, index) => <ServiceCard key={service.id} service={service} index={index} onOpen={() => setLeadOpen(true)} />)}</div>
+        </div>
+      </section>
+
+      <section className="about-reference" id="about">
+        <div className="about-reference__copy reveal reveal--from-left"><div><EyebrowLabel light>ПРО НАС</EyebrowLabel><h2>Локальна компанія<br />з реальним досвідом</h2><p>ZAHIDALEXBUR — це команда фахівців, яка знає геологію регіону, працює з сучасною технікою та забезпечує результат. Ми не просто буримо — ми даємо людям доступ до якісної води.</p><PillButton variant="brown" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}>Дізнатися більше</PillButton><div className="about-reference__script"><span>Люди</span><span>Регіон</span><span>Результат</span></div></div></div>
+        <div className="about-reference__media"><Image src={assets.about} alt="" fill sizes="(max-width: 900px) 100vw, 60vw" quality={90} style={{ objectFit: 'cover', objectPosition: 'center 48%' }} /><div className="about-reference__stats reveal">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label === 'років досвіду' ? 'років досвіду у регіоні' : stat.label} dark />)}</div><TestimonialQuote /></div>
       </section>
 
       <section className="blog-reference" id="blog">
