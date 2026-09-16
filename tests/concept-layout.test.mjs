@@ -71,13 +71,13 @@ test('hero, three services and about section use distinct semantic local photo a
   assert.match(mediaCss, /url\(['"]?\/media\/about-mountain-forest\.jpg['"]?\)/);
 });
 
-test('hero matches approved composition with video action, stats, process teaser and glass info card', () => {
+test('hero keeps the approved simplified composition without removed promo or video CTAs', () => {
   assert.match(component, /className="hero reference-hero"/);
-  assert.match(component, /Дивитися відео/);
   assert.match(component, /hero-stat-row/);
   assert.match(component, /hero-process-teaser/);
-  assert.match(component, /GlassInfoCard/);
-  assert.match(component, /Вода ближче, ніж ви думаєте/);
+  assert.doesNotMatch(component, /Дивитися відео/);
+  assert.doesNotMatch(component, /GlassInfoCard/);
+  assert.doesNotMatch(component, /Вода ближче, ніж ви думаєте/);
 });
 
 test('services render exactly three large reference cards without need filters or carousel controls', () => {
@@ -116,7 +116,6 @@ test('reference visual layer includes robust image fitting, glass cards, serif h
   assert.match(mediaCss, /\.reference-page img/);
   assert.match(mediaCss, /object-fit:\s*cover/);
   assert.match(mediaCss, /\.service-reference-card__photo img/);
-  assert.match(finalCss, /\.glass-info-card/);
   assert.match(finalCss, /\.services-reference__title/);
   assert.match(finalCss, /\.service-reference-card/);
   assert.match(finalCss, /\.about-reference/);
