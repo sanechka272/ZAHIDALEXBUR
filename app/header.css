@@ -1,4 +1,33 @@
-/* Desktop header alignment + typography. Kept isolated so mobile/burger behavior stays untouched. */
+/* Header navigation behavior: full nav whenever the viewport has enough width; burger only on small/mobile screens. */
+
+/* Burger is opt-in for small screens, never the desktop default. */
+.reference-header .menu-button {
+  display: none;
+}
+
+/* Keep the full navigation visible on tablets/smaller laptops where it still fits. */
+@media (min-width: 768px) and (max-width: 900px) {
+  .reference-header .desktop-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(12px, 1.8vw, 17px);
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .reference-header .desktop-nav a {
+    font-size: 10px;
+  }
+
+  /* At this width the navigation gets priority over secondary header actions. */
+  .reference-header .header-phone,
+  .reference-header .header-callback {
+    display: none;
+  }
+}
+
+/* Desktop alignment + typography. */
 @media (min-width: 901px) {
   .reference-header__inner {
     position: relative;
@@ -47,5 +76,16 @@
     font-family: var(--body);
     font-weight: 500;
     letter-spacing: -.01em;
+  }
+}
+
+/* Phone/small-device mode. */
+@media (max-width: 767px) {
+  .reference-header .desktop-nav {
+    display: none;
+  }
+
+  .reference-header .menu-button {
+    display: grid;
   }
 }
