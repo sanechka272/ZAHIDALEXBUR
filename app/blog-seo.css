@@ -1,0 +1,167 @@
+.blog-page__topnav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+
+.blog-page__topnav a {
+  position: relative;
+  padding: 8px 0;
+  color: #6f685f;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: .04em;
+}
+
+.blog-page__topnav a:hover,
+.blog-page__topnav a[aria-current='page'] { color: #17140f; }
+.blog-page__topnav a[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 1px;
+  background: #a9784f;
+}
+
+/* The filter sticks only while the article-library block is in view. */
+.blog-kb__filterbar {
+  position: sticky;
+  top: 70px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.blog-page__grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.blog-index-card,
+.blog-index-card:last-child {
+  grid-column: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.blog-index-card__media,
+.blog-index-card:last-child .blog-index-card__media {
+  min-height: 0;
+  aspect-ratio: 1.28 / 1;
+}
+
+.blog-index-card__body { display: flex; flex: 1; flex-direction: column; }
+.blog-index-card__body > a:last-child { margin-top: auto; align-self: flex-start; }
+.blog-page__footer { margin-top: 0; }
+
+.article-page__breadcrumbs {
+  margin-bottom: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  color: #8a867c;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.article-page__breadcrumbs a { color: #655e55; }
+.article-page__breadcrumbs a:hover { color: #a9784f; }
+.article-page__breadcrumbs span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+.article-page__context-links {
+  margin-top: 30px;
+  padding-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  border-top: 1px solid #dcd5ca;
+}
+
+.article-page__context-links a {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #a9784f;
+  color: #5f594f;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.article-related {
+  padding: 0 0 120px;
+  color: #17140f;
+  background: #f2efe9;
+}
+
+.article-related__head {
+  margin-bottom: 34px;
+  padding-top: 54px;
+  border-top: 1px solid #dcd5ca;
+}
+
+.article-related__head > span {
+  color: #a9784f;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .13em;
+}
+
+.article-related__head h2 {
+  margin: 12px 0 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(40px, 4vw, 60px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+.article-related__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 22px;
+}
+
+.article-related__grid article { min-width: 0; }
+.article-related__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 1.35 / 1;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #2c2821;
+}
+.article-related__media img { object-fit: cover; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+.article-related__grid article:hover .article-related__media img { transform: scale(1.03); }
+.article-related__grid article > span {
+  display: block;
+  margin-top: 18px;
+  color: #a9784f;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+.article-related__grid h3 {
+  margin: 10px 0 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(24px, 2.2vw, 34px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -.03em;
+}
+
+@media (max-width: 980px) {
+  .blog-page__topnav { display: none; }
+  .blog-page__grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .article-related__grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width: 767px) {
+  .blog-kb__filterbar { top: 62px; }
+  .blog-page__grid { grid-template-columns: 1fr; }
+  .article-page__breadcrumbs { margin-bottom: 24px; font-size: 10px; }
+  .article-page__context-links { flex-direction: column; align-items: flex-start; }
+  .article-related { padding-bottom: 80px; }
+  .article-related__grid { grid-template-columns: 1fr; gap: 30px; }
+}

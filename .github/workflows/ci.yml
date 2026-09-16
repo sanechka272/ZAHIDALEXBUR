@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, feature/first-party-analytics-dashboard]
+    branches: [main, feature/first-party-analytics-dashboard, feature/blog-knowledge-base-seo]
   pull_request:
     branches: [main]
 
