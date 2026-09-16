@@ -76,7 +76,7 @@ test('every production photo is a large high-resolution repository-local JPEG', 
 });
 
 test('hero, three services and about section use distinct local photo assets', () => {
-  assert.match(siteData, /hero:\s*['"]\/media\/hero-waterwell\.jpg['"]/);
+  assert.match(siteData, /hero:\s*['"]\/media\/64ac66b2-80b3-4edb-8c64-a2423104debc\.png['"]/);
   assert.match(siteData, /about:\s*['"]\/media\/about-mountain-forest\.jpg['"]/);
   assert.match(siteData, /services:\s*\[[\s\S]*service-private-water\.jpg[\s\S]*service-filter-drilling\.jpg[\s\S]*service-industrial-rig\.jpg/);
   assert.doesNotMatch(siteData, /services:\s*\[[\s\S]*hero-waterwell\.jpg/);
