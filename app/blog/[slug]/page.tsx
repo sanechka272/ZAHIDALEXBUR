@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { blogArticles, getBlogArticle } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
 
+export const dynamic = 'force-static';
+export const revalidate = false;
 export const dynamicParams = false;
 
 export function generateStaticParams() {
