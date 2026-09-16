@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { LeadForm } from '@/components/LeadForm';
 
 function ArrowIcon() {
@@ -56,7 +56,7 @@ export function ArticleShareButton({ title }: { title: string }) {
   );
 }
 
-export function ArticleLeadButton({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function ArticleLeadButton({ children, className = '' }: { children: ReactNode; className?: string }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
