@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
@@ -28,7 +29,13 @@ export default function BlogIndexPage() {
           {blogArticles.map((article, index) => (
             <Link href={`/blog/${article.slug}`} className="blog-index-card" key={article.slug}>
               <div className="blog-index-card__media">
-                <img src={article.image} alt={article.title} />
+                <Image
+                  src={article.image}
+                  alt={article.title}
+                  fill
+                  sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 640px"
+                  quality={90}
+                />
                 <span>0{index + 1}</span>
               </div>
               <div className="blog-index-card__body">
