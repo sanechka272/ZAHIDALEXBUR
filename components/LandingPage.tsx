@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import Image from 'next/image';
 import { blogArticles } from '@/lib/blog-data';
 import { assets, contact, processSteps, services } from '@/lib/site-data';
 import { LeadForm } from '@/components/LeadForm';
@@ -70,7 +71,7 @@ function StatBlock({ value, caption, dark = false }: { value: string; caption: s
 function GlassInfoCard({ onClick }: { onClick: () => void }) {
   return (
     <button type="button" aria-label="Вода ближче, ніж ви думаєте" className="glass-info-card hero-enter hero-enter--5" onClick={onClick}>
-      <span className="glass-info-card__thumb"><img src={assets.services[2]} alt="Буріння свердловини у Львівській області" /></span>
+      <span className="glass-info-card__thumb" style={{ position: 'relative' }}><Image src={assets.services[2]} alt="Буріння свердловини у Львівській області" fill sizes="82px" quality={90} /></span>
       <span className="glass-info-card__copy">Вода ближче,<br />ніж ви думаєте</span>
       <span className="glass-info-card__arrow"><Arrow /></span>
     </button>
@@ -80,8 +81,8 @@ function GlassInfoCard({ onClick }: { onClick: () => void }) {
 function BlogCard({ article, index }: { article: (typeof blogArticles)[number]; index: number }) {
   return (
     <a className="blog-reference-card reveal" style={{ '--delay': `${index * 70}ms` } as CSSProperties} href={`/blog/${article.slug}`} aria-label={article.title}>
-      <div className="blog-reference-card__media">
-        <img src={article.image} alt={article.title} loading="lazy" />
+      <div className="blog-reference-card__media" style={{ position: 'relative' }}>
+        <Image src={article.image} alt={article.title} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={90} />
         <span>0{index + 1}</span>
       </div>
       <div className="blog-reference-card__body">
@@ -99,7 +100,7 @@ function ServiceCard({ service, index, onOpen }: { service: (typeof services)[nu
   return (
     <article id={`service-card-${index}`} className="service-reference-card reveal" style={{ '--delay': `${index * 100}ms` } as CSSProperties}>
       <div className="service-reference-card__photo">
-        <img src={service.image} alt={service.title} loading={index === 0 ? 'eager' : 'lazy'} />
+        <Image src={service.image} alt={service.title} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 78vw, 33vw" quality={90} />
         <span className="service-reference-card__number">0{index + 1}</span>
       </div>
       <div className="service-reference-card__body">
@@ -111,7 +112,7 @@ function ServiceCard({ service, index, onOpen }: { service: (typeof services)[nu
         </ul>
         <div className="service-reference-card__price"><strong>{service.shortPrice.replace('грн', '₴')}</strong><button type="button" aria-label={`Розрахувати ${service.title}`} onClick={onOpen}><Arrow /></button></div>
         <div className="service-project-thumbs">
-          <div>{thumbs.map((thumb, thumbIndex) => <span key={`${thumb}-${thumbIndex}`}><img src={thumb} alt="" loading="lazy" /></span>)}</div>
+          <div>{thumbs.map((thumb, thumbIndex) => <span key={`${thumb}-${thumbIndex}`} style={{ position: 'relative' }}><Image src={thumb} alt="" fill sizes="96px" quality={90} /></span>)}</div>
           <button type="button" onClick={onOpen}>Переглянути<br />реалізовані проєкти</button>
         </div>
       </div>
@@ -227,7 +228,9 @@ export default function LandingPage() {
       </header>
 
       <section className="hero reference-hero">
-        <div className="reference-hero__media" style={{ backgroundImage: `url(${assets.hero})` }} aria-hidden="true" />
+        <div className="reference-hero__media" aria-hidden="true">
+          <Image src={assets.hero} alt="" fill sizes="100vw" quality={90} fetchPriority="high" style={{ objectFit: 'cover', objectPosition: '58% 50%' }} />
+        </div>
         <div className="reference-hero__overlay" aria-hidden="true" />
         <div className="reference-shell reference-hero__layout">
           <div className="reference-hero__copy">
@@ -255,11 +258,11 @@ export default function LandingPage() {
 
       <section className="about-reference" id="about">
         <div className="about-reference__copy reveal reveal--from-left"><div><EyebrowLabel light>ПРО НАС</EyebrowLabel><h2>Локальна компанія<br />з реальним досвідом</h2><p>ZAHIDALEXBUR — це команда фахівців, яка знає геологію регіону, працює з сучасною технікою та забезпечує результат. Ми не просто буримо — ми даємо людям доступ до якісної води.</p><PillButton variant="brown" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}>Дізнатися більше</PillButton><div className="about-reference__script"><span>Люди</span><span>Регіон</span><span>Результат</span></div></div></div>
-        <div className="about-reference__media" style={{ backgroundImage: `linear-gradient(90deg, rgba(20,18,15,.74), rgba(20,18,15,.18)), url(${assets.about})` }}><div className="about-reference__stats reveal">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label === 'років досвіду' ? 'років досвіду у регіоні' : stat.label} dark />)}</div><TestimonialQuote /></div>
+        <div className="about-reference__media"><Image src={assets.about} alt="" fill sizes="(max-width: 900px) 100vw, 60vw" quality={90} style={{ objectFit: 'cover', objectPosition: 'center 48%' }} /><div className="about-reference__stats reveal">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label === 'років досвіду' ? 'років досвіду у регіоні' : stat.label} dark />)}</div><TestimonialQuote /></div>
       </section>
 
       <section className="process-story reveal" id="process">
-        <div className="process-story__media" aria-hidden="true" />
+        <div className="process-story__media" style={{ backgroundImage: 'none' }} aria-hidden="true"><Image src={assets.hero} alt="" fill sizes="100vw" quality={90} style={{ objectFit: 'cover', objectPosition: 'center 52%' }} /></div>
         <div className="process-story__veil" aria-hidden="true" />
         <div className="reference-shell process-story__layout">
           <div className="process-story__copy reveal reveal--from-left">
