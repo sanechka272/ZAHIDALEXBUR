@@ -4,6 +4,7 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import Image from 'next/image';
 import { blogArticles } from '@/lib/blog-data';
 import { assets, contact, processSteps, services } from '@/lib/site-data';
+import { BlogSection } from '@/components/BlogSection';
 import { LeadForm } from '@/components/LeadForm';
 
 const navItems = [
@@ -271,12 +272,7 @@ export default function LandingPage() {
         <div className="about-reference__media"><Image src={assets.about} alt="" fill sizes="(max-width: 900px) 100vw, 60vw" quality={90} style={{ objectFit: 'cover', objectPosition: 'center 48%' }} /><div className="about-reference__stats reveal">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label === 'років досвіду' ? 'років досвіду у регіоні' : stat.label} dark />)}</div><TestimonialQuote /></div>
       </section>
 
-      <section className="blog-reference" id="blog">
-        <div className="reference-shell">
-          <div className="blog-reference__header reveal"><div><EyebrowLabel>БЛОГ</EyebrowLabel><h2>Корисно знати до того,<br />як почнеться буріння</h2></div><a className="blog-reference__all" href="/blog">Усі матеріали <Arrow /></a></div>
-          <div className="blog-reference__grid">{blogArticles.map((article, index) => <BlogCard key={article.slug} article={article} index={index} />)}</div>
-        </div>
-      </section>
+      <BlogSection onLeadOpen={() => setLeadOpen(true)} />
 
       <section className="contact-reference" id="contact">
         <div className="reference-shell contact-reference__layout">
