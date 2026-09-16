@@ -30,6 +30,14 @@ test('Cloudflare deployment runs the standalone app in a Container instead of st
   assert.match(worker, /city/);
 });
 
+test('missing analytics secrets do not crash the public Worker runtime', () => {
+  const worker = read('cloudflare/worker.ts');
+  assert.doesNotMatch(worker, /function required\(/);
+  assert.doesNotMatch(worker, /throw new Error\(`\$\{name\} Worker secret is required`\)/);
+  assert.match(worker, /if \(env\.DATABASE_URL\)/);
+  assert.match(worker, /if \(env\.ANALYTICS_SESSION_SECRET\)/);
+});
+
 test('operations runbook calls out Cloudflare Containers paid-plan requirement', () => {
   const ops = read('docs/analytics-operations.md');
   assert.match(ops, /Cloudflare Containers/i);
