@@ -47,6 +47,25 @@ test('header follows approved reference with centered navigation, phone, callbac
   assert.match(header, /assets\.logo/);
 });
 
+test('desktop header nav is centered to the viewport and uses restrained premium typography', () => {
+  const innerRule = finalCss.match(/\.reference-header__inner\s*\{[\s\S]*?\}/)?.[0] ?? '';
+  const navRule = finalCss.match(/\.reference-header \.desktop-nav\s*\{[\s\S]*?\}/)?.[0] ?? '';
+  const linkRule = finalCss.match(/\.reference-header \.desktop-nav a\s*\{[\s\S]*?\}/)?.[0] ?? '';
+  const phoneRule = finalCss.match(/\.reference-header \.header-phone strong\s*\{[\s\S]*?\}/)?.[0] ?? '';
+  const callbackRule = finalCss.match(/\.reference-header \.header-callback\s*\{[\s\S]*?\}/)?.[0] ?? '';
+
+  assert.match(innerRule, /position:\s*relative/);
+  assert.match(navRule, /position:\s*absolute/);
+  assert.match(navRule, /left:\s*50%/);
+  assert.match(navRule, /transform:\s*translateX\(-50%\)/);
+  assert.match(linkRule, /font-family:\s*var\(--body\)/);
+  assert.match(linkRule, /font-size:\s*11(?:\.5)?px/);
+  assert.match(linkRule, /font-weight:\s*500/);
+  assert.match(linkRule, /letter-spacing:\s*\.0[12]em/);
+  assert.match(phoneRule, /font-weight:\s*600/);
+  assert.match(callbackRule, /font-weight:\s*(?:500|600)/);
+});
+
 test('brand uses a repository-local SVG logo and effective CSS never crops it with negative offsets', async () => {
   assert.match(siteData, /logo:\s*['"]\/brand\/zahidalexbur-logo\.svg['"]/);
   const svg = await readFile(new URL('../public/brand/zahidalexbur-logo.svg', import.meta.url), 'utf8');
