@@ -33,16 +33,31 @@ test('Cloudflare deployment keeps the standalone backend container while moving 
   assert.match(worker, /city/);
 });
 
-test('public documents and Next image responses are cached at the Worker edge instead of repeatedly waking the container', () => {
+test('public documents and static responses are cached at the Worker edge instead of repeatedly waking the container', () => {
   const worker = read('cloudflare/worker.ts');
   assert.match(worker, /caches\s+as\s+any/);
   assert.match(worker, /\.default/);
   assert.match(worker, /CF_VERSION_METADATA/);
-  assert.match(worker, /\/_next\/image/);
   assert.match(worker, /x-zab-edge-cache/);
   assert.match(worker, /\/api\//);
   assert.match(worker, /\/analytics/);
   assert.match(worker, /waitUntil\(/);
+});
+
+test('Next image requests are transformed at Cloudflare edge before the container fallback', () => {
+  const worker = read('cloudflare/worker.ts');
+
+  assert.match(worker, /transformNextImageAtEdge/);
+  assert.match(worker, /url\.pathname !== '\/_next\/image'/);
+  assert.match(worker, /value\.startsWith\('\/media\/'\)/);
+  assert.match(worker, /cf:\s*\{\s*image\s*\}/);
+  assert.match(worker, /x-zab-image-edge/);
+  assert.match(worker, /image-resizing/i);
+  assert.match(worker, /env\.ASSETS\.fetch\(request\)/);
+
+  const transformPosition = worker.indexOf('const edgeImage = await transformNextImageAtEdge');
+  const containerPosition = worker.indexOf('const container = getContainer');
+  assert.ok(transformPosition >= 0 && containerPosition > transformPosition, 'edge image transform must run before container fallback');
 });
 
 test('missing analytics secrets do not crash the public Worker runtime', () => {
