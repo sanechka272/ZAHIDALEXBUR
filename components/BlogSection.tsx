@@ -7,12 +7,6 @@ import { featuredBlogArticle, landingBlogArticles } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
 
 const categories = ['УСІ МАТЕРІАЛИ', 'ГЕОЛОГІЯ', 'БУРІННЯ', 'ОБЛАШТУВАННЯ', 'ВОДА', 'ЦІНИ', 'ПОРАДИ'] as const;
-const locations = ['Львів', 'Сокільники', 'Пустомити', 'Дрогобич', 'Стрий', 'Городок', 'Жовква', 'Буськ', 'Камʼянка-Бузька', 'Яворів'];
-const popularSlugs = [
-  'hlybyna-sverdlovyny-lvivska-oblast',
-  'filtrova-chy-bezfiltrova-sverdlovyna',
-  'skilky-koshtuye-burinnya-sverdlovyny-lviv',
-];
 
 function ArrowIcon() {
   return (
@@ -31,10 +25,10 @@ function SearchIcon() {
   );
 }
 
-export function BlogSection({ onLeadOpen }: { onLeadOpen: () => void }) {
+export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => void }) {
+  void _onLeadOpen;
   const [activeCategory, setActiveCategory] = useState<(typeof categories)[number]>('УСІ МАТЕРІАЛИ');
   const [query, setQuery] = useState('');
-  const [activeLocation, setActiveLocation] = useState('Львів');
 
   const filteredArticles = useMemo(() => {
     const normalized = query.trim().toLocaleLowerCase('uk-UA');
@@ -44,8 +38,6 @@ export function BlogSection({ onLeadOpen }: { onLeadOpen: () => void }) {
       return matchesCategory && matchesQuery;
     });
   }, [activeCategory, query]);
-
-  const popular = [featuredBlogArticle, ...landingBlogArticles].filter((article) => popularSlugs.includes(article.slug));
 
   return (
     <section className="blog-kb" id="blog" aria-labelledby="blog-kb-title">
@@ -123,47 +115,6 @@ export function BlogSection({ onLeadOpen }: { onLeadOpen: () => void }) {
             ))}
             {filteredArticles.length === 0 && <p className="blog-kb__empty">За цим запитом матеріалів не знайдено.</p>}
           </div>
-        </div>
-      </div>
-
-      <div className="blog-kb__popular">
-        <div className="blog-kb__popular-photo" aria-hidden="true"><Image src={assets.about} alt="" fill sizes="42vw" quality={90} /></div>
-        <div className="reference-shell blog-kb__popular-inner">
-          <span className="blog-kb__eyebrow blog-kb__eyebrow--light">ПОПУЛЯРНЕ</span>
-          <div className="blog-kb__popular-grid">
-            {popular.map((article, index) => (
-              <article key={article.slug}>
-                <span>0{index + 1}</span>
-                <h3><Link href={`/blog/${article.slug}`}>{article.title}</Link></h3>
-                <small>{article.readTime}</small>
-                <Link href={`/blog/${article.slug}`} aria-label={`Читати ${article.title}`}><ArrowIcon /></Link>
-              </article>
-            ))}
-          </div>
-          <blockquote>«Знання про воду економить ваш час і гроші»</blockquote>
-        </div>
-      </div>
-
-      <div className="blog-kb__locations">
-        <div className="reference-shell">
-          <div className="blog-kb__locations-head">
-            <div><span className="blog-kb__eyebrow">ЛОКАЛЬНА БАЗА ЗНАНЬ</span><h3>Буріння у вашому районі</h3><p>Корисні матеріали для населених пунктів Львівської області.</p></div>
-            <Link href="/blog">Усі матеріали по районам <ArrowIcon /></Link>
-          </div>
-          <div className="blog-kb__location-tabs" role="tablist" aria-label="Населені пункти">
-            {locations.map((location) => (
-              <button key={location} type="button" role="tab" aria-selected={activeLocation === location} className={activeLocation === location ? 'is-active' : ''} onClick={() => setActiveLocation(location)}>{location}</button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="blog-kb__cta">
-        <div className="blog-kb__cta-photo" aria-hidden="true"><Image src={assets.about} alt="" fill sizes="38vw" quality={90} /></div>
-        <div className="reference-shell blog-kb__cta-grid">
-          <div><span className="blog-kb__eyebrow blog-kb__eyebrow--light">НЕ ЗНАЙШЛИ ВІДПОВІДЬ?</span><h3>Розберемо вашу<br />ділянку окремо</h3></div>
-          <div className="blog-kb__cta-copy"><p>Передайте адресу або геолокацію — зорієнтуємо по глибині та типу свердловини.</p><button type="button" onClick={onLeadOpen}>Обговорити свердловину <ArrowIcon /></button></div>
-          <div className="blog-kb__cta-label">НАДІЙНА<br />ВОДА —<br />РЕАЛЬНА ПЕРЕВАГА</div>
         </div>
       </div>
     </section>
