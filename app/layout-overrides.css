@@ -5,9 +5,29 @@
 }
 
 /* Keep the two-line hero headline fully visible on every viewport. */
+.reference-hero__copy {
+  width: min(760px, 66%);
+  max-width: 760px;
+}
+
+.reference-hero__title {
+  font-size: clamp(64px, 6vw, 100px);
+  line-height: .88;
+  letter-spacing: -.045em;
+}
+
+.reference-hero .hero-line {
+  padding-right: .08em;
+}
+
+.reference-hero .hero-line--2 {
+  font-size: .92em;
+}
+
 @media (min-width: 901px) and (max-width: 1180px) {
   .reference-hero__copy {
     width: min(780px, 78%);
+    max-width: 780px;
   }
 
   .reference-hero__title {
@@ -29,6 +49,11 @@
 }
 
 @media (max-width: 767px) {
+  .reference-hero__copy {
+    width: 100%;
+    max-width: none;
+  }
+
   .reference-hero__title {
     font-size: clamp(46px, 13.2vw, 66px);
     line-height: .89;
