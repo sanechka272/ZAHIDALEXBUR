@@ -11,7 +11,7 @@ export const assets = {
   about: '/media/about-mountain-forest.jpg',
   services: [
     '/media/service-bezfiltrova-sverdlovyna-main.png',
-    '/media/service-filter-drilling.jpg',
+    '/media/service-filtrova-sverdlovyna-main.png',
     '/media/service-industrial-rig.jpg',
   ],
 };
