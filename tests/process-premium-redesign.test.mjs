@@ -25,12 +25,13 @@ test('legacy horizontal and mobile flipping process implementations are removed'
   assert.doesNotMatch(landing, /process-reference__steps|process-reference-step/);
 });
 
-test('process visual layer is isolated, responsive and uses the repository-local background', () => {
+test('process visual layer is isolated, responsive and uses optimized repository-local media', () => {
   assert.equal(existsSync(processCssUrl), true, 'app/process.css must exist');
   const css = readFileSync(processCssUrl, 'utf8');
   assert.match(layout, /import '\.\/process\.css';/);
   assert.match(css, /\.process-story\s*\{[^}]*border-radius:\s*24px/i);
-  assert.match(css, /\.process-story__media[\s\S]*url\(['"]?\/media\/hero-waterwell\.jpg/i);
+  assert.match(landing, /process-story__media[\s\S]*?<Image[\s\S]*?src=\{assets\.hero\}/i);
+  assert.doesNotMatch(css, /hero-waterwell\.jpg/i);
   assert.match(css, /backdrop-filter:\s*blur\(/i);
   assert.match(css, /\.process-story__glass/i);
   assert.match(css, /@media\s*\(max-width:\s*767px\)[\s\S]*\.process-story__layout[\s\S]*grid-template-columns:\s*1fr/i);
