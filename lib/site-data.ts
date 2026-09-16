@@ -12,7 +12,7 @@ export const assets = {
   services: [
     '/media/service-bezfiltrova-sverdlovyna-main.png',
     '/media/service-filtrova-sverdlovyna-main.png',
-    '/media/service-industrial-rig.jpg',
+    '/media/service-promyslova-sverdlovyna-main.png',
   ],
 };
 
