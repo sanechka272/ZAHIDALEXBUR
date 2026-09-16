@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 
 const landing = readFileSync(new URL('../components/LandingPage.tsx', import.meta.url), 'utf8');
+const blogSection = readFileSync(new URL('../components/BlogSection.tsx', import.meta.url), 'utf8');
 const mobileCss = readFileSync(new URL('../app/mobile.css', import.meta.url), 'utf8');
 const contentCss = readFileSync(new URL('../app/content.css', import.meta.url), 'utf8');
 const processCss = readFileSync(new URL('../app/process.css', import.meta.url), 'utf8');
@@ -17,7 +18,7 @@ test('services header has no need filters or carousel arrows in rendered JSX', (
   assert.match(mobileCss, /\.services-reference__header\s*\{[\s\S]*?text-align:\s*center/i);
 });
 
-test('blog contains five internal articles and cards link to their real routes', () => {
+test('blog contains seven internal SEO articles and cards link to their real routes', () => {
   assert.equal(existsSync(blogDataUrl), true, 'lib/blog-data.ts must exist');
   assert.equal(existsSync(blogIndexUrl), true, 'blog index page must exist');
   assert.equal(existsSync(blogArticleUrl), true, 'dynamic blog article page must exist');
@@ -26,10 +27,12 @@ test('blog contains five internal articles and cards link to their real routes',
   const blogPage = readFileSync(blogArticleUrl, 'utf8');
   const slugCount = (blogData.match(/slug:\s*'/g) || []).length;
 
-  assert.equal(slugCount, 5);
-  assert.match(landing, /href=\{`\/blog\/\$\{article\.slug\}`\}/);
-  assert.doesNotMatch(landing, /href="https:\/\/zahidalexbur\.com\.ua\/blog"/);
+  assert.equal(slugCount, 7);
+  assert.match(landing, /<BlogSection onLeadOpen=/);
+  assert.match(blogSection, /href=\{`\/blog\/\$\{article\.slug\}`\}/);
+  assert.doesNotMatch(blogSection, /href="https:\/\/zahidalexbur\.com\.ua\/blog"/);
   assert.match(blogPage, /generateStaticParams/);
+  assert.match(blogPage, /dynamicParams\s*=\s*false/);
 });
 
 test('process is one responsive glass journey instead of a rotating mobile stage', () => {
