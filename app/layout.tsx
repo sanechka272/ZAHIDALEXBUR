@@ -9,6 +9,7 @@ import './header.css';
 import './content.css';
 import './mobile.css';
 import './process.css';
+import './layout-overrides.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://zahidalexbur.com.ua'),
