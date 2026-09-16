@@ -5,6 +5,7 @@ import './globals.css';
 import './fixes.css';
 import './final.css';
 import './media.css';
+import './header.css';
 import './content.css';
 import './mobile.css';
 import './process.css';
