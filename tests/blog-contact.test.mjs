@@ -27,11 +27,11 @@ test('knowledge base has seven routed articles and responsive 3-column library g
   assert.match(layout, /import '\.\/blog-knowledge\.css';/);
 });
 
-test('blog filter, search and location hub are implemented in-page', () => {
+test('blog keeps filter and search while extra popular, location and final CTA bands stay removed', () => {
   assert.match(blogSection, /УСІ МАТЕРІАЛИ/);
   assert.match(blogSection, /type="search"/);
   assert.match(blogSection, /Пошук статей/);
-  assert.match(blogSection, /Буріння у вашому районі/);
-  assert.match(blogSection, /Сокільники/);
-  assert.match(blogSection, /ПОПУЛЯРНЕ/);
+  assert.doesNotMatch(blogSection, /ПОПУЛЯРНЕ/);
+  assert.doesNotMatch(blogSection, /Буріння у вашому районі/);
+  assert.doesNotMatch(blogSection, /Розберемо вашу/);
 });
