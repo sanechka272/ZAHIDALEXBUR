@@ -7,12 +7,12 @@ export const contact = {
 
 export const assets = {
   logo: '/brand/zahidalexbur-logo.svg',
-  hero: '/media/64ac66b2-80b3-4edb-8c64-a2423104debc.png',
+  hero: '/media/hero-drilling-main.png',
   about: '/media/about-mountain-forest.jpg',
   services: [
-    '/media/service-bezfiltrova-sverdlovyna-main.png',
-    '/media/service-filtrova-sverdlovyna-main.png',
-    '/media/service-promyslova-sverdlovyna-main.png',
+    '/media/service-bezfiltrova-sverdlovyna-main.webp',
+    '/media/service-filtrova-sverdlovyna-main.webp',
+    '/media/service-promyslova-sverdlovyna-main.webp',
   ],
 };
 
