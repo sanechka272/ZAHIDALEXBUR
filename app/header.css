@@ -25,7 +25,7 @@
     gap: clamp(20px, 1.85vw, 34px);
     width: max-content;
     white-space: nowrap;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%) translateY(-50%);
   }
 
   .reference-header .desktop-nav a {
