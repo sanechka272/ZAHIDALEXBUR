@@ -9,16 +9,11 @@ type EdgeCf = {
 
 type Env = {
   APP_CONTAINER: unknown;
-  DATABASE_URL: string;
-  ANALYTICS_SESSION_SECRET: string;
+  DATABASE_URL?: string;
+  ANALYTICS_SESSION_SECRET?: string;
   DATABASE_POOL_SIZE?: string;
   ANALYTICS_RETENTION_BATCH_SIZE?: string;
 };
-
-function required(value: string | undefined, name: string) {
-  if (!value) throw new Error(`${name} Worker secret is required`);
-  return value;
-}
 
 export class ZahidaContainer extends Container {
   defaultPort = 3000;
@@ -28,12 +23,16 @@ export class ZahidaContainer extends Container {
 
   constructor(ctx: any, env: Env) {
     super(ctx, env);
-    this.envVars = {
-      DATABASE_URL: required(env.DATABASE_URL, 'DATABASE_URL'),
-      ANALYTICS_SESSION_SECRET: required(env.ANALYTICS_SESSION_SECRET, 'ANALYTICS_SESSION_SECRET'),
+
+    const envVars: Record<string, string> = {
       DATABASE_POOL_SIZE: env.DATABASE_POOL_SIZE ?? '5',
       ANALYTICS_RETENTION_BATCH_SIZE: env.ANALYTICS_RETENTION_BATCH_SIZE ?? '5000',
     };
+
+    if (env.DATABASE_URL) envVars.DATABASE_URL = env.DATABASE_URL;
+    if (env.ANALYTICS_SESSION_SECRET) envVars.ANALYTICS_SESSION_SECRET = env.ANALYTICS_SESSION_SECRET;
+
+    this.envVars = envVars;
   }
 }
 
