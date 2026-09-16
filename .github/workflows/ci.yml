@@ -2,13 +2,31 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/first-party-analytics-dashboard]
   pull_request:
     branches: [main]
 
 jobs:
   verify:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: zahidalexbur_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d zahidalexbur_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/zahidalexbur_test
+      ANALYTICS_SESSION_SECRET: ci-only-session-secret-at-least-32-bytes
+      GEOIP_CITY_DB_PATH: ./tests/fixtures/empty.mmdb
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,8 +39,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Migrate test database
+        run: npm run db:migrate
+
       - name: Run tests
         run: npm test
 
       - name: Build
         run: npm run build
+
+      - name: Audit production dependencies
+        run: npm run security:audit
+
+      - name: Build production Docker image
+        run: docker build -t zahidalexbur-ci .
+
+      - name: Validate Wrangler deployment bundle
+        run: npx wrangler deploy --dry-run --outdir .wrangler-dry-run

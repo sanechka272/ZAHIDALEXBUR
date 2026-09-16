@@ -1,15 +1,35 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "zahidalexbur",
-  "compatibility_date": "2026-09-11",
-  "build": {
-    "command": "npm run build"
+  "main": "cloudflare/worker.ts",
+  "compatibility_date": "2026-09-15",
+  "containers": [
+    {
+      "class_name": "ZahidaContainer",
+      "image": "./Dockerfile",
+      "max_instances": 1,
+      "instance_type": "basic"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "APP_CONTAINER",
+        "class_name": "ZahidaContainer"
+      }
+    ]
   },
-  "assets": {
-    "directory": "./out",
-    "not_found_handling": "404-page",
-    "html_handling": "auto-trailing-slash"
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["ZahidaContainer"]
+    }
+  ],
+  "vars": {
+    "DATABASE_POOL_SIZE": "5",
+    "ANALYTICS_RETENTION_BATCH_SIZE": "5000"
+  },
+  "observability": {
+    "enabled": true
   }
 }
-
-// deploy-trigger: blog-contact-2026-09-12

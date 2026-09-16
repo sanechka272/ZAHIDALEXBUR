@@ -1,8 +1,9 @@
 'use client';
 
-import { FormEvent, useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { blogArticles } from '@/lib/blog-data';
 import { assets, contact, processSteps, services } from '@/lib/site-data';
+import { LeadForm } from '@/components/LeadForm';
 
 const navItems = [
   { label: 'Головна', href: '#top' },
@@ -156,16 +157,6 @@ function TestimonialQuote() {
       <div className="testimonial-quote__person"><button type="button" aria-label="Перейти до процесу" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}><PlayIcon /></button><p><strong>— Олександр Герман</strong><span>Засновник компанії</span></p></div>
     </div>
   );
-}
-
-function LeadForm() {
-  const [sent, setSent] = useState(false);
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSent(true);
-  }
-  if (sent) return <div className="reference-form-success"><strong>Дякуємо.</strong><span>Заявку підготовлено. Для швидкого звʼязку зателефонуйте:</span><a href={contact.phoneHref}>{contact.phoneDisplay}</a></div>;
-  return <form className="reference-lead-form" onSubmit={submit}><label><span>Імʼя</span><input name="name" autoComplete="name" /></label><label><span>Телефон</span><input name="phone" type="tel" required autoComplete="tel" inputMode="tel" placeholder="+380" /></label><label><span>Населений пункт</span><input name="location" autoComplete="address-level2" /></label><button type="submit">Підготувати заявку <Arrow /></button></form>;
 }
 
 export default function LandingPage() {
