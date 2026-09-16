@@ -14,14 +14,15 @@
   inset: 0;
   z-index: -3;
   overflow: hidden;
+  background-image: url('/media/6cf70733-a291-4fd2-ae11-f5d510e1d959.webp') !important;
+  background-size: cover;
+  background-position: center 52%;
+  background-repeat: no-repeat;
   transform: scale(1.015);
 }
 
 .process-story__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 52%;
+  display: none;
 }
 
 .process-story__veil {
@@ -322,11 +323,8 @@
   }
 
   .process-story__media {
+    background-position: 56% center;
     transform: scale(1.03);
-  }
-
-  .process-story__media img {
-    object-position: 64% center;
   }
 
   .process-story__veil {
