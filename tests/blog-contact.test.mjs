@@ -2,30 +2,36 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const component = await readFile(new URL('../components/LandingPage.tsx', import.meta.url), 'utf8');
+const landing = await readFile(new URL('../components/LandingPage.tsx', import.meta.url), 'utf8');
+const blogSection = await readFile(new URL('../components/BlogSection.tsx', import.meta.url), 'utf8');
 const blogData = await readFile(new URL('../lib/blog-data.ts', import.meta.url), 'utf8');
-const css = await readFile(new URL('../app/content.css', import.meta.url), 'utf8');
+const blogCss = await readFile(new URL('../app/blog-knowledge.css', import.meta.url), 'utf8');
 const layout = await readFile(new URL('../app/layout.tsx', import.meta.url), 'utf8');
 
-test('blog and contacts are real landing sections and navigation targets them', () => {
-  assert.match(component, /label: 'Блог', href: '#blog'/);
-  assert.match(component, /className="blog-reference" id="blog"/);
-  assert.match(component, /blogArticles\.map/);
-  assert.match(component, /className="contact-reference" id="contact"/);
-  assert.match(component, /contact\.phoneDisplay/);
-  assert.match(component, /contact\.email/);
-  assert.match(component, /contact\.address/);
-  assert.match(component, /<LeadForm \/>/);
+test('blog knowledge base stays inside the landing flow and links to article routes', () => {
+  assert.match(landing, /label: 'Блог', href: '#blog'/);
+  assert.match(landing, /<BlogSection onLeadOpen=/);
+  assert.match(blogSection, /id="blog"/);
+  assert.match(blogSection, /href=\{`\/blog\/\$\{article\.slug\}`\}/);
+  assert.match(landing, /className="contact-reference" id="contact"/);
 });
 
-test('blog uses repository-local image assets, five articles and production responsive styles', () => {
-  assert.doesNotMatch(component, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
-  assert.match(blogData, /assets\.services\[0\]/);
-  assert.match(blogData, /assets\.hero/);
-  assert.equal((blogData.match(/slug:\s*'/g) || []).length, 5);
-  assert.match(css, /\.blog-reference-card/);
-  assert.match(css, /\.contact-reference/);
-  assert.match(css, /@media \(max-width:767px\)/);
-  assert.match(css, /prefers-reduced-motion:reduce/);
-  assert.match(layout, /import '\.\/content\.css';/);
+test('knowledge base has seven routed articles and responsive 3-column library grid', () => {
+  assert.equal((blogData.match(/slug:\s*'/g) || []).length, 7);
+  assert.match(blogData, /featured:\s*true/);
+  assert.match(blogData, /landingBlogArticles/);
+  assert.match(blogCss, /\.blog-kb__grid\s*\{[\s\S]*grid-template-columns:\s*repeat\(3/);
+  assert.match(blogCss, /@media \(max-width: 900px\)/);
+  assert.match(blogCss, /@media \(max-width: 767px\)/);
+  assert.match(blogCss, /prefers-reduced-motion/);
+  assert.match(layout, /import '\.\/blog-knowledge\.css';/);
+});
+
+test('blog filter, search and location hub are implemented in-page', () => {
+  assert.match(blogSection, /УСІ МАТЕРІАЛИ/);
+  assert.match(blogSection, /type="search"/);
+  assert.match(blogSection, /Пошук статей/);
+  assert.match(blogSection, /Буріння у вашому районі/);
+  assert.match(blogSection, /Сокільники/);
+  assert.match(blogSection, /ПОПУЛЯРНЕ/);
 });
