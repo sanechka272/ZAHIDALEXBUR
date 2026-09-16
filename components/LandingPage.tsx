@@ -268,7 +268,7 @@ export default function LandingPage() {
       </section>
 
       <section className="about-reference" id="about">
-        <div className="about-reference__copy reveal reveal--from-left"><div><EyebrowLabel light>ПРО НАС</EyebrowLabel><h2>Локальна компанія<br />з реальним досвідом</h2><p>ZAHIDALEXBUR — це команда фахівців, яка знає геологію регіону, працює з сучасною технікою та забезпечує результат. Ми не просто буримо — ми даємо людям доступ до якісної води.</p><PillButton variant="brown" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}>Дізнатися більше</PillButton><div className="about-reference__script"><span>Люди</span><span>Регіон</span><span>Результат</span></div></div></div>
+        <div className="about-reference__copy reveal reveal--from-left"><div><EyebrowLabel light>ПРО НАС</EyebrowLabel><h2>Локальна компанія<br />з реальним досвідом</h2><p>ZAHIDALEXBUR — це команда фахівців, яка знає геологію регіону, працює з сучасною технікою та забезпечує результат. Ми не просто буримо — ми даємо людям доступ до якісної води.</p><PillButton variant="brown" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}>Дізнатися більше</PillButton></div></div>
         <div className="about-reference__media"><Image src={assets.about} alt="" fill sizes="(max-width: 900px) 100vw, 60vw" quality={90} style={{ objectFit: 'cover', objectPosition: 'center 48%' }} /><div className="about-reference__stats reveal">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label === 'років досвіду' ? 'років досвіду у регіоні' : stat.label} dark />)}</div><TestimonialQuote /></div>
       </section>
 
