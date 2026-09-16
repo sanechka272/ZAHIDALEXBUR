@@ -1,53 +1,88 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-data';
-import { assets } from '@/lib/site-data';
+import { assets, contact } from '@/lib/site-data';
 
 export const dynamic = 'force-static';
 export const revalidate = false;
+
+export const metadata: Metadata = {
+  title: 'Блог про свердловини, воду та геологію | ZAHIDALEXBUR',
+  description: 'База знань ZAHIDALEXBUR про буріння свердловин у Львові та області: геологія, вода, облаштування, насоси, ціни та практичні поради.',
+  alternates: { canonical: '/blog' },
+  openGraph: {
+    type: 'website',
+    locale: 'uk_UA',
+    title: 'Блог / База знань ZAHIDALEXBUR',
+    description: 'Практичні матеріали про буріння свердловин, воду та геологію Львівської області.',
+    url: '/blog',
+    images: [{ url: assets.hero, alt: 'Буріння свердловини у Львівській області' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Блог / База знань ZAHIDALEXBUR',
+    description: 'Практичні матеріали про буріння свердловин, воду та геологію.',
+    images: [assets.hero],
+  },
+};
 
 export default function BlogIndexPage() {
   return (
     <main className="blog-page">
       <header className="blog-page__header">
         <div className="blog-page__shell blog-page__nav">
-          <Link href="/" className="blog-page__brand"><img src={assets.logo} alt="ZAHIDALEXBUR" /></Link>
-          <Link href="/#contact" className="blog-page__contact">Звʼязатися</Link>
+          <Link href="/#top" className="blog-page__brand"><img src={assets.logo} alt="ZAHIDALEXBUR — буріння свердловин" /></Link>
+          <nav aria-label="Навігація блогу" className="blog-page__topnav">
+            <Link href="/#services">Послуги</Link>
+            <Link href="/#about">Про нас</Link>
+            <Link href="/#blog" aria-current="page">Блог</Link>
+            <Link href="/#contact">Контакти</Link>
+          </nav>
+          <a href={contact.phoneHref} className="blog-page__contact">{contact.phoneDisplay}</a>
         </div>
       </header>
 
-      <section className="blog-page__hero">
+      <section className="blog-page__hero" aria-labelledby="blog-index-title">
         <div className="blog-page__shell">
-          <span>БЛОГ ZAHIDALEXBUR</span>
-          <h1>Корисно знати<br />до початку буріння</h1>
-          <p>Практичні матеріали про планування, геологію, типи свердловин, вартість і процес робіт.</p>
+          <span>БЛОГ / БАЗА ЗНАНЬ</span>
+          <h1 id="blog-index-title">Про свердловини<br />без зайвої води</h1>
+          <p>Практичні матеріали про буріння, геологію, воду, облаштування та вартість свердловин у Львові та області.</p>
         </div>
       </section>
 
-      <section className="blog-page__list">
+      <section className="blog-page__list" aria-label="Усі матеріали">
         <div className="blog-page__shell blog-page__grid">
           {blogArticles.map((article, index) => (
-            <Link href={`/blog/${article.slug}`} className="blog-index-card" key={article.slug}>
-              <div className="blog-index-card__media">
+            <article className="blog-index-card" key={article.slug}>
+              <Link href={`/blog/${article.slug}`} className="blog-index-card__media" aria-label={article.title}>
                 <Image
                   src={article.image}
-                  alt={article.title}
+                  alt={article.imageAlt}
                   fill
-                  sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 640px"
+                  sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw"
                   quality={90}
                 />
                 <span>0{index + 1}</span>
-              </div>
+              </Link>
               <div className="blog-index-card__body">
-                <div><span>{article.tag}</span><small>{article.readTime}</small></div>
-                <h2>{article.title}</h2>
+                <div><span>{article.category}</span><small>{article.readTime}</small></div>
+                <h2><Link href={`/blog/${article.slug}`}>{article.title}</Link></h2>
                 <p>{article.excerpt}</p>
-                <strong>Читати статтю →</strong>
+                <Link href={`/blog/${article.slug}`}><strong>Читати статтю →</strong></Link>
               </div>
-            </Link>
+            </article>
           ))}
         </div>
       </section>
+
+      <footer className="reference-footer blog-page__footer">
+        <div className="blog-page__shell reference-footer__inner">
+          <Link href="/#top" className="reference-footer__brand"><img src={assets.logo} alt="ZAHIDALEXBUR" /></Link>
+          <nav aria-label="Навігація у футері"><Link href="/#services">Послуги</Link><Link href="/#about">Про нас</Link><Link href="/#blog">Блог</Link><Link href="/#contact">Контакти</Link></nav>
+          <div><a href={contact.phoneHref}>{contact.phoneDisplay}</a><a href={`mailto:${contact.email}`}>{contact.email}</a></div>
+        </div>
+      </footer>
     </main>
   );
 }
