@@ -13,10 +13,15 @@
   position: absolute;
   inset: 0;
   z-index: -3;
-  background-image: url('/media/hero-waterwell.jpg');
-  background-size: cover;
-  background-position: center 52%;
+  overflow: hidden;
   transform: scale(1.015);
+}
+
+.process-story__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 52%;
 }
 
 .process-story__veil {
@@ -317,8 +322,11 @@
   }
 
   .process-story__media {
-    background-position: 64% center;
     transform: scale(1.03);
+  }
+
+  .process-story__media img {
+    object-position: 64% center;
   }
 
   .process-story__veil {
