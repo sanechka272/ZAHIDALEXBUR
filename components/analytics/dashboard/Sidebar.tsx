@@ -52,7 +52,7 @@ export default function Sidebar({ open, onClose, footer, active = 'Analytics' }:
         </nav>
         <div className="analytics-sidebar__spacer" />
         <div className="analytics-sidebar-story">
-          <img src="/media/service-industrial-rig.jpg" alt="" aria-hidden="true" />
+          <img src="/media/64ac66b2-80b3-4edb-8c64-a2423104debc.png" alt="" aria-hidden="true" />
           <div className="analytics-sidebar-story__shade" />
           <div className="analytics-sidebar-story__copy">
             <span>01 / FIELD DATA</span>
