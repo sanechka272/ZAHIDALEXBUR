@@ -4,6 +4,44 @@
   display: none;
 }
 
+/* Keep the two-line hero headline fully visible on every viewport. */
+@media (min-width: 901px) and (max-width: 1180px) {
+  .reference-hero__copy {
+    width: min(780px, 78%);
+  }
+
+  .reference-hero__title {
+    font-size: clamp(66px, 7vw, 84px);
+    line-height: .87;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 900px) {
+  .reference-hero__copy {
+    width: 100%;
+    max-width: 760px;
+  }
+
+  .reference-hero__title {
+    font-size: clamp(60px, 8vw, 72px);
+    line-height: .88;
+  }
+}
+
+@media (max-width: 767px) {
+  .reference-hero__title {
+    font-size: clamp(46px, 13.2vw, 66px);
+    line-height: .89;
+    letter-spacing: -.045em;
+  }
+}
+
+@media (max-width: 430px) {
+  .reference-hero__title {
+    font-size: clamp(42px, 12.2vw, 52px);
+  }
+}
+
 .blog-reference__grid,
 .blog-page__grid {
   display: grid;
