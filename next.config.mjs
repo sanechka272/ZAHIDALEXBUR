@@ -3,7 +3,7 @@ const nextConfig = {
   output: 'standalone',
   images: {
     qualities: [90],
-    formats: ['image/avif', 'image/webp'],
+    formats: ['image/webp'],
     minimumCacheTTL: 604800,
   },
 };
