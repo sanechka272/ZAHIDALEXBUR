@@ -10,7 +10,7 @@ export const assets = {
   hero: '/media/64ac66b2-80b3-4edb-8c64-a2423104debc.png',
   about: '/media/about-mountain-forest.jpg',
   services: [
-    '/media/service-private-water.jpg',
+    '/media/service-bezfiltrova-sverdlovyna-main.png',
     '/media/service-filter-drilling.jpg',
     '/media/service-industrial-rig.jpg',
   ],
