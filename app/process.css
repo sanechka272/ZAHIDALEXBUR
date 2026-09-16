@@ -18,7 +18,10 @@
   background-size: cover;
   background-position: center 52%;
   background-repeat: no-repeat;
+  opacity: 1;
   transform: scale(1.015);
+  transform-origin: 50% 50%;
+  will-change: opacity, transform;
 }
 
 .process-story__media img {
@@ -238,15 +241,24 @@
   line-height: 1.45;
 }
 
+/* Keep the section itself stable and animate only the background media. */
 .motion-ready .process-story.reveal {
-  opacity: 0;
-  transform: translateY(26px);
-  transition: opacity .72s cubic-bezier(.22,.61,.36,1), transform .72s cubic-bezier(.22,.61,.36,1);
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
-.motion-ready .process-story.reveal.is-visible {
+.motion-ready .process-story__media {
+  opacity: .08;
+  transform: scale(1.055);
+  transition:
+    opacity .82s ease,
+    transform 1.18s cubic-bezier(.22,.61,.36,1);
+}
+
+.motion-ready .process-story.is-visible .process-story__media {
   opacity: 1;
-  transform: translateY(0);
+  transform: scale(1.015);
 }
 
 .motion-ready .process-story__step {
@@ -324,6 +336,14 @@
 
   .process-story__media {
     background-position: 56% center;
+    transform: scale(1.03);
+  }
+
+  .motion-ready .process-story__media {
+    transform: scale(1.07);
+  }
+
+  .motion-ready .process-story.is-visible .process-story__media {
     transform: scale(1.03);
   }
 
@@ -418,6 +438,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .process-story,
+  .process-story__media,
   .process-story__step,
   .process-story__cta {
     animation: none !important;
@@ -426,6 +447,7 @@
   }
 
   .process-story,
+  .process-story__media,
   .process-story__step {
     opacity: 1 !important;
   }
