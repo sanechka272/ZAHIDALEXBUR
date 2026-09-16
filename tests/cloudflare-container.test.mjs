@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 const root = new URL('../', import.meta.url);
 const read = (path) => readFileSync(new URL(path, root), 'utf8');
 
-test('Cloudflare deployment runs the standalone app in a Container instead of static out assets', () => {
+test('Cloudflare deployment keeps the standalone backend container while moving public assets to the edge', () => {
   const config = read('wrangler.jsonc');
   const worker = read('cloudflare/worker.ts');
   const pkg = JSON.parse(read('package.json'));
@@ -16,18 +16,33 @@ test('Cloudflare deployment runs the standalone app in a Container instead of st
   assert.match(config, /"image"\s*:\s*"\.\/Dockerfile"/);
   assert.match(config, /"max_instances"\s*:\s*1/);
   assert.match(config, /"new_sqlite_classes"/);
+  assert.match(config, /"assets"\s*:\s*\{[\s\S]*"directory"\s*:\s*"\.\/public"[\s\S]*"binding"\s*:\s*"ASSETS"/);
+  assert.match(config, /"version_metadata"\s*:\s*\{[\s\S]*"binding"\s*:\s*"CF_VERSION_METADATA"/);
 
   assert.equal(pkg.dependencies['@cloudflare/containers'], '0.3.7');
   assert.equal(pkg.devDependencies.wrangler, '4.131.2');
   assert.equal(pkg.scripts.deploy, 'wrangler deploy');
 
   assert.match(worker, /class ZahidaContainer extends Container/);
+  assert.match(worker, /sleepAfter\s*=\s*['"]2h['"]/);
   assert.match(worker, /DATABASE_URL/);
   assert.match(worker, /ANALYTICS_SESSION_SECRET/);
   assert.match(worker, /getContainer\(/);
   assert.match(worker, /x-zab-edge-country/);
   assert.match(worker, /regionCode/);
   assert.match(worker, /city/);
+});
+
+test('public documents and Next image responses are cached at the Worker edge instead of repeatedly waking the container', () => {
+  const worker = read('cloudflare/worker.ts');
+  assert.match(worker, /caches\s+as\s+any/);
+  assert.match(worker, /\.default/);
+  assert.match(worker, /CF_VERSION_METADATA/);
+  assert.match(worker, /\/_next\/image/);
+  assert.match(worker, /x-zab-edge-cache/);
+  assert.match(worker, /\/api\//);
+  assert.match(worker, /\/analytics/);
+  assert.match(worker, /waitUntil\(/);
 });
 
 test('missing analytics secrets do not crash the public Worker runtime', () => {
