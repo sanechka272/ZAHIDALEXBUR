@@ -8,6 +8,8 @@ const sitemap = await readFile(new URL('../app/sitemap.ts', import.meta.url), 'u
 const robots = await readFile(new URL('../app/robots.ts', import.meta.url), 'utf8');
 const blogData = await readFile(new URL('../lib/blog-data.ts', import.meta.url), 'utf8');
 const blogSection = await readFile(new URL('../components/BlogSection.tsx', import.meta.url), 'utf8');
+const articleCss = await readFile(new URL('../app/blog-seo.css', import.meta.url), 'utf8');
+const articleInteractions = await readFile(new URL('../components/ArticleInteractions.tsx', import.meta.url), 'utf8');
 
 test('article routes are statically generated and unknown slugs are disabled', () => {
   assert.match(articlePage, /generateStaticParams/);
@@ -22,6 +24,7 @@ test('article metadata contains canonical Open Graph and Twitter fields', () => 
   assert.match(articlePage, /openGraph:/);
   assert.match(articlePage, /type:\s*'article'/);
   assert.match(articlePage, /twitter:/);
+  assert.match(articlePage, /datePublished/);
   assert.match(blogData, /metaTitle:/);
   assert.match(blogData, /metaDescription:/);
   assert.match(blogData, /imageAlt:/);
@@ -31,10 +34,36 @@ test('article pages use semantic heading hierarchy and structured data', () => {
   assert.equal((articlePage.match(/<h1>/g) || []).length, 1);
   assert.match(articlePage, /<h2>\{section\.heading\}<\/h2>/);
   assert.match(articlePage, /<h3><Link href=\{`\/blog\//);
+  assert.match(articlePage, /<time dateTime=/);
   assert.match(articlePage, /BlogPosting/);
   assert.match(articlePage, /BreadcrumbList/);
   assert.match(articlePage, /mainEntityOfPage/);
   assert.match(articlePage, /Читайте також/);
+});
+
+test('article pages keep the reference editorial reading structure', () => {
+  assert.match(articlePage, /article-page__hero-grid/);
+  assert.match(articlePage, /article-page__reading-grid/);
+  assert.match(articlePage, /className="article-page__sidebar"/);
+  assert.match(articlePage, /className="article-toc" open/);
+  assert.match(articlePage, /article-consultation/);
+  assert.match(articlePage, /article-info-card/);
+  assert.match(articlePage, /article-page__article-nav/);
+  assert.match(articlePage, /article-final-cta/);
+  assert.match(articleInteractions, /navigator\.share/);
+  assert.match(articleInteractions, /<LeadForm \/>/);
+  assert.match(articleCss, /grid-template-columns:\s*260px\s+minmax\(0,\s*880px\)/);
+  assert.match(articleCss, /position:\s*sticky/);
+  assert.match(articleCss, /\.article-related__grid\s*\{[\s\S]*repeat\(3/);
+});
+
+test('water-location article has the six text-first sections from the reference', () => {
+  assert.match(blogData, /Геологічні карти і регіональні дані/);
+  assert.match(blogData, /Дані сусідніх свердловин/);
+  assert.match(blogData, /Що потрібно перед виїздом техніки/);
+  assert.match(blogData, /Додаткові методи оцінки/);
+  assert.match(blogData, /Обмеження та реалістичні очікування/);
+  assert.match(blogData, /heading:\s*'Висновок'/);
 });
 
 test('homepage blog section does not introduce a second H1', () => {
