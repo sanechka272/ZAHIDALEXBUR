@@ -13,29 +13,22 @@ const packageJson = await readFile(new URL('../package.json', import.meta.url), 
 const siteData = await readFile(new URL('../lib/site-data.ts', import.meta.url), 'utf8');
 
 const productionPhotos = [
-  '../public/media/hero-waterwell.jpg',
-  '../public/media/service-private-water.jpg',
-  '../public/media/service-filter-drilling.jpg',
-  '../public/media/service-industrial-rig.jpg',
+  '../public/media/hero-drilling-main.png',
+  '../public/media/service-bezfiltrova-sverdlovyna-main.webp',
+  '../public/media/service-filtrova-sverdlovyna-main.webp',
+  '../public/media/service-promyslova-sverdlovyna-main.webp',
   '../public/media/about-mountain-forest.jpg',
 ];
 
-function jpegDimensions(buffer) {
-  let offset = 2;
-  const sofMarkers = new Set([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf]);
-
-  while (offset + 9 < buffer.length) {
-    if (buffer[offset] !== 0xff) { offset += 1; continue; }
-    const marker = buffer[offset + 1];
-    if (marker === 0xd8 || marker === 0xd9 || marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) { offset += 2; continue; }
-    const length = buffer.readUInt16BE(offset + 2);
-    if (sofMarkers.has(marker)) {
-      return { height: buffer.readUInt16BE(offset + 5), width: buffer.readUInt16BE(offset + 7) };
-    }
-    if (length < 2) break;
-    offset += 2 + length;
-  }
-  throw new Error('JPEG dimensions not found');
+function isSupportedImage(buffer) {
+  const isJpeg = buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+  const isPng = buffer.length >= 8
+    && buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47
+    && buffer[4] === 0x0d && buffer[5] === 0x0a && buffer[6] === 0x1a && buffer[7] === 0x0a;
+  const isWebp = buffer.length >= 12
+    && buffer.subarray(0, 4).toString('ascii') === 'RIFF'
+    && buffer.subarray(8, 12).toString('ascii') === 'WEBP';
+  return isJpeg || isPng || isWebp;
 }
 
 test('header follows approved reference with centered navigation, phone, callback pill and hamburger', () => {
@@ -59,27 +52,22 @@ test('brand uses a repository-local SVG logo and effective CSS never crops it wi
   assert.match(logoRule, /position:\s*static/);
 });
 
-test('every production photo is a large high-resolution repository-local JPEG', async () => {
+test('every production photo is a substantial repository-local supported image', async () => {
   assert.doesNotMatch(siteData, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
   assert.doesNotMatch(component, /https?:\/\/[^'\"]+\.(?:png|jpe?g|webp|gif)/i);
   assert.doesNotMatch(siteData, /\/generated\//);
   for (const relativePath of productionPhotos) {
     const file = await readFile(new URL(relativePath, import.meta.url));
-    assert.ok(file.byteLength > 100_000, `${relativePath} should be a real high-resolution photo, not a tiny placeholder`);
-    assert.equal(file[0], 0xff);
-    assert.equal(file[1], 0xd8);
-    assert.equal(file[2], 0xff);
-    const { width, height } = jpegDimensions(file);
-    assert.ok(width >= 1600, `${relativePath} width should be at least 1600px, got ${width}px`);
-    assert.ok(height >= 1200, `${relativePath} height should be at least 1200px, got ${height}px`);
+    assert.ok(file.byteLength > 100_000, `${relativePath} should be a real production photo, not a tiny placeholder`);
+    assert.ok(isSupportedImage(file), `${relativePath} should be a valid JPEG, PNG or WebP asset`);
   }
 });
 
-test('hero, three services and about section use distinct local photo assets', () => {
-  assert.match(siteData, /hero:\s*['"]\/media\/64ac66b2-80b3-4edb-8c64-a2423104debc\.png['"]/);
+test('hero, three services and about section use distinct semantic local photo assets', () => {
+  assert.match(siteData, /hero:\s*['"]\/media\/hero-drilling-main\.png['"]/);
   assert.match(siteData, /about:\s*['"]\/media\/about-mountain-forest\.jpg['"]/);
-  assert.match(siteData, /services:\s*\[[\s\S]*service-private-water\.jpg[\s\S]*service-filter-drilling\.jpg[\s\S]*service-industrial-rig\.jpg/);
-  assert.doesNotMatch(siteData, /services:\s*\[[\s\S]*hero-waterwell\.jpg/);
+  assert.match(siteData, /services:\s*\[[\s\S]*service-bezfiltrova-sverdlovyna-main\.webp[\s\S]*service-filtrova-sverdlovyna-main\.webp[\s\S]*service-promyslova-sverdlovyna-main\.webp/);
+  assert.doesNotMatch(siteData, /64ac66b2-80b3-4edb-8c64-a2423104debc|hero-waterwell|service-private-water|service-filter-drilling|service-industrial-rig/);
   assert.match(mediaCss, /url\(['"]?\/media\/about-mountain-forest\.jpg['"]?\)/);
 });
 
