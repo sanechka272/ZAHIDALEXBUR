@@ -26,6 +26,14 @@
   background: #a9784f;
 }
 
+/* The filter sticks only while the article-library block is in view. */
+.blog-kb__filterbar {
+  position: sticky;
+  top: 70px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
 .blog-page__grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: stretch;
@@ -150,6 +158,7 @@
 }
 
 @media (max-width: 767px) {
+  .blog-kb__filterbar { top: 62px; }
   .blog-page__grid { grid-template-columns: 1fr; }
   .article-page__breadcrumbs { margin-bottom: 24px; font-size: 10px; }
   .article-page__context-links { flex-direction: column; align-items: flex-start; }
