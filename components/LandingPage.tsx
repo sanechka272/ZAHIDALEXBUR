@@ -68,16 +68,6 @@ function StatBlock({ value, caption, dark = false }: { value: string; caption: s
   return <div className={`stat-block ${dark ? 'stat-block--dark' : ''}`}><strong>{value}</strong><span>{caption}</span></div>;
 }
 
-function GlassInfoCard({ onClick }: { onClick: () => void }) {
-  return (
-    <button type="button" aria-label="Вода ближче, ніж ви думаєте" className="glass-info-card hero-enter hero-enter--5" onClick={onClick}>
-      <span className="glass-info-card__thumb" style={{ position: 'relative' }}><Image src={assets.services[2]} alt="Буріння свердловини у Львівській області" fill sizes="82px" quality={90} /></span>
-      <span className="glass-info-card__copy">Вода ближче,<br />ніж ви думаєте</span>
-      <span className="glass-info-card__arrow"><Arrow /></span>
-    </button>
-  );
-}
-
 function BlogCard({ article, index }: { article: (typeof blogArticles)[number]; index: number }) {
   return (
     <a className="blog-reference-card reveal" style={{ '--delay': `${index * 70}ms` } as CSSProperties} href={`/blog/${article.slug}`} aria-label={article.title}>
@@ -238,12 +228,11 @@ export default function LandingPage() {
             <h1 className="reference-hero__title"><span className="hero-line"><span>БУРІННЯ</span></span><span className="hero-line hero-line--2"><span>СВЕРДЛОВИН</span></span></h1>
             <strong className="reference-hero__location">Львів та Львівська область</strong>
             <p className="reference-hero__lead">Чиста вода. Стабільний результат.<br />Працюємо для приватних будинків, бізнесу та промислових обʼєктів.</p>
-            <div className="reference-hero__actions"><PillButton variant="cream" onClick={() => setLeadOpen(true)}>Розрахувати вартість</PillButton><button className="video-action" type="button" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}><span><PlayIcon /></span><strong>Дивитися відео<small>(1:24)</small></strong></button></div>
+            <div className="reference-hero__actions"><PillButton variant="cream" onClick={() => setLeadOpen(true)}>Розрахувати вартість</PillButton></div>
             <div className="hero-stat-row">{heroStats.map((stat) => <StatBlock key={stat.value} value={stat.value} caption={stat.label} />)}</div>
           </div>
 
           <div className="hero-process-teaser">{heroProcess.map(([number, title], index) => <button type="button" className={index === 1 ? 'is-active' : ''} key={number} onClick={() => index === 1 ? document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }) : document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })}><span>{number}</span><strong>{title}</strong></button>)}</div>
-          <GlassInfoCard onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })} />
           <div className="reference-hero__caption"><span>Стабільна вода —</span><strong>стабільне майбутнє.</strong></div>
           <button className="reference-hero__scroll" type="button" aria-label="Прокрутити до послуг" onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}><Arrow direction="down" /></button>
         </div>
