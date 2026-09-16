@@ -96,7 +96,7 @@ function cacheKey(request: Request, env: Env, kind: CacheKind) {
 
   if (kind === 'image') {
     const accept = request.headers.get('accept') ?? '';
-    url.searchParams.set('__zab_image_format', accept.includes('image/webp') ? 'webp' : 'fallback');
+    url.searchParams.set('__zab_image_format', accept.includes('image/avif') ? 'avif' : accept.includes('image/webp') ? 'webp' : 'fallback');
   }
 
   return new Request(url.toString(), { method: 'GET' });
@@ -104,7 +104,7 @@ function cacheKey(request: Request, env: Env, kind: CacheKind) {
 
 function browserCacheControl(kind: CacheKind) {
   if (kind === 'static') return 'public, max-age=31536000, immutable';
-  if (kind === 'image') return 'public, max-age=86400, stale-while-revalidate=604800';
+  if (kind === 'image') return 'public, max-age=31536000, immutable';
   return 'public, max-age=0, must-revalidate';
 }
 
@@ -126,9 +126,75 @@ function canStore(response: Response) {
   return !/private|no-store/i.test(cacheControl);
 }
 
+function localImageSource(value: string | null) {
+  if (!value || !value.startsWith('/media/')) return null;
+  if (value.includes('..') || value.includes('\\')) return null;
+  return value;
+}
+
+function imageFormat(request: Request) {
+  const accept = request.headers.get('accept') ?? '';
+  if (accept.includes('image/avif')) return 'avif';
+  if (accept.includes('image/webp')) return 'webp';
+  return undefined;
+}
+
+async function transformNextImageAtEdge(request: Request, url: URL) {
+  if (request.method !== 'GET' || url.pathname !== '/_next/image') return null;
+
+  const source = localImageSource(url.searchParams.get('url'));
+  const width = Number.parseInt(url.searchParams.get('w') ?? '', 10);
+  const requestedQuality = Number.parseInt(url.searchParams.get('q') ?? '90', 10);
+  if (!source || !Number.isFinite(width) || width < 16 || width > 3840) return null;
+
+  const quality = Math.min(95, Math.max(88, Number.isFinite(requestedQuality) ? requestedQuality : 90));
+  const sourceUrl = new URL(source, url.origin);
+  const format = imageFormat(request);
+  const image: Record<string, string | number> = {
+    width,
+    quality,
+    fit: 'scale-down',
+  };
+  if (format) image.format = format;
+
+  try {
+    const transformed = await fetch(sourceUrl.toString(), {
+      headers: { accept: request.headers.get('accept') ?? 'image/webp,image/*,*/*;q=0.8' },
+      cf: { image },
+    } as RequestInit & { cf: { image: Record<string, string | number> } });
+
+    if (!transformed.ok) return null;
+
+    const headers = new Headers(transformed.headers);
+    headers.set('cache-control', 'public, max-age=31536000, immutable');
+    headers.set('x-zab-image-edge', 'cloudflare');
+    headers.delete('set-cookie');
+
+    return new Response(transformed.body, {
+      status: transformed.status,
+      statusText: transformed.statusText,
+      headers,
+    });
+  } catch {
+    return null;
+  }
+}
+
+function isImageResizingSubrequest(request: Request, url: URL) {
+  return url.pathname.startsWith('/media/') && /image-resizing/i.test(request.headers.get('via') ?? '');
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: WorkerContext) {
     const url = new URL(request.url);
+
+    if (isImageResizingSubrequest(request, url) && env.ASSETS) {
+      return env.ASSETS.fetch(request);
+    }
+
+    const edgeImage = await transformNextImageAtEdge(request, url);
+    if (edgeImage) return edgeImage;
+
     const kind = cacheKind(request, url);
     const cache = (caches as any).default as {
       match(key: Request): Promise<Response | undefined>;
