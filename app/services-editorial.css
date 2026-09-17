@@ -171,19 +171,20 @@
   line-height: 1.6;
 }
 
-.service-reference-card__benefits {
+.service-reference-card .service-reference-card__benefits {
   min-height: 92px;
   margin: 22px 0 0 !important;
   padding: 18px 0 0 !important;
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-content: start;
   align-items: start;
   gap: 10px;
   border-top: 1px solid rgba(255, 255, 255, .1);
   list-style: none;
 }
 
-.service-reference-card__benefit {
+.service-reference-card .service-reference-card__benefit {
   min-width: 0;
   display: grid !important;
   align-content: start;
@@ -193,7 +194,7 @@
   line-height: 1.35 !important;
 }
 
-.service-reference-card__benefit-icon {
+.service-reference-card .service-reference-card__benefit-icon {
   width: 31px;
   height: 31px;
   display: grid;
@@ -201,6 +202,7 @@
   border: 1px solid rgba(216, 178, 107, .48);
   border-radius: 50%;
   color: #d8b26b;
+  font-size: 0;
 }
 
 .service-reference-card__benefit-icon svg {
@@ -208,9 +210,10 @@
   height: 15px;
 }
 
-.service-reference-card__benefit-copy {
+.service-reference-card .service-reference-card__benefit-copy {
   display: block;
   color: rgba(255, 255, 255, .7);
+  font-size: 8px;
 }
 
 .service-reference-card__footer {
@@ -282,8 +285,9 @@
 
 @media (max-width: 1180px) {
   .service-reference-card__body { padding: 25px 23px 24px; }
-  .service-reference-card__benefits { gap: 8px; }
-  .service-reference-card__benefit { font-size: 7.5px !important; }
+  .service-reference-card .service-reference-card__benefits { gap: 8px; }
+  .service-reference-card .service-reference-card__benefit,
+  .service-reference-card .service-reference-card__benefit-copy { font-size: 7.5px !important; }
 }
 
 @media (max-width: 1100px) {
@@ -312,7 +316,7 @@
   }
 
   .service-reference-card__body { padding: 24px 22px; }
-  .service-reference-card__benefits { min-height: 88px; }
+  .service-reference-card .service-reference-card__benefits { min-height: 88px; }
 }
 
 @media (max-width: 767px) {
@@ -350,12 +354,13 @@
   .service-reference-card__body { padding: 24px 20px 22px; }
   .service-reference-card h3 { min-height: 0; font-size: 30px; }
   .service-reference-card__body > p { min-height: 0; }
-  .service-reference-card__benefits {
+  .service-reference-card .service-reference-card__benefits {
     min-height: 0;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px 12px;
   }
-  .service-reference-card__benefit { font-size: 8.5px !important; }
+  .service-reference-card .service-reference-card__benefit,
+  .service-reference-card .service-reference-card__benefit-copy { font-size: 8.5px !important; }
   .service-reference-card__footer { padding-top: 22px; }
   .service-reference-card__details { min-height: 39px; padding-inline: 13px; }
 }
