@@ -7,6 +7,7 @@ const css = await readFile(new URL('../app/globals.css', import.meta.url), 'utf8
 const fixes = await readFile(new URL('../app/fixes.css', import.meta.url), 'utf8');
 const finalCss = await readFile(new URL('../app/final.css', import.meta.url), 'utf8');
 const mediaCss = await readFile(new URL('../app/media.css', import.meta.url), 'utf8');
+const servicesCss = await readFile(new URL('../app/services-editorial.css', import.meta.url), 'utf8');
 const processCss = await readFile(new URL('../app/process.css', import.meta.url), 'utf8');
 const layout = await readFile(new URL('../app/layout.tsx', import.meta.url), 'utf8');
 const packageJson = await readFile(new URL('../package.json', import.meta.url), 'utf8');
@@ -83,16 +84,35 @@ test('hero keeps the approved simplified composition without removed promo or vi
   assert.doesNotMatch(component, /Вода ближче, ніж ви думаєте/);
 });
 
-test('services render exactly three large reference cards without need filters or carousel controls', () => {
+test('services render as an editorial visual comparison with four verified benefits and no thumbnail gallery', () => {
   assert.match(component, /id="services"/);
-  assert.doesNotMatch(component, /service-filter-tabs/);
-  assert.doesNotMatch(component, /service-carousel-controls/);
-  assert.doesNotMatch(component, /Для дому|Для бізнесу|Для промисловості/);
-  assert.match(component, /services\.map/);
-  assert.match(component, /ServiceCard/);
-  assert.match(component, /service\.included\.map/);
-  assert.match(component, /service-project-thumbs/);
-  assert.match(component, /Переглянути.*реалізовані проєкти/);
+  assert.match(component, /Оберіть свій тип свердловини/);
+  assert.match(component, /services-reference__intro/);
+  assert.match(component, /service-reference-card__category/);
+  assert.match(component, /service-reference-card__benefits/);
+  assert.match(component, /service\.included\.slice\(0, 4\)\.map/);
+  assert.match(component, /ServiceBenefitIcon/);
+  assert.match(component, /service-reference-card__details/);
+  assert.match(component, /Детальніше/);
+  assert.match(component, /serviceImageAlts/);
+  assert.doesNotMatch(component, /service-project-thumbs/);
+  assert.doesNotMatch(component, /Переглянути.*реалізовані проєкти/);
+  assert.doesNotMatch(component, /service-filter-tabs|service-carousel-controls/);
+});
+
+test('service comparison keeps image-first hierarchy, aligned grid, responsive columns and reduced-motion fallback', () => {
+  assert.match(layout, /import '\.\/services-editorial\.css';/);
+  assert.match(servicesCss, /grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/);
+  assert.match(servicesCss, /aspect-ratio:/);
+  assert.match(servicesCss, /object-fit:\s*cover/);
+  assert.match(servicesCss, /object-position:/);
+  assert.match(servicesCss, /scale\(1\.0[234]\)/);
+  assert.match(servicesCss, /service-reference-card__benefits/);
+  assert.match(servicesCss, /service-reference-card__details/);
+  assert.match(servicesCss, /:focus-visible/);
+  assert.match(servicesCss, /@media\s*\(max-width:\s*1100px\)[\s\S]*grid-template-columns:\s*repeat\(2,/);
+  assert.match(servicesCss, /@media\s*\(max-width:\s*767px\)[\s\S]*grid-template-columns:\s*1fr/);
+  assert.match(servicesCss, /prefers-reduced-motion:\s*reduce/);
 });
 
 test('about section keeps the approved dark split after decorative words were removed', () => {
