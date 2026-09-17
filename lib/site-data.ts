@@ -1,3 +1,7 @@
+import bezfiltrovaServiceImage from '../425d83c7-3324-483f-bcbf-66bdf21c82cb.webp';
+import filtrovaServiceImage from '../48531249-ec4d-4cb5-bd78-1726bea2bc62.webp';
+import promyslovaServiceImage from '../99b7ae26-44f5-4025-a31b-b47a7ad17b79.webp';
+
 export const contact = {
   phoneDisplay: '+38 099 783 76 44',
   phoneHref: 'tel:+380997837644',
@@ -10,9 +14,9 @@ export const assets = {
   hero: '/media/hero-drilling-main.png',
   about: '/media/about-mountain-forest.jpg',
   services: [
-    '/media/service-bezfiltrova-sverdlovyna-main.webp',
-    '/media/service-filtrova-sverdlovyna-main.webp',
-    '/media/service-promyslova-sverdlovyna-main.webp',
+    bezfiltrovaServiceImage.src,
+    filtrovaServiceImage.src,
+    promyslovaServiceImage.src,
   ],
 };
 
