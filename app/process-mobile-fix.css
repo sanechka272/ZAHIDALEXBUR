@@ -1,0 +1,64 @@
+/* Mobile rendering fix for the process-story background.
+   Telegram/iOS WebViews can visibly repaint large CSS backgrounds while a reveal transform is active.
+   Keep the image stable on phones, start loading it early, and fade the landscape naturally into the dark content area. */
+
+@media (max-width: 767px) {
+  .process-story {
+    background: #14120f;
+  }
+
+  .process-story__media {
+    opacity: 1 !important;
+    background-color: #14120f;
+    background-position: 56% top !important;
+    background-size: auto 62% !important;
+    background-repeat: no-repeat !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 44%,
+      rgba(0, 0, 0, .98) 50%,
+      rgba(0, 0, 0, .82) 58%,
+      rgba(0, 0, 0, .42) 68%,
+      transparent 79%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 44%,
+      rgba(0, 0, 0, .98) 50%,
+      rgba(0, 0, 0, .82) 58%,
+      rgba(0, 0, 0, .42) 68%,
+      transparent 79%
+    );
+  }
+
+  .motion-ready .process-story__media,
+  .motion-ready .process-story.is-visible .process-story__media {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .process-story__veil {
+    background:
+      linear-gradient(180deg,
+        rgba(12, 10, 8, .72) 0%,
+        rgba(12, 10, 8, .62) 30%,
+        rgba(12, 10, 8, .76) 48%,
+        rgba(12, 10, 8, .95) 70%,
+        #14120f 88%,
+        #14120f 100%) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process-story__media {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
