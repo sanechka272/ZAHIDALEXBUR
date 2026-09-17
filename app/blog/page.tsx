@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
+import blogHeroImage from '../../d99f5283-0d57-4271-8db0-e7bb5158f0c1.webp';
 
 export const dynamic = 'force-static';
 export const revalidate = false;
@@ -44,10 +45,22 @@ export default function BlogIndexPage() {
       </header>
 
       <section className="blog-page__hero" aria-labelledby="blog-index-title">
-        <div className="blog-page__shell">
-          <span>БЛОГ / БАЗА ЗНАНЬ</span>
-          <h1 id="blog-index-title">Про свердловини<br />без зайвої води</h1>
-          <p>Практичні матеріали про буріння, геологію, воду, облаштування та вартість свердловин у Львові та області.</p>
+        <div className="blog-page__shell blog-page__hero-grid">
+          <div className="blog-page__hero-copy">
+            <span>БЛОГ / БАЗА ЗНАНЬ</span>
+            <h1 id="blog-index-title">Про свердловини<br />без зайвої води</h1>
+            <p>Практичні матеріали про буріння, геологію, воду, облаштування та вартість свердловин у Львові та області.</p>
+          </div>
+          <div className="blog-page__hero-media">
+            <Image
+              src={blogHeroImage}
+              alt="Буріння свердловини у Львівській області"
+              fill
+              sizes="(max-width: 820px) 100vw, 52vw"
+              quality={90}
+              fetchPriority="high"
+            />
+          </div>
         </div>
       </section>
 
