@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import featuredDepthArticleImage from '../../../blog-hlybyna-sverdlovyny-lvivska-oblast-featured.webp';
 import { ArticleLeadButton, ArticleShareButton } from '@/components/ArticleInteractions';
 import { blogArticles, getBlogArticle, getRelatedBlogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
@@ -9,6 +10,16 @@ import { assets, contact } from '@/lib/site-data';
 const SITE_URL = 'https://zahidalexbur.com.ua';
 const ARTICLE_PUBLISHED_AT = '2026-08-12';
 const ARTICLE_PUBLISHED_LABEL = '12 серпня 2026';
+const FEATURED_DEPTH_ARTICLE_SLUG = 'hlybyna-sverdlovyny-lvivska-oblast';
+
+function getArticleVisual(slug: string, fallback: string) {
+  return slug === FEATURED_DEPTH_ARTICLE_SLUG ? featuredDepthArticleImage : fallback;
+}
+
+function getArticleVisualUrl(slug: string, fallback: string) {
+  const visual = getArticleVisual(slug, fallback);
+  return typeof visual === 'string' ? visual : visual.src;
+}
 
 export const dynamic = 'force-static';
 export const revalidate = false;
@@ -24,6 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!article) return {};
 
   const canonical = `/blog/${article.slug}`;
+  const articleVisualUrl = getArticleVisualUrl(article.slug, article.image);
 
   return {
     title: article.metaTitle,
@@ -35,14 +47,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url: canonical,
       title: article.metaTitle,
       description: article.metaDescription,
-      images: [{ url: article.image, alt: article.imageAlt }],
+      images: [{ url: articleVisualUrl, alt: article.imageAlt }],
       publishedTime: ARTICLE_PUBLISHED_AT,
     },
     twitter: {
       card: 'summary_large_image',
       title: article.metaTitle,
       description: article.metaDescription,
-      images: [article.image],
+      images: [articleVisualUrl],
     },
   };
 }
@@ -92,6 +104,8 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
   const nextArticle = articleIndex >= 0 && articleIndex < blogArticles.length - 1 ? blogArticles[articleIndex + 1] : null;
   const related = getRelatedBlogArticles(article).slice(0, 3);
   const articleUrl = `${SITE_URL}/blog/${article.slug}`;
+  const articleVisual = getArticleVisual(article.slug, article.image);
+  const articleVisualUrl = getArticleVisualUrl(article.slug, article.image);
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -100,7 +114,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
         '@id': `${articleUrl}#article`,
         headline: article.title,
         description: article.metaDescription,
-        image: [`${SITE_URL}${article.image}`],
+        image: [`${SITE_URL}${articleVisualUrl}`],
         datePublished: ARTICLE_PUBLISHED_AT,
         dateModified: ARTICLE_PUBLISHED_AT,
         inLanguage: 'uk-UA',
@@ -166,7 +180,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
               <div className="article-page__visual">
                 <div className="article-page__cover" style={{ position: 'relative' }}>
-                  <Image src={article.image} alt={article.imageAlt} fill sizes="(max-width: 900px) 100vw, 58vw" quality={90} fetchPriority="high" />
+                  <Image src={articleVisual} alt={article.imageAlt} fill sizes="(max-width: 900px) 100vw, 58vw" quality={90} fetchPriority="high" />
                 </div>
                 <div className="article-page__media-tools">
                   <span><ClockIcon />{article.readTime}</span>
