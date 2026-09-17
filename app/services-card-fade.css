@@ -1,0 +1,63 @@
+/* Final service-card visual tuning: keep the construction visible under the copy transition. */
+
+/* Show more of the lower industrial assembly instead of cropping the system out. */
+.service-reference-card:nth-child(3) .service-reference-card__photo img {
+  object-position: 50% 60% !important;
+}
+
+/* The requested Liquid-Glass idea is a static transparency fade, not a text reveal. */
+.service-reference-card__body {
+  z-index: 3;
+  margin-top: -92px;
+  padding-top: 112px;
+  overflow: visible;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(23, 21, 19, 0) 0%,
+      rgba(23, 21, 19, .18) 13%,
+      rgba(23, 21, 19, .52) 31%,
+      rgba(23, 21, 19, .86) 48%,
+      #171513 68%,
+      #171513 100%
+    );
+}
+
+/* Remove the previous blur/sweep interpretation completely. */
+.service-reference-card__body::before {
+  display: none !important;
+  animation: none !important;
+  content: none !important;
+}
+
+.motion-ready .service-reference-card:not(.is-visible) .service-reference-card__body > h3,
+.motion-ready .service-reference-card:not(.is-visible) .service-reference-card__body > p,
+.motion-ready .service-reference-card:not(.is-visible) .service-reference-card__body > .service-reference-card__benefits,
+.motion-ready .service-reference-card:not(.is-visible) .service-reference-card__body > .service-reference-card__footer,
+.motion-ready .service-reference-card.is-visible .service-reference-card__body > h3,
+.motion-ready .service-reference-card.is-visible .service-reference-card__body > p,
+.motion-ready .service-reference-card.is-visible .service-reference-card__body > .service-reference-card__benefits,
+.motion-ready .service-reference-card.is-visible .service-reference-card__body > .service-reference-card__footer {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+@media (max-width: 1100px) {
+  .service-reference-card__body {
+    margin-top: -82px;
+    padding-top: 100px;
+  }
+}
+
+@media (max-width: 767px) {
+  .service-reference-card__body {
+    margin-top: -72px;
+    padding-top: 90px;
+  }
+
+  .service-reference-card:nth-child(3) .service-reference-card__photo img {
+    object-position: 50% 58% !important;
+  }
+}
