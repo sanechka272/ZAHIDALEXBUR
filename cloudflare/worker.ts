@@ -27,7 +27,7 @@ type WorkerContext = {
   waitUntil(promise: Promise<unknown>): void;
 };
 
-type CacheKind = 'html' | 'image' | 'static';
+type CacheKind = 'image' | 'static';
 
 export class ZahidaContainer extends Container {
   defaultPort = 3000;
@@ -73,20 +73,15 @@ function isBackendPath(pathname: string) {
   return pathname === '/api' || pathname.startsWith('/api/') || pathname === '/analytics' || pathname.startsWith('/analytics/');
 }
 
-function isRscRequest(request: Request) {
-  const accept = request.headers.get('accept') ?? '';
-  return request.headers.has('rsc') || request.headers.has('next-router-state-tree') || accept.includes('text/x-component');
-}
-
 function cacheKind(request: Request, url: URL): CacheKind | null {
   if (request.method !== 'GET' || isBackendPath(url.pathname)) return null;
 
   if (url.pathname === '/_next/image') return 'image';
   if (url.pathname.startsWith('/_next/static/')) return 'static';
 
-  const isPublicDocument = url.pathname === '/' || url.pathname === '/blog' || url.pathname.startsWith('/blog/');
-  if (isPublicDocument && !isRscRequest(request) && (request.headers.get('accept') ?? '').includes('text/html')) return 'html';
-
+  // Do not cache page HTML in the Worker Cache API. The Next.js app lives in a
+  // separately rolled-out Container image, so Worker-version keyed HTML could
+  // outlive a CSS/content-only container deploy and make the site look stale.
   return null;
 }
 
@@ -104,14 +99,24 @@ function cacheKey(request: Request, env: Env, kind: CacheKind) {
 
 function browserCacheControl(kind: CacheKind) {
   if (kind === 'static') return 'public, max-age=31536000, immutable';
-  if (kind === 'image') return 'public, max-age=31536000, immutable';
-  return 'public, max-age=0, must-revalidate';
+  return 'public, max-age=31536000, immutable';
 }
 
 function responseWithCacheStatus(response: Response, kind: CacheKind, status: 'HIT' | 'MISS') {
   const headers = new Headers(response.headers);
   headers.set('cache-control', browserCacheControl(kind));
   headers.set('x-zab-edge-cache', status);
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
+function responseWithRelease(response: Response, env: Env) {
+  const headers = new Headers(response.headers);
+  headers.set('x-zab-worker-version', env.CF_VERSION_METADATA?.id ?? 'unknown');
+  headers.set('x-zab-container-generation', 'v2');
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
@@ -204,13 +209,15 @@ export default {
     if (kind) {
       const key = cacheKey(request, env, kind);
       const cached = await cache.match(key);
-      if (cached) return responseWithCacheStatus(cached, kind, 'HIT');
+      if (cached) return responseWithRelease(responseWithCacheStatus(cached, kind, 'HIT'), env);
     }
 
-    const container = getContainer(env.APP_CONTAINER as any, 'zahidalexbur-production');
+    // New object name forces a fresh stateless Next.js container instance once,
+    // avoiding a previously warm Durable Object instance during the rollout.
+    const container = getContainer(env.APP_CONTAINER as any, 'zahidalexbur-production-v2');
     const response = await container.fetch(edgeRequest(request));
 
-    if (!kind || !canStore(response)) return response;
+    if (!kind || !canStore(response)) return responseWithRelease(response, env);
 
     const key = cacheKey(request, env, kind);
     const cacheCopy = response.clone();
@@ -224,6 +231,6 @@ export default {
       headers: cacheHeaders,
     })));
 
-    return responseWithCacheStatus(response, kind, 'MISS');
+    return responseWithRelease(responseWithCacheStatus(response, kind, 'MISS'), env);
   },
 };
