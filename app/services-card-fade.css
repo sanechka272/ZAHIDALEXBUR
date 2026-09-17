@@ -1,29 +1,77 @@
-/* Final service-card visual tuning: keep the construction visible under the copy transition. */
+/* Service-card photo-to-copy fade: keep the well construction visible behind the transition. */
+
+.service-reference-card {
+  --service-card-fade-overlap: 124px;
+}
 
 /* Show more of the lower industrial assembly instead of cropping the system out. */
 .service-reference-card:nth-child(3) .service-reference-card__photo img {
   object-position: 50% 60% !important;
 }
 
-/* The requested Liquid-Glass idea is a static transparency fade, not a text reveal. */
+/*
+ * Pull the copy layer over the final part of the image. The first part of the
+ * copy background is transparent, then gradually becomes the card charcoal.
+ * This removes the hard horizontal cut and gives the requested liquid-glass
+ * fading transition without hiding the technical image.
+ */
+.service-reference-card__photo {
+  z-index: 1;
+  margin-bottom: calc(var(--service-card-fade-overlap) * -1);
+}
+
+.service-reference-card__photo::after {
+  background: linear-gradient(
+    180deg,
+    transparent 74%,
+    rgba(23, 21, 19, .08) 84%,
+    rgba(23, 21, 19, .2) 92%,
+    rgba(23, 21, 19, .34) 100%
+  ) !important;
+}
+
 .service-reference-card__body {
   z-index: 3;
-  margin-top: -92px;
-  padding-top: 112px;
+  margin-top: 0;
+  padding-top: calc(var(--service-card-fade-overlap) + 28px);
   overflow: visible;
   background:
     linear-gradient(
       180deg,
-      rgba(23, 21, 19, 0) 0%,
-      rgba(23, 21, 19, .18) 13%,
-      rgba(23, 21, 19, .52) 31%,
-      rgba(23, 21, 19, .86) 48%,
-      #171513 68%,
+      rgba(23, 21, 19, 0) 0,
+      rgba(23, 21, 19, .08) 28px,
+      rgba(23, 21, 19, .24) 58px,
+      rgba(23, 21, 19, .5) 86px,
+      rgba(23, 21, 19, .78) 108px,
+      rgba(23, 21, 19, .96) 126px,
+      #171513 140px,
       #171513 100%
     );
 }
 
-/* Remove the previous blur/sweep interpretation completely. */
+/* A very light glass veil only through the transition zone. */
+.service-reference-card__body::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  top: 18px;
+  left: 0;
+  right: 0;
+  height: 104px;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, .025),
+    rgba(255, 255, 255, .012) 45%,
+    transparent 100%
+  );
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 24%, #000 66%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 24%, #000 66%, transparent);
+}
+
+/* Remove the previous animated text/sweep interpretation completely. */
 .service-reference-card__body::before {
   display: none !important;
   animation: none !important;
@@ -45,19 +93,63 @@
 }
 
 @media (max-width: 1100px) {
+  .service-reference-card {
+    --service-card-fade-overlap: 104px;
+  }
+
   .service-reference-card__body {
-    margin-top: -82px;
-    padding-top: 100px;
+    padding-top: calc(var(--service-card-fade-overlap) + 25px);
+    background:
+      linear-gradient(
+        180deg,
+        rgba(23, 21, 19, 0) 0,
+        rgba(23, 21, 19, .1) 24px,
+        rgba(23, 21, 19, .3) 48px,
+        rgba(23, 21, 19, .62) 72px,
+        rgba(23, 21, 19, .9) 94px,
+        #171513 116px,
+        #171513 100%
+      );
+  }
+
+  .service-reference-card__body::after {
+    height: 88px;
   }
 }
 
 @media (max-width: 767px) {
+  .service-reference-card {
+    --service-card-fade-overlap: 88px;
+  }
+
   .service-reference-card__body {
-    margin-top: -72px;
-    padding-top: 90px;
+    padding-top: calc(var(--service-card-fade-overlap) + 24px);
+    background:
+      linear-gradient(
+        180deg,
+        rgba(23, 21, 19, 0) 0,
+        rgba(23, 21, 19, .12) 20px,
+        rgba(23, 21, 19, .34) 40px,
+        rgba(23, 21, 19, .68) 62px,
+        rgba(23, 21, 19, .94) 82px,
+        #171513 100px,
+        #171513 100%
+      );
+  }
+
+  .service-reference-card__body::after {
+    top: 12px;
+    height: 74px;
   }
 
   .service-reference-card:nth-child(3) .service-reference-card__photo img {
     object-position: 50% 58% !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-reference-card__body::after {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }
