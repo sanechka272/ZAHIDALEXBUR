@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import featuredDepthArticleImage from '../dea54c87-5ec0-422d-bea5-282055a683c4.webp';
+import featuredDepthArticleImage from '../blog-hlybyna-sverdlovyny-lvivska-oblast-featured.webp';
 import { featuredBlogArticle, landingBlogArticles } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
 
