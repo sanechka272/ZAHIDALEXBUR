@@ -69,7 +69,6 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
           </div>
           <div className="blog-kb__featured-aside" aria-hidden="true">
             <span>01</span>
-            <div className="blog-kb__featured-thumb"><Image src={featuredBlogArticle.image} alt="" fill sizes="120px" quality={90} /></div>
             <small>ЛЬВІВ ТА ОБЛАСТЬ<br />ГЕОЛОГІЯ РЕГІОНУ</small>
           </div>
         </article>
