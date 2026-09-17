@@ -35,7 +35,7 @@ export const services = [
     price: '1 800–2 100 грн/м',
     shortPrice: 'від 1 800 грн/м',
     description: 'Надійне рішення для стабільного водопостачання у приватних будинках.',
-    image: assets.services[0],
+    image: assets.services[2],
     included: [
       'Буріння та обсадна колона',
       'Цементація',
@@ -49,7 +49,7 @@ export const services = [
     price: '2 000–2 300 грн/м',
     shortPrice: 'від 2 000 грн/м',
     description: 'Оптимальний вибір для чистої води з додатковою фільтрацією.',
-    image: assets.services[1],
+    image: assets.services[0],
     included: [
       'Буріння',
       'Фільтр та обсадні труби',
@@ -64,7 +64,7 @@ export const services = [
     price: '2 300–2 500 грн/м',
     shortPrice: 'від 2 300 грн/м',
     description: 'Потужні рішення для виробництва, аграрного сектору та великих обʼєктів.',
-    image: assets.services[2],
+    image: assets.services[1],
     included: [
       'Проєктування',
       'Буріння великого діаметру',
