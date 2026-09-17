@@ -30,7 +30,13 @@ const heroProcess = [
   ['04', 'СЕРВІС'],
 ];
 
-const serviceTags = ['ДЛЯ ПРИВАТНИХ БУДИНКІВ', 'ДЛЯ БУДИНКІВ ТА КОТЕДЖІВ', 'ДЛЯ БІЗНЕСУ ТА ВЕЛИКИХ ОБʼЄКТІВ'];
+const serviceTags = ['Для приватних будинків', 'Для будинків та котеджів', 'Для бізнесу та великих обʼєктів'];
+
+const serviceImageAlts = [
+  'Поперечний розріз безфільтрової свердловини з обсадною колоною, насосом, водоносним горизонтом і геологічними шарами',
+  'Поперечний розріз фільтрової свердловини з фільтром усередині стовбура, водоприймальною зоною, насосом і геологічними шарами',
+  'Поперечний розріз промислової свердловини з ширшою обсадною колоною, потужнішим насосним вузлом і промисловим середовищем над землею',
+];
 
 function Arrow({ direction = 'right' }: { direction?: 'left' | 'right' | 'down' }) {
   const path = direction === 'left' ? 'M19 12H6M10 7l-5 5 5 5' : direction === 'down' ? 'M12 5v13M7 14l5 5 5-5' : 'M5 12h13M14 7l5 5-5 5';
@@ -86,25 +92,38 @@ function BlogCard({ article, index }: { article: (typeof blogArticles)[number]; 
   );
 }
 
+function ServiceBenefitIcon({ index }: { index: number }) {
+  const icons = [
+    <path key="drill" d="M12 3v18M8.5 6h7M9.5 10h5M10.5 14h3M8 19h8" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" />,
+    <path key="layers" d="m5 8 7-4 7 4-7 4-7-4Zm0 4 7 4 7-4M5 16l7 4 7-4" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />,
+    <path key="water" d="M12 3.5s5 5.6 5 10a5 5 0 0 1-10 0c0-4.4 5-10 5-10Zm-2.5 11.2c.5 1.2 1.4 1.8 2.7 1.8" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />,
+    <path key="check" d="M12 3 19 6v5c0 4.5-2.8 8-7 10-4.2-2-7-5.5-7-10V6l7-3Zm-3 8.6 2 2 4-4" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />,
+  ];
+  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">{icons[index % icons.length]}</svg>;
+}
+
 function ServiceCard({ service, index, onOpen }: { service: (typeof services)[number]; index: number; onOpen: () => void }) {
-  const thumbs = [assets.services[index], assets.hero, assets.services[(index + 2) % assets.services.length]];
   return (
     <article id={`service-card-${index}`} className="service-reference-card reveal" style={{ '--delay': `${index * 100}ms` } as CSSProperties}>
       <div className="service-reference-card__photo">
-        <Image src={service.image} alt={service.title} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 78vw, 33vw" quality={90} />
-        <span className="service-reference-card__number">0{index + 1}</span>
+        <Image src={service.image} alt={serviceImageAlts[index]} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={90} />
+        <span className="service-reference-card__number">{service.id}</span>
+        <span className="service-reference-card__category">{serviceTags[index]}</span>
       </div>
       <div className="service-reference-card__body">
-        <span className="service-reference-card__tag">{serviceTags[index]}</span>
         <h3>{service.title}</h3>
         <p>{service.description}</p>
-        <ul>
-          {service.included.map((item, itemIndex) => <li key={item} style={{ '--item-delay': `${itemIndex * 42}ms` } as CSSProperties}><span>✓</span>{item}</li>).slice(0, 5)}
+        <ul className="service-reference-card__benefits" aria-label={`Ключові переваги: ${service.title}`}>
+          {service.included.slice(0, 4).map((item, itemIndex) => (
+            <li className="service-reference-card__benefit" key={item}>
+              <span className="service-reference-card__benefit-icon"><ServiceBenefitIcon index={itemIndex} /></span>
+              <span className="service-reference-card__benefit-copy">{item}</span>
+            </li>
+          ))}
         </ul>
-        <div className="service-reference-card__price"><strong>{service.shortPrice.replace('грн', '₴')}</strong><button type="button" aria-label={`Розрахувати ${service.title}`} onClick={onOpen}><Arrow /></button></div>
-        <div className="service-project-thumbs">
-          <div>{thumbs.map((thumb, thumbIndex) => <span key={`${thumb}-${thumbIndex}`} style={{ position: 'relative' }}><Image src={thumb} alt="" fill sizes="96px" quality={90} /></span>)}</div>
-          <button type="button" onClick={onOpen}>Переглянути<br />реалізовані проєкти</button>
+        <div className="service-reference-card__footer">
+          <div className="service-reference-card__price"><strong>{service.shortPrice.replace('грн', '₴')}</strong></div>
+          <button className="service-reference-card__details" type="button" aria-label={`Детальніше про ${service.title}`} onClick={onOpen}>Детальніше <Arrow /></button>
         </div>
       </div>
     </article>
@@ -260,9 +279,12 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="services-reference" id="services">
+      <section className="services-reference" id="services" aria-labelledby="services-title">
         <div className="reference-shell">
-          <div className="services-reference__header reveal"><div><EyebrowLabel>НАШІ ПОСЛУГИ</EyebrowLabel><h2 className="services-reference__title">Оберіть свій тип свердловини</h2></div></div>
+          <div className="services-reference__header reveal">
+            <div><EyebrowLabel>НАШІ ПОСЛУГИ</EyebrowLabel><h2 id="services-title" className="services-reference__title">Оберіть свій тип свердловини</h2></div>
+            <p className="services-reference__intro">Оптимальний тип свердловини залежить від геології ділянки, водоносного горизонту та потрібної продуктивності. Порівняйте конструкції візуально — остаточне рішення підбираємо під умови конкретного обʼєкта.</p>
+          </div>
           <div className="services-reference__grid">{services.map((service, index) => <ServiceCard key={service.id} service={service} index={index} onOpen={() => setLeadOpen(true)} />)}</div>
         </div>
       </section>
