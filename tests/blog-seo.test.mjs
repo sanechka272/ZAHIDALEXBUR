@@ -9,6 +9,8 @@ const robots = await readFile(new URL('../app/robots.ts', import.meta.url), 'utf
 const blogData = await readFile(new URL('../lib/blog-data.ts', import.meta.url), 'utf8');
 const blogSection = await readFile(new URL('../components/BlogSection.tsx', import.meta.url), 'utf8');
 const articleCss = await readFile(new URL('../app/blog-seo.css', import.meta.url), 'utf8');
+const blogIndexHeroCss = await readFile(new URL('../app/blog-index-hero.css', import.meta.url), 'utf8');
+const layout = await readFile(new URL('../app/layout.tsx', import.meta.url), 'utf8');
 const articleInteractions = await readFile(new URL('../components/ArticleInteractions.tsx', import.meta.url), 'utf8');
 
 test('article routes are statically generated and unknown slugs are disabled', () => {
@@ -62,8 +64,9 @@ test('blog index hero uses the dedicated repository image in a responsive split 
   assert.match(indexPage, /blog-page__hero-grid/);
   assert.match(indexPage, /blog-page__hero-media/);
   assert.match(indexPage, /fetchPriority="high"/);
-  assert.match(articleCss, /\.blog-page__hero-grid\s*\{[\s\S]*grid-template-columns:/);
-  assert.match(articleCss, /@media \(max-width: 820px\)[\s\S]*\.blog-page__hero-grid\s*\{[^}]*grid-template-columns:\s*1fr/);
+  assert.match(layout, /import '\.\/blog-index-hero\.css';/);
+  assert.match(blogIndexHeroCss, /\.blog-page__hero-grid\s*\{[\s\S]*grid-template-columns:/);
+  assert.match(blogIndexHeroCss, /@media \(max-width: 820px\)[\s\S]*\.blog-page__hero-grid\s*\{[^}]*grid-template-columns:\s*1fr/);
 });
 
 test('water-location article has the six text-first sections from the reference', () => {
