@@ -57,6 +57,15 @@ test('article pages keep the reference editorial reading structure', () => {
   assert.match(articleCss, /\.article-related__grid\s*\{[\s\S]*repeat\(3/);
 });
 
+test('blog index hero uses the dedicated repository image in a responsive split layout', () => {
+  assert.match(indexPage, /d99f5283-0d57-4271-8db0-e7bb5158f0c1\.webp/);
+  assert.match(indexPage, /blog-page__hero-grid/);
+  assert.match(indexPage, /blog-page__hero-media/);
+  assert.match(indexPage, /fetchPriority="high"/);
+  assert.match(articleCss, /\.blog-page__hero-grid\s*\{[\s\S]*grid-template-columns:/);
+  assert.match(articleCss, /@media \(max-width: 820px\)[\s\S]*\.blog-page__hero-grid\s*\{[^}]*grid-template-columns:\s*1fr/);
+});
+
 test('water-location article has the six text-first sections from the reference', () => {
   assert.match(blogData, /Геологічні карти і регіональні дані/);
   assert.match(blogData, /Дані сусідніх свердловин/);
