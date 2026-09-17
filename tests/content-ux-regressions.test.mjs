@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 
 const landing = readFileSync(new URL('../components/LandingPage.tsx', import.meta.url), 'utf8');
 const blogSection = readFileSync(new URL('../components/BlogSection.tsx', import.meta.url), 'utf8');
-const mobileCss = readFileSync(new URL('../app/mobile.css', import.meta.url), 'utf8');
+const servicesCss = readFileSync(new URL('../app/services-editorial.css', import.meta.url), 'utf8');
 const contentCss = readFileSync(new URL('../app/content.css', import.meta.url), 'utf8');
 const processCss = readFileSync(new URL('../app/process.css', import.meta.url), 'utf8');
 
@@ -12,10 +12,12 @@ const blogDataUrl = new URL('../lib/blog-data.ts', import.meta.url);
 const blogIndexUrl = new URL('../app/blog/page.tsx', import.meta.url);
 const blogArticleUrl = new URL('../app/blog/[slug]/page.tsx', import.meta.url);
 
-test('services header has no need filters or carousel arrows in rendered JSX', () => {
+test('services header is an editorial comparison without filters or carousel controls', () => {
   assert.doesNotMatch(landing, /serviceFilters|service-filter-tabs|service-carousel-controls/);
-  assert.doesNotMatch(landing, /Попередня послуга|Наступна послуга|Для дому|Для бізнесу|Для промисловості/);
-  assert.match(mobileCss, /\.services-reference__header\s*\{[\s\S]*?text-align:\s*center/i);
+  assert.doesNotMatch(landing, /Попередня послуга|Наступна послуга/);
+  assert.match(landing, /Оберіть свій тип свердловини/);
+  assert.match(landing, /services-reference__intro/);
+  assert.match(servicesCss, /\.services-reference__header\s*\{[\s\S]*?text-align:\s*left\s*!important/i);
 });
 
 test('blog contains seven internal SEO articles and cards link to their real routes', () => {
