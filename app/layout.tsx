@@ -14,6 +14,7 @@ import './blog-knowledge.css';
 import './blog-seo.css';
 import './process-mobile-fix.css';
 import './services-editorial.css';
+import './services-card-fade.css';
 import './blog-index-hero.css';
 
 export const metadata: Metadata = {
