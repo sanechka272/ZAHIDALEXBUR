@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
+import featuredDepthArticleImage from '../dea54c87-5ec0-422d-bea5-282055a683c4.webp';
 import { featuredBlogArticle, landingBlogArticles } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
 
@@ -59,7 +60,7 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
       <div className="blog-kb__featured-wrap">
         <article className="reference-shell blog-kb__featured reveal">
           <Link href={`/blog/${featuredBlogArticle.slug}`} className="blog-kb__featured-media" aria-label={featuredBlogArticle.title}>
-            <Image src={featuredBlogArticle.image} alt={featuredBlogArticle.imageAlt} fill sizes="(max-width: 900px) 100vw, 48vw" quality={90} />
+            <Image src={featuredDepthArticleImage} alt={featuredBlogArticle.imageAlt} fill sizes="(max-width: 900px) 100vw, 48vw" quality={90} />
           </Link>
           <div className="blog-kb__featured-copy">
             <span className="blog-kb__meta">{featuredBlogArticle.category} · {featuredBlogArticle.readTime.toUpperCase().replace(' ЧИТАННЯ', '')}</span>
