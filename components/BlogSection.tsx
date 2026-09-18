@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import featuredDepthArticleImage from '../blog-hlybyna-sverdlovyny-lvivska-oblast-featured.webp';
+import blogKnowledgeHeroImage from '../blog-knowledge-hero-drilling.webp';
 import { featuredBlogArticle, landingBlogArticles } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
 
@@ -51,7 +52,7 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
             <div className="blog-kb__keywords" aria-label="Ключові теми"><span />ДОСВІД · ЕКСПЕРТИЗА · РЕАЛЬНІ КЕЙСИ</div>
           </div>
           <div className="blog-kb__hero-media reveal reveal--from-right">
-            <Image src={assets.hero} alt="Бурова установка ZAHIDALEXBUR у Львівській області" fill sizes="(max-width: 900px) 100vw, 52vw" quality={90} />
+            <Image src={blogKnowledgeHeroImage} alt="Бурова установка ZAHIDALEXBUR у Львівській області" fill sizes="(max-width: 900px) 100vw, 52vw" quality={90} />
             <div className="blog-kb__hero-caption">ВОДА<br />ПОЧИНАЄТЬСЯ<br />З ПРАВИЛЬНИХ РІШЕНЬ</div>
           </div>
         </div>
