@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import featuredDepthArticleImage from '../../../blog-hlybyna-sverdlovyny-lvivska-oblast-featured.webp';
+import waterDisappearsArticleImage from '../../../blog-chomu-voda-mozhe-znyknuty-featured.webp';
 import { ArticleLeadButton, ArticleShareButton } from '@/components/ArticleInteractions';
 import { blogArticles, getBlogArticle, getRelatedBlogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
@@ -11,9 +12,12 @@ const SITE_URL = 'https://zahidalexbur.com.ua';
 const ARTICLE_PUBLISHED_AT = '2026-08-12';
 const ARTICLE_PUBLISHED_LABEL = '12 серпня 2026';
 const FEATURED_DEPTH_ARTICLE_SLUG = 'hlybyna-sverdlovyny-lvivska-oblast';
+const WATER_DISAPPEARS_ARTICLE_SLUG = 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny';
 
 function getArticleVisual(slug: string, fallback: string) {
-  return slug === FEATURED_DEPTH_ARTICLE_SLUG ? featuredDepthArticleImage : fallback;
+  if (slug === FEATURED_DEPTH_ARTICLE_SLUG) return featuredDepthArticleImage;
+  if (slug === WATER_DISAPPEARS_ARTICLE_SLUG) return waterDisappearsArticleImage;
+  return fallback;
 }
 
 function getArticleVisualUrl(slug: string, fallback: string) {
