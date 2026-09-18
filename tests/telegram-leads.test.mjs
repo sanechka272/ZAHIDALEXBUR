@@ -50,3 +50,18 @@ test('container route skips duplicate Telegram delivery when edge already handle
   assert.match(route, /if \(!telegramHandledAtEdge\)/);
   assert.match(route, /storage_unavailable/);
 });
+
+
+test('lead POST is completed at the Worker edge before container/database work', () => {
+  assert.match(worker, /request\.method === 'POST' && url\.pathname === '\/api\/leads'/);
+  assert.match(worker, /sendLeadTelegramAtEdge\(env, lead, leadId, false\)/);
+  assert.match(worker, /storage: 'edge_telegram'/);
+  assert.match(worker, /x-zab-lead-path': 'edge'/);
+
+  const directLeadPosition = worker.indexOf("request.method === 'POST' && url.pathname === '/api/leads'");
+  const normalContainerPosition = worker.indexOf("const container = getContainer");
+  assert.ok(
+    directLeadPosition >= 0 && normalContainerPosition > directLeadPosition,
+    'direct Telegram lead delivery must happen before the normal container path',
+  );
+});
