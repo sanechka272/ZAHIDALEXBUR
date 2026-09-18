@@ -99,3 +99,10 @@ test('water-disappears article uses its dedicated repository image everywhere', 
   assert.match(indexPage, /blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
   assert.match(articlePage, /blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
 });
+
+
+test('turnkey-well article uses its dedicated repository image everywhere', () => {
+  assert.match(blogSection, /blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured\.webp/);
+  assert.match(indexPage, /blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured\.webp/);
+  assert.match(articlePage, /blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured\.webp/);
+});

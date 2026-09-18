@@ -1,5 +1,6 @@
 import waterDisappearsArticleImage from '../blog-chomu-voda-mozhe-znyknuty-featured.webp';
 import filterVsNoFilterArticleImage from '../blog-filtrova-chy-bezfiltrova-featured.webp';
+import turnkeyWellArticleImage from '../blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp';
 import { assets } from './site-data';
 
 export type BlogSectionBlock = {
@@ -93,7 +94,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Облаштування свердловини під ключ: етапи робіт | ZAHIDALEXBUR',
     metaDescription: 'Що входить в облаштування свердловини під ключ: насос, автоматика, герметизація, магістраль до будинку, запуск та перевірка системи.',
     excerpt: 'Що входить у комплекс робіт та з яких етапів складається готова система.',
-    image: assets.about,
+    image: turnkeyWellArticleImage.src,
     imageAlt: 'Облаштована свердловина та система водопостачання приватного будинку',
     readTime: '8 хв читання',
     intro: 'Після буріння свердловину потрібно перетворити на стабільну систему водопостачання. Для цього підбирають насос, автоматику, захист, магістраль і спосіб герметичного облаштування оголовка.',

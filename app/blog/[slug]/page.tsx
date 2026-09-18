@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import featuredDepthArticleImage from '../../../blog-hlybyna-sverdlovyny-lvivska-oblast-featured.webp';
 import waterDisappearsArticleImage from '../../../blog-chomu-voda-mozhe-znyknuty-featured.webp';
 import filterVsNoFilterArticleImage from '../../../blog-filtrova-chy-bezfiltrova-featured.webp';
+import turnkeyWellArticleImage from '../../../blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp';
 import { ArticleLeadButton, ArticleShareButton } from '@/components/ArticleInteractions';
 import { blogArticles, getBlogArticle, getRelatedBlogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
@@ -15,11 +16,13 @@ const ARTICLE_PUBLISHED_LABEL = '12 серпня 2026';
 const FEATURED_DEPTH_ARTICLE_SLUG = 'hlybyna-sverdlovyny-lvivska-oblast';
 const WATER_DISAPPEARS_ARTICLE_SLUG = 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny';
 const FILTER_VS_NO_FILTER_ARTICLE_SLUG = 'filtrova-chy-bezfiltrova-sverdlovyna';
+const TURNKEY_WELL_ARTICLE_SLUG = 'yak-oblashtuvaty-sverdlovynu-pid-kliuch';
 
 function getArticleVisual(slug: string, fallback: string) {
   if (slug === FEATURED_DEPTH_ARTICLE_SLUG) return featuredDepthArticleImage;
   if (slug === WATER_DISAPPEARS_ARTICLE_SLUG) return waterDisappearsArticleImage;
   if (slug === FILTER_VS_NO_FILTER_ARTICLE_SLUG) return filterVsNoFilterArticleImage;
+  if (slug === TURNKEY_WELL_ARTICLE_SLUG) return turnkeyWellArticleImage;
   return fallback;
 }
 
