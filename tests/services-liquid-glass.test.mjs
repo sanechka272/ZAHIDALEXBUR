@@ -27,7 +27,7 @@ test('service cards use a static full-card cinematic overlay with no separate bl
 
 test('service hover keeps the overlay fixed and only scales the underlying image', () => {
   assert.match(css, /service-reference-card:hover\s*\{[\s\S]*transform:\s*none\s*!important/);
-  assert.match(css, /service-reference-card:hover \.service-reference-card__photo img\s*\{[\s\S]*transform:\s*scale\(1\.03\)/);
+  assert.match(css, /service-reference-card:hover \.service-reference-card__photo img\s*\{[\s\S]*scale\(var\(--service-image-hover-scale\)\)/);
   assert.doesNotMatch(css, /service-reference-card:hover::after/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
 });
