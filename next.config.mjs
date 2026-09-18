@@ -2,9 +2,11 @@
 const nextConfig = {
   output: 'standalone',
   images: {
-    qualities: [90],
-    formats: ['image/webp'],
-    minimumCacheTTL: 604800,
+    qualities: [82],
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [360, 480, 640, 750, 828, 1080, 1280, 1440, 1920],
+    imageSizes: [96, 128, 256, 384, 512],
+    minimumCacheTTL: 2592000,
   },
   async redirects() {
     return [

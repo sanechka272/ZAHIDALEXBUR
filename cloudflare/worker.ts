@@ -158,7 +158,7 @@ async function transformNextImageAtEdge(request: Request, url: URL) {
   const requestedQuality = Number.parseInt(url.searchParams.get('q') ?? '90', 10);
   if (!source || !Number.isFinite(width) || width < 16 || width > 3840) return null;
 
-  const quality = Math.min(95, Math.max(88, Number.isFinite(requestedQuality) ? requestedQuality : 90));
+  const quality = Math.min(90, Math.max(78, Number.isFinite(requestedQuality) ? requestedQuality : 82));
   const sourceUrl = new URL(source, url.origin);
   const format = imageFormat(request);
   const image: Record<string, string | number> = {

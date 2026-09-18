@@ -1,6 +1,3 @@
-import bezfiltrovaServiceImage from '../service-card-bezfiltrova-cross-section.webp';
-import filtrovaServiceImage from '../service-card-filtrova-cross-section.webp';
-import promyslovaServiceImage from '../service-card-promyslova-cross-section.webp';
 
 export const contact = {
   phoneDisplay: '+38 099 783 76 44',
@@ -15,9 +12,9 @@ export const assets = {
   process: '/media/process-drilling-background.webp',
   about: '/media/about-mountain-forest.jpg',
   services: [
-    bezfiltrovaServiceImage.src,
-    filtrovaServiceImage.src,
-    promyslovaServiceImage.src,
+    '/media/service-card-bezfiltrova-cross-section.webp',
+    '/media/service-card-filtrova-cross-section.webp',
+    '/media/service-card-promyslova-cross-section.webp',
   ],
 };
 

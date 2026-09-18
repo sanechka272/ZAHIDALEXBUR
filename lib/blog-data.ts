@@ -1,10 +1,3 @@
-import waterDisappearsArticleImage from '../blog-chomu-voda-mozhe-znyknuty-featured.webp';
-import filterVsNoFilterArticleImage from '../blog-filtrova-chy-bezfiltrova-featured.webp';
-import turnkeyWellArticleImage from '../blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp';
-import waterLocationArticleImage from '../blog-yak-vyznachyty-vodu-na-diliantsi-featured.webp';
-import sitePreparationArticleImage from '../blog-yak-pidhotuvaty-dilianku-do-burinnya-featured.webp';
-import pumpChoiceArticleImage from '../blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured.webp';
-import { assets } from './site-data';
 
 export type BlogSectionBlock = {
   heading: string;
@@ -38,7 +31,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Глибина свердловини у Львівській області | ZAHIDALEXBUR',
     metaDescription: 'Пояснюємо, від чого залежить глибина свердловини у Львові та області, чому сусідня свердловина не є гарантією і як оцінити ділянку до буріння.',
     excerpt: 'Чому сусідні населені пункти можуть мати різні водоносні горизонти і чому точну глибину не варто вгадувати наперед.',
-    image: assets.hero,
+    image: '/media/blog-hlybyna-sverdlovyny-lvivska-oblast-featured.webp',
     imageAlt: 'Бурова установка під час буріння свердловини у Львівській області',
     readTime: '7 хв читання',
     intro: 'Універсальної глибини для Львова та області не існує. Вона залежить від геологічної будови ділянки, обраного горизонту та задачі майбутньої свердловини.',
@@ -59,7 +52,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Чому у свердловині зникає вода: основні причини | ZAHIDALEXBUR',
     metaDescription: 'Основні причини падіння дебіту або зникнення води зі свердловини: сезонність, насос, замулення, зміни горизонту та правильна діагностика.',
     excerpt: 'Основні причини та як цього уникнути.',
-    image: waterDisappearsArticleImage.src,
+    image: '/media/blog-chomu-voda-mozhe-znyknuty-featured.webp',
     imageAlt: 'Свердловина на воду та обладнання системи водопостачання',
     readTime: '5 хв читання',
     intro: 'Якщо вода у свердловині стала надходити слабше або зникла, причина не завжди у самій свердловині. Спочатку потрібно відокремити проблеми дебіту від несправностей насоса, автоматики чи водопроводу.',
@@ -78,7 +71,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Фільтрова чи безфільтрова свердловина: різниця | ZAHIDALEXBUR',
     metaDescription: 'Порівнюємо фільтрові та безфільтрові свердловини: конструкцію, умови застосування, переваги та фактори, які впливають на вибір.',
     excerpt: 'Порівнюємо конструкції, їх переваги та особливості використання.',
-    image: filterVsNoFilterArticleImage.src,
+    image: '/media/blog-filtrova-chy-bezfiltrova-featured.webp',
     imageAlt: 'Конструкція фільтрової свердловини на воду',
     readTime: '6 хв читання',
     intro: 'Тип свердловини не варто обирати лише за назвою або ціною. Фільтрова й безфільтрова конструкції застосовуються за різних геологічних умов і вирішують різні задачі.',
@@ -97,7 +90,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Облаштування свердловини під ключ: етапи робіт | ZAHIDALEXBUR',
     metaDescription: 'Що входить в облаштування свердловини під ключ: насос, автоматика, герметизація, магістраль до будинку, запуск та перевірка системи.',
     excerpt: 'Що входить у комплекс робіт та з яких етапів складається готова система.',
-    image: turnkeyWellArticleImage.src,
+    image: '/media/blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp',
     imageAlt: 'Облаштована свердловина та система водопостачання приватного будинку',
     readTime: '8 хв читання',
     intro: 'Після буріння свердловину потрібно перетворити на стабільну систему водопостачання. Для цього підбирають насос, автоматику, захист, магістраль і спосіб герметичного облаштування оголовка.',
@@ -116,7 +109,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Як визначити воду на ділянці перед бурінням | ZAHIDALEXBUR',
     metaDescription: 'Що реально допомагає оцінити перспективи буріння: геологічні дані, сусідні свердловини, рельєф, карти та професійна оцінка ділянки.',
     excerpt: 'Методи оцінки, геологічні карти та практичні рекомендації.',
-    image: waterLocationArticleImage.src,
+    image: '/media/blog-yak-vyznachyty-vodu-na-diliantsi-featured.webp',
     imageAlt: 'Ділянка у Львівській області перед бурінням свердловини',
     readTime: '6 хв читання',
     intro: 'Надійно визначити точну глибину води лише за зовнішніми ознаками неможливо. Але до початку робіт можна зібрати достатньо даних, щоб оцінити геологічну ситуацію і вибрати реалістичну стратегію буріння.',
@@ -138,7 +131,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Як підготувати ділянку до буріння свердловини | ZAHIDALEXBUR',
     metaDescription: 'Що підготувати до приїзду бурової: місце під свердловину, заїзд техніки, комунікації, робочу зону та умови для виконання робіт.',
     excerpt: 'Що варто підготувати до приїзду бурової техніки, щоб роботи пройшли без зайвих затримок.',
-    image: sitePreparationArticleImage.src,
+    image: '/media/blog-yak-pidhotuvaty-dilianku-do-burinnya-featured.webp',
     imageAlt: 'Підготовлена ділянка перед бурінням свердловини на воду',
     readTime: '5 хв читання',
     intro: 'Підготовка ділянки починається не з техніки, а з правильно обраного місця та зрозумілих умов для роботи бригади. Завчасно продуманий заїзд, робоча зона й відомі комунікації допомагають уникнути зайвих пауз уже після прибуття бурової.',
@@ -160,7 +153,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Як вибрати насос для свердловини: основні параметри | ZAHIDALEXBUR',
     metaDescription: 'Як підібрати насос для свердловини за глибиною, дебітом, напором і витратою води. Пояснюємо ключові параметри без зайвих складнощів.',
     excerpt: 'Типи насосів, характеристики та рекомендації.',
-    image: pumpChoiceArticleImage.src,
+    image: '/media/blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured.webp',
     imageAlt: 'Насосне обладнання для свердловини на воду',
     readTime: '5 хв читання',
     intro: 'Насос для свердловини підбирають не за принципом «чим потужніший, тим краще». Він має відповідати глибині, дебіту свердловини, потрібному напору та реальному споживанню води.',

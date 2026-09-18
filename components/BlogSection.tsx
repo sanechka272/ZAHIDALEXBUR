@@ -3,34 +3,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import featuredDepthArticleImage from '../blog-hlybyna-sverdlovyny-lvivska-oblast-featured.webp';
-import blogKnowledgeHeroImage from '../blog-knowledge-hero-drilling.webp';
-import waterDisappearsArticleImage from '../blog-chomu-voda-mozhe-znyknuty-featured.webp';
-import filterVsNoFilterArticleImage from '../blog-filtrova-chy-bezfiltrova-featured.webp';
-import turnkeyWellArticleImage from '../blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp';
-import waterLocationArticleImage from '../blog-yak-vyznachyty-vodu-na-diliantsi-featured.webp';
-import sitePreparationArticleImage from '../blog-yak-pidhotuvaty-dilianku-do-burinnya-featured.webp';
-import pumpChoiceArticleImage from '../blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured.webp';
 import { featuredBlogArticle, landingBlogArticles } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
 
 const categories = ['УСІ МАТЕРІАЛИ', 'ГЕОЛОГІЯ', 'БУРІННЯ', 'ОБЛАШТУВАННЯ', 'ВОДА', 'ЦІНИ', 'ПОРАДИ'] as const;
-const WATER_DISAPPEARS_SLUG = 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny';
-const FILTER_VS_NO_FILTER_SLUG = 'filtrova-chy-bezfiltrova-sverdlovyna';
-const TURNKEY_WELL_SLUG = 'yak-oblashtuvaty-sverdlovynu-pid-kliuch';
-const WATER_LOCATION_SLUG = 'yak-vyznachyty-vodu-na-diliantsi';
-const SITE_PREPARATION_SLUG = 'yak-pidhotuvaty-dilianku-do-burinnya-sverdlovyny';
-const PUMP_CHOICE_SLUG = 'yakyi-nasos-obraty-dlia-sverdlovyny';
-
-function getLandingArticleImage(article: (typeof landingBlogArticles)[number]) {
-  if (article.slug === WATER_DISAPPEARS_SLUG) return waterDisappearsArticleImage;
-  if (article.slug === FILTER_VS_NO_FILTER_SLUG) return filterVsNoFilterArticleImage;
-  if (article.slug === TURNKEY_WELL_SLUG) return turnkeyWellArticleImage;
-  if (article.slug === WATER_LOCATION_SLUG) return waterLocationArticleImage;
-  if (article.slug === SITE_PREPARATION_SLUG) return sitePreparationArticleImage;
-  if (article.slug === PUMP_CHOICE_SLUG) return pumpChoiceArticleImage;
-  return article.image;
-}
+const BLOG_KNOWLEDGE_HERO_IMAGE = '/media/blog-knowledge-hero-drilling.webp';
 
 function ArrowIcon() {
   return (
@@ -74,7 +51,7 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
             <div className="blog-kb__keywords" aria-label="Ключові теми"><span />ДОСВІД · ЕКСПЕРТИЗА · РЕАЛЬНІ КЕЙСИ</div>
           </div>
           <div className="blog-kb__hero-media reveal reveal--from-right">
-            <Image src={blogKnowledgeHeroImage} alt="Бурова установка ZAHIDALEXBUR у Львівській області" fill sizes="(max-width: 900px) 100vw, 52vw" quality={90} />
+            <Image src={BLOG_KNOWLEDGE_HERO_IMAGE} alt="Бурова установка ZAHIDALEXBUR у Львівській області" fill sizes="(max-width: 900px) 100vw, 52vw" quality={82} />
             <div className="blog-kb__hero-caption">ВОДА<br />ПОЧИНАЄТЬСЯ<br />З ПРАВИЛЬНИХ РІШЕНЬ</div>
           </div>
         </div>
@@ -83,7 +60,7 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
       <div className="blog-kb__featured-wrap">
         <article className="reference-shell blog-kb__featured reveal">
           <Link href={`/blog/${featuredBlogArticle.slug}`} className="blog-kb__featured-media" aria-label={featuredBlogArticle.title}>
-            <Image src={featuredDepthArticleImage} alt={featuredBlogArticle.imageAlt} fill sizes="(max-width: 900px) 100vw, 48vw" quality={90} />
+            <Image src={featuredBlogArticle.image} alt={featuredBlogArticle.imageAlt} fill sizes="(max-width: 900px) 100vw, 48vw" quality={82} />
           </Link>
           <div className="blog-kb__featured-copy">
             <span className="blog-kb__meta">{featuredBlogArticle.category} · {featuredBlogArticle.readTime.toUpperCase().replace(' ЧИТАННЯ', '')}</span>
@@ -126,7 +103,7 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
             {filteredArticles.map((article) => (
               <article className="blog-kb-card" key={article.slug}>
                 <Link className="blog-kb-card__media" href={`/blog/${article.slug}`} aria-label={article.title}>
-                  <Image src={getLandingArticleImage(article)} alt={article.imageAlt} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={90} />
+                  <Image src={article.image} alt={article.imageAlt} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={82} />
                 </Link>
                 <div className="blog-kb-card__body">
                   <span className="blog-kb__meta">{article.category} · {article.readTime.toUpperCase().replace(' ЧИТАННЯ', '')}</span>

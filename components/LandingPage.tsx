@@ -77,7 +77,7 @@ function BlogCard({ article, index }: { article: (typeof blogArticles)[number]; 
   return (
     <a className="blog-reference-card reveal" style={{ '--delay': `${index * 70}ms` } as CSSProperties} href={`/blog/${article.slug}`} aria-label={article.title}>
       <div className="blog-reference-card__media" style={{ position: 'relative' }}>
-        <Image src={article.image} alt={article.title} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={90} />
+        <Image src={article.image} alt={article.title} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={82} />
         <span>0{index + 1}</span>
       </div>
       <div className="blog-reference-card__body">
@@ -104,7 +104,7 @@ function ServiceCard({ service, index, onOpen }: { service: (typeof services)[nu
   return (
     <article id={`service-card-${index}`} className="service-reference-card reveal" style={{ '--delay': `${index * 100}ms` } as CSSProperties}>
       <div className="service-reference-card__photo">
-        <Image src={service.image} alt={serviceImageAlts[index]} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={90} />
+        <Image src={service.image} alt={serviceImageAlts[index]} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={82} />
         <span className="service-reference-card__number">{service.id}</span>
         <span className="service-reference-card__category">{serviceTags[index]}</span>
       </div>
@@ -237,7 +237,7 @@ export default function LandingPage() {
 
       <section className="hero reference-hero">
         <div className="reference-hero__media" aria-hidden="true">
-          <Image src={assets.hero} alt="" fill sizes="100vw" quality={90} fetchPriority="high" style={{ objectFit: 'cover', objectPosition: '58% 50%' }} />
+          <Image src={assets.hero} alt="" fill sizes="100vw" quality={82} preload fetchPriority="high" style={{ objectFit: 'cover', objectPosition: '58% 50%' }} />
         </div>
         <div className="reference-hero__overlay" aria-hidden="true" />
         <div className="reference-shell reference-hero__layout">
@@ -257,7 +257,7 @@ export default function LandingPage() {
       </section>
 
       <section className="process-story reveal" id="process">
-        <div className="process-story__media" aria-hidden="true"><Image src={assets.process} alt="" fill sizes="100vw" quality={90} style={{ objectFit: 'cover', objectPosition: 'center 52%' }} /></div>
+        <div className="process-story__media" aria-hidden="true"><Image src={assets.process} alt="" fill sizes="100vw" quality={82} style={{ objectFit: 'cover', objectPosition: 'center 52%' }} /></div>
         <div className="process-story__veil" aria-hidden="true" />
         <div className="reference-shell process-story__layout">
           <div className="process-story__copy reveal reveal--from-left">

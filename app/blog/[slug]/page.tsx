@@ -2,13 +2,6 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import featuredDepthArticleImage from '../../../blog-hlybyna-sverdlovyny-lvivska-oblast-featured.webp';
-import waterDisappearsArticleImage from '../../../blog-chomu-voda-mozhe-znyknuty-featured.webp';
-import filterVsNoFilterArticleImage from '../../../blog-filtrova-chy-bezfiltrova-featured.webp';
-import turnkeyWellArticleImage from '../../../blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp';
-import waterLocationArticleImage from '../../../blog-yak-vyznachyty-vodu-na-diliantsi-featured.webp';
-import sitePreparationArticleImage from '../../../blog-yak-pidhotuvaty-dilianku-do-burinnya-featured.webp';
-import pumpChoiceArticleImage from '../../../blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured.webp';
 import { ArticleLeadButton, ArticleShareButton } from '@/components/ArticleInteractions';
 import { blogArticles, getBlogArticle, getRelatedBlogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
@@ -16,30 +9,6 @@ import { assets, contact } from '@/lib/site-data';
 const SITE_URL = 'https://zahidalexbur.com.ua';
 const ARTICLE_PUBLISHED_AT = '2026-08-12';
 const ARTICLE_PUBLISHED_LABEL = '12 серпня 2026';
-const FEATURED_DEPTH_ARTICLE_SLUG = 'hlybyna-sverdlovyny-lvivska-oblast';
-const WATER_DISAPPEARS_ARTICLE_SLUG = 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny';
-const FILTER_VS_NO_FILTER_ARTICLE_SLUG = 'filtrova-chy-bezfiltrova-sverdlovyna';
-const TURNKEY_WELL_ARTICLE_SLUG = 'yak-oblashtuvaty-sverdlovynu-pid-kliuch';
-const WATER_LOCATION_ARTICLE_SLUG = 'yak-vyznachyty-vodu-na-diliantsi';
-const SITE_PREPARATION_ARTICLE_SLUG = 'yak-pidhotuvaty-dilianku-do-burinnya-sverdlovyny';
-const PUMP_CHOICE_ARTICLE_SLUG = 'yakyi-nasos-obraty-dlia-sverdlovyny';
-
-function getArticleVisual(slug: string, fallback: string) {
-  if (slug === FEATURED_DEPTH_ARTICLE_SLUG) return featuredDepthArticleImage;
-  if (slug === WATER_DISAPPEARS_ARTICLE_SLUG) return waterDisappearsArticleImage;
-  if (slug === FILTER_VS_NO_FILTER_ARTICLE_SLUG) return filterVsNoFilterArticleImage;
-  if (slug === TURNKEY_WELL_ARTICLE_SLUG) return turnkeyWellArticleImage;
-  if (slug === WATER_LOCATION_ARTICLE_SLUG) return waterLocationArticleImage;
-  if (slug === SITE_PREPARATION_ARTICLE_SLUG) return sitePreparationArticleImage;
-  if (slug === PUMP_CHOICE_ARTICLE_SLUG) return pumpChoiceArticleImage;
-  return fallback;
-}
-
-function getArticleVisualUrl(slug: string, fallback: string) {
-  const visual = getArticleVisual(slug, fallback);
-  return typeof visual === 'string' ? visual : visual.src;
-}
-
 export const dynamic = 'force-static';
 export const revalidate = false;
 export const dynamicParams = false;
@@ -54,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!article) return {};
 
   const canonical = `/blog/${article.slug}`;
-  const articleVisualUrl = getArticleVisualUrl(article.slug, article.image);
+  const articleVisualUrl = article.image;
 
   return {
     title: article.metaTitle,
@@ -123,8 +92,8 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
   const nextArticle = articleIndex >= 0 && articleIndex < blogArticles.length - 1 ? blogArticles[articleIndex + 1] : null;
   const related = getRelatedBlogArticles(article).slice(0, 3);
   const articleUrl = `${SITE_URL}/blog/${article.slug}`;
-  const articleVisual = getArticleVisual(article.slug, article.image);
-  const articleVisualUrl = getArticleVisualUrl(article.slug, article.image);
+  const articleVisual = article.image;
+  const articleVisualUrl = article.image;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -199,7 +168,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
               <div className="article-page__visual">
                 <div className="article-page__cover" style={{ position: 'relative' }}>
-                  <Image src={articleVisual} alt={article.imageAlt} fill sizes="(max-width: 900px) 100vw, 58vw" quality={90} fetchPriority="high" />
+                  <Image src={articleVisual} alt={article.imageAlt} fill sizes="(max-width: 900px) 100vw, 58vw" quality={82} preload fetchPriority="high" />
                 </div>
                 <div className="article-page__media-tools">
                   <span><ClockIcon />{article.readTime}</span>
@@ -275,7 +244,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                 {related.map((relatedArticle) => (
                   <article key={relatedArticle.slug}>
                     <Link className="article-related__media" href={`/blog/${relatedArticle.slug}`} aria-label={relatedArticle.title}>
-                      <Image src={relatedArticle.image} alt={relatedArticle.imageAlt} fill sizes="110px" quality={90} />
+                      <Image src={relatedArticle.image} alt={relatedArticle.imageAlt} fill sizes="110px" quality={82} />
                     </Link>
                     <div className="article-related__copy">
                       <span>{relatedArticle.category} · {relatedArticle.readTime}</span>

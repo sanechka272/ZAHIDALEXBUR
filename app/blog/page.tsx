@@ -3,33 +3,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
-import blogHeroImage from '../../blog-index-hero-drilling.webp';
-import waterDisappearsArticleImage from '../../blog-chomu-voda-mozhe-znyknuty-featured.webp';
-import filterVsNoFilterArticleImage from '../../blog-filtrova-chy-bezfiltrova-featured.webp';
-import turnkeyWellArticleImage from '../../blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp';
-import waterLocationArticleImage from '../../blog-yak-vyznachyty-vodu-na-diliantsi-featured.webp';
-import sitePreparationArticleImage from '../../blog-yak-pidhotuvaty-dilianku-do-burinnya-featured.webp';
-import pumpChoiceArticleImage from '../../blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured.webp';
 
 export const dynamic = 'force-static';
 export const revalidate = false;
 
-const WATER_DISAPPEARS_SLUG = 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny';
-const FILTER_VS_NO_FILTER_SLUG = 'filtrova-chy-bezfiltrova-sverdlovyna';
-const TURNKEY_WELL_SLUG = 'yak-oblashtuvaty-sverdlovynu-pid-kliuch';
-const WATER_LOCATION_SLUG = 'yak-vyznachyty-vodu-na-diliantsi';
-const SITE_PREPARATION_SLUG = 'yak-pidhotuvaty-dilianku-do-burinnya-sverdlovyny';
-const PUMP_CHOICE_SLUG = 'yakyi-nasos-obraty-dlia-sverdlovyny';
-
-function getBlogIndexArticleImage(article: (typeof blogArticles)[number]) {
-  if (article.slug === WATER_DISAPPEARS_SLUG) return waterDisappearsArticleImage;
-  if (article.slug === FILTER_VS_NO_FILTER_SLUG) return filterVsNoFilterArticleImage;
-  if (article.slug === TURNKEY_WELL_SLUG) return turnkeyWellArticleImage;
-  if (article.slug === WATER_LOCATION_SLUG) return waterLocationArticleImage;
-  if (article.slug === SITE_PREPARATION_SLUG) return sitePreparationArticleImage;
-  if (article.slug === PUMP_CHOICE_SLUG) return pumpChoiceArticleImage;
-  return article.image;
-}
+const BLOG_INDEX_HERO_IMAGE = '/media/blog-index-hero-drilling.webp';
 
 export const metadata: Metadata = {
   title: 'Блог про свердловини, воду та геологію | ZAHIDALEXBUR',
@@ -41,13 +19,13 @@ export const metadata: Metadata = {
     title: 'Блог / База знань ZAHIDALEXBUR',
     description: 'Практичні матеріали про буріння свердловин, воду та геологію Львівської області.',
     url: '/blog',
-    images: [{ url: blogHeroImage.src, alt: 'Буріння свердловини у Львівській області' }],
+    images: [{ url: BLOG_INDEX_HERO_IMAGE, alt: 'Буріння свердловини у Львівській області' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Блог / База знань ZAHIDALEXBUR',
     description: 'Практичні матеріали про буріння свердловин, воду та геологію.',
-    images: [blogHeroImage.src],
+    images: [BLOG_INDEX_HERO_IMAGE],
   },
 };
 
@@ -76,11 +54,12 @@ export default function BlogIndexPage() {
           </div>
           <div className="blog-page__hero-media">
             <Image
-              src={blogHeroImage}
+              src={BLOG_INDEX_HERO_IMAGE}
               alt="Буріння свердловини у Львівській області"
               fill
               sizes="(max-width: 820px) 100vw, 52vw"
-              quality={90}
+              quality={82}
+              preload
               fetchPriority="high"
             />
           </div>
@@ -93,11 +72,11 @@ export default function BlogIndexPage() {
             <article className="blog-index-card" key={article.slug}>
               <Link href={`/blog/${article.slug}`} className="blog-index-card__media" aria-label={article.title}>
                 <Image
-                  src={getBlogIndexArticleImage(article)}
+                  src={article.image}
                   alt={article.imageAlt}
                   fill
                   sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw"
-                  quality={90}
+                  quality={82}
                 />
                 <span>0{index + 1}</span>
               </Link>

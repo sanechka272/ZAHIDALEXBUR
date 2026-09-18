@@ -40,15 +40,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="uk">
-      <head>
-        <link
-          rel="preload"
-          as="image"
-          href="/media/6cf70733-a291-4fd2-ae11-f5d510e1d959.webp"
-          type="image/webp"
-          media="(max-width: 767px)"
-        />
-      </head>
       <body>
         {children}
         <FirstPartyTracker />
