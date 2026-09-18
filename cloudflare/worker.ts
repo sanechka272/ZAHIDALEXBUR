@@ -122,7 +122,7 @@ function responseWithCacheStatus(response: Response, kind: CacheKind, status: 'H
 function responseWithRelease(response: Response, env: Env) {
   const headers = new Headers(response.headers);
   headers.set('x-zab-worker-version', env.CF_VERSION_METADATA?.id ?? 'unknown');
-  headers.set('x-zab-container-generation', 'v2');
+  headers.set('x-zab-container-generation', 'v3');
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
@@ -220,7 +220,7 @@ export default {
 
     // New object name forces a fresh stateless Next.js container instance once,
     // avoiding a previously warm Durable Object instance during the rollout.
-    const container = getContainer(env.APP_CONTAINER as any, 'zahidalexbur-production-v2');
+    const container = getContainer(env.APP_CONTAINER as any, 'zahidalexbur-production-v3');
     const response = await container.fetch(edgeRequest(request));
 
     if (!kind || !canStore(response)) return responseWithRelease(response, env);
