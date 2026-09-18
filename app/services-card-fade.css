@@ -5,6 +5,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  align-self: stretch;
   background: #0f0d0b;
 }
 
@@ -30,7 +31,7 @@
 
 .service-reference-card__photo img {
   object-fit: cover;
-  transform: translate3d(0, 5.5%, 0) scale(1.08);
+  transform: translate3d(0, 4%, 0) scale(1.14);
   transform-origin: 50% 50%;
   filter: contrast(1.01) saturate(.96);
   transition: transform .42s cubic-bezier(.22, .61, .36, 1);
@@ -40,7 +41,7 @@
    because object-position barely changes these near-matching source/card ratios. */
 .service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 50% !important; }
 .service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 50% !important; }
-.service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 53% !important; }
+.service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 51% !important; }
 
 /* One fixed, long multi-stop overlay across the entire card. */
 .service-reference-card::after {
@@ -117,7 +118,7 @@
 }
 
 .service-reference-card:hover .service-reference-card__photo img {
-  transform: translate3d(0, 5.5%, 0) scale(1.11);
+  transform: translate3d(0, 4%, 0) scale(1.17);
   filter: contrast(1.01) saturate(.96);
 }
 
@@ -135,11 +136,11 @@
   }
 
   .service-reference-card__photo img {
-    transform: translate3d(0, 5%, 0) scale(1.08);
+    transform: translate3d(0, 3.5%, 0) scale(1.13);
   }
 
   .service-reference-card:hover .service-reference-card__photo img {
-    transform: translate3d(0, 5%, 0) scale(1.11);
+    transform: translate3d(0, 3.5%, 0) scale(1.16);
   }
 }
 
@@ -157,11 +158,11 @@
   }
 
   .service-reference-card__photo img {
-    transform: translate3d(0, 4.5%, 0) scale(1.07);
+    transform: translate3d(0, 3%, 0) scale(1.12);
   }
 
   .service-reference-card:hover .service-reference-card__photo img {
-    transform: translate3d(0, 4.5%, 0) scale(1.10);
+    transform: translate3d(0, 3%, 0) scale(1.15);
   }
 }
 
@@ -169,6 +170,6 @@
   .service-reference-card__photo img,
   .service-reference-card:hover .service-reference-card__photo img {
     transition: none !important;
-    transform: translate3d(0, 4.5%, 0) scale(1.07) !important;
+    transform: translate3d(0, 3%, 0) scale(1.12) !important;
   }
 }
