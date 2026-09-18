@@ -94,24 +94,21 @@ test('blog index and discovery routes are indexable through sitemap and robots',
 });
 
 
-test('water-disappears article uses its dedicated repository image everywhere', () => {
-  assert.match(blogSection, /blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
-  assert.match(indexPage, /blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
-  assert.match(articlePage, /blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
+test('water-disappears article uses its dedicated public media image', () => {
+  assert.match(blogData, /\/media\/blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
+  assert.match(blogSection, /article\.image/);
+  assert.match(indexPage, /article\.image/);
+  assert.match(articlePage, /article\.image/);
 });
 
 
-test('turnkey-well article uses its dedicated repository image everywhere', () => {
-  assert.match(blogSection, /blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured\.webp/);
-  assert.match(indexPage, /blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured\.webp/);
-  assert.match(articlePage, /blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured\.webp/);
+test('turnkey-well article uses its dedicated public media image', () => {
+  assert.match(blogData, /\/media\/blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured\.webp/);
 });
 
 
-test('water-location article uses its dedicated repository image everywhere', () => {
-  assert.match(blogSection, /blog-yak-vyznachyty-vodu-na-diliantsi-featured\.webp/);
-  assert.match(indexPage, /blog-yak-vyznachyty-vodu-na-diliantsi-featured\.webp/);
-  assert.match(articlePage, /blog-yak-vyznachyty-vodu-na-diliantsi-featured\.webp/);
+test('water-location article uses its dedicated public media image', () => {
+  assert.match(blogData, /\/media\/blog-yak-vyznachyty-vodu-na-diliantsi-featured\.webp/);
 });
 
 
@@ -126,15 +123,11 @@ test('article lead modal is portaled outside article stacking contexts and keeps
 });
 
 
-test('site-preparation article uses its dedicated repository image everywhere', () => {
-  assert.match(blogSection, /blog-yak-pidhotuvaty-dilianku-do-burinnya-featured\.webp/);
-  assert.match(indexPage, /blog-yak-pidhotuvaty-dilianku-do-burinnya-featured\.webp/);
-  assert.match(articlePage, /blog-yak-pidhotuvaty-dilianku-do-burinnya-featured\.webp/);
+test('site-preparation article uses its dedicated public media image', () => {
+  assert.match(blogData, /\/media\/blog-yak-pidhotuvaty-dilianku-do-burinnya-featured\.webp/);
 });
 
 
-test('pump-choice article uses its dedicated repository image everywhere', () => {
-  assert.match(blogSection, /blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured\.webp/);
-  assert.match(indexPage, /blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured\.webp/);
-  assert.match(articlePage, /blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured\.webp/);
+test('pump-choice article uses its dedicated public media image', () => {
+  assert.match(blogData, /\/media\/blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured\.webp/);
 });

@@ -16,9 +16,9 @@ const siteData = await readFile(new URL('../lib/site-data.ts', import.meta.url),
 const productionPhotos = [
   '../public/media/hero-drilling-main.png',
   '../public/media/process-drilling-background.webp',
-  '../service-card-filtrova-cross-section.webp',
-  '../service-card-promyslova-cross-section.webp',
-  '../service-card-bezfiltrova-cross-section.webp',
+  '../public/media/service-card-filtrova-cross-section.webp',
+  '../public/media/service-card-promyslova-cross-section.webp',
+  '../public/media/service-card-bezfiltrova-cross-section.webp',
 ];
 
 function isSupportedImage(buffer) {
@@ -69,7 +69,7 @@ test('hero and three services use distinct approved local photo assets', () => {
   assert.match(siteData, /service-card-filtrova-cross-section\.webp/);
   assert.match(siteData, /service-card-promyslova-cross-section\.webp/);
   assert.match(siteData, /service-card-bezfiltrova-cross-section\.webp/);
-  assert.match(siteData, /services:\s*\[[\s\S]*bezfiltrovaServiceImage\.src[\s\S]*filtrovaServiceImage\.src[\s\S]*promyslovaServiceImage\.src/);
+  assert.match(siteData, /services:\s*\[[\s\S]*\/media\/service-card-bezfiltrova-cross-section\.webp[\s\S]*\/media\/service-card-filtrova-cross-section\.webp[\s\S]*\/media\/service-card-promyslova-cross-section\.webp/);
   assert.doesNotMatch(siteData, /64ac66b2-80b3-4edb-8c64-a2423104debc|hero-waterwell|service-private-water|service-filter-drilling|service-industrial-rig/);
 });
 
