@@ -14,9 +14,9 @@
 }
 
 /* Calibrated against card 02 so the lawn/ground line sits on one horizontal baseline. */
-.service-reference-card:nth-child(1) { --service-image-y: -6.2%; }
+.service-reference-card:nth-child(1) { --service-image-y: -4.7%; }
 .service-reference-card:nth-child(2) { --service-image-y: -2%; }
-.service-reference-card:nth-child(3) { --service-image-y: -15%; --service-image-scale: 1.15; --service-image-hover-scale: 1.18; }
+.service-reference-card:nth-child(3) { --service-image-y: -12.6%; --service-image-scale: 1.15; --service-image-hover-scale: 1.18; }
 
 /* The service photo is the card background from top to bottom. */
 .service-reference-card__photo {
