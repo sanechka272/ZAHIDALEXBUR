@@ -60,7 +60,7 @@ export function LeadForm() {
   }
 
   return (
-    <form className="reference-lead-form" onSubmit={submit}>
+    <form className="reference-lead-form" onSubmit={submit} noValidate>
       <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
         <label>Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
       </div>
@@ -75,7 +75,6 @@ export function LeadForm() {
           inputMode="tel"
           value={phone}
           maxLength={13}
-          pattern="\\+380[0-9]{9}"
           aria-invalid={phoneError ? true : undefined}
           aria-describedby={phoneError ? 'lead-phone-error' : undefined}
           onChange={(event) => {
