@@ -439,12 +439,12 @@ export default {
       ctx.waitUntil(
         storageContainer
           .fetch(edgeRequest(storageRequest, { 'x-zab-telegram-edge': '1' }))
-          .then((storageResponse) => {
+          .then((storageResponse: Response) => {
             if (!storageResponse.ok) {
               console.error('[analytics-edge] background lead storage failed', storageResponse.status);
             }
           })
-          .catch((error) => {
+          .catch((error: unknown) => {
             console.error('[analytics-edge] background lead storage crashed', error);
           }),
       );
