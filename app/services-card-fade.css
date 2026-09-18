@@ -13,9 +13,9 @@
   background: #0f0d0b;
 }
 
-.service-reference-card:nth-child(1) { --service-image-y: 3%; }
-.service-reference-card:nth-child(2) { --service-image-y: 3.5%; }
-.service-reference-card:nth-child(3) { --service-image-y: -3.5%; --service-image-scale: 1.15; --service-image-hover-scale: 1.18; }
+.service-reference-card:nth-child(1) { --service-image-y: -1%; }
+.service-reference-card:nth-child(2) { --service-image-y: -2%; }
+.service-reference-card:nth-child(3) { --service-image-y: -7%; --service-image-scale: 1.15; --service-image-hover-scale: 1.18; }
 
 /* The service photo is the card background from top to bottom. */
 .service-reference-card__photo {
@@ -167,9 +167,9 @@
     padding: 112% 20px 22px;
   }
 
-  .service-reference-card:nth-child(1) { --service-image-y: 2%; }
-  .service-reference-card:nth-child(2) { --service-image-y: 2.5%; }
-  .service-reference-card:nth-child(3) { --service-image-y: -2.5%; }
+  .service-reference-card:nth-child(1) { --service-image-y: -0.5%; }
+  .service-reference-card:nth-child(2) { --service-image-y: -1%; }
+  .service-reference-card:nth-child(3) { --service-image-y: -5%; }
 
   .service-reference-card {
     --service-image-scale: 1.13;
