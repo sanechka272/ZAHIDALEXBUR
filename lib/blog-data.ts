@@ -1,6 +1,7 @@
 import waterDisappearsArticleImage from '../blog-chomu-voda-mozhe-znyknuty-featured.webp';
 import filterVsNoFilterArticleImage from '../blog-filtrova-chy-bezfiltrova-featured.webp';
 import turnkeyWellArticleImage from '../blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp';
+import waterLocationArticleImage from '../blog-yak-vyznachyty-vodu-na-diliantsi-featured.webp';
 import { assets } from './site-data';
 
 export type BlogSectionBlock = {
@@ -113,7 +114,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Як визначити воду на ділянці перед бурінням | ZAHIDALEXBUR',
     metaDescription: 'Що реально допомагає оцінити перспективи буріння: геологічні дані, сусідні свердловини, рельєф, карти та професійна оцінка ділянки.',
     excerpt: 'Методи оцінки, геологічні карти та практичні рекомендації.',
-    image: assets.services[0],
+    image: waterLocationArticleImage.src,
     imageAlt: 'Ділянка у Львівській області перед бурінням свердловини',
     readTime: '6 хв читання',
     intro: 'Надійно визначити точну глибину води лише за зовнішніми ознаками неможливо. Але до початку робіт можна зібрати достатньо даних, щоб оцінити геологічну ситуацію і вибрати реалістичну стратегію буріння.',

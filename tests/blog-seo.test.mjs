@@ -106,3 +106,10 @@ test('turnkey-well article uses its dedicated repository image everywhere', () =
   assert.match(indexPage, /blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured\.webp/);
   assert.match(articlePage, /blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured\.webp/);
 });
+
+
+test('water-location article uses its dedicated repository image everywhere', () => {
+  assert.match(blogSection, /blog-yak-vyznachyty-vodu-na-diliantsi-featured\.webp/);
+  assert.match(indexPage, /blog-yak-vyznachyty-vodu-na-diliantsi-featured\.webp/);
+  assert.match(articlePage, /blog-yak-vyznachyty-vodu-na-diliantsi-featured\.webp/);
+});
