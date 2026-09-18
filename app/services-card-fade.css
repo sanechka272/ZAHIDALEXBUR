@@ -1,172 +1,164 @@
-/* Seamless photo-to-copy fade for service cards.
-   Keep the technical image readable: no opaque fog band, no hard seam. */
+/* Static full-card image treatment for service comparison cards.
+   Layer order: image -> cinematic gradient -> UI content. */
 
 .service-reference-card {
-  --service-card-fade-overlap: 112px;
-  --service-card-glass-height: 150px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #0f0d0b;
 }
 
-/* Show more of the lower industrial assembly instead of cropping the system out. */
-.service-reference-card:nth-child(3) .service-reference-card__photo img {
-  object-position: 50% 60% !important;
-}
-
-/* Let the lower part of the photo continue underneath the copy layer. */
+/* The service photo is the card background from top to bottom. */
 .service-reference-card__photo {
-  z-index: 1;
-  margin-bottom: calc(var(--service-card-fade-overlap) * -1);
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: auto !important;
+  width: 100%;
+  height: 100% !important;
+  min-height: 100% !important;
+  margin: 0 !important;
+  aspect-ratio: auto !important;
+  overflow: hidden;
+  border-radius: inherit;
+  background: #0f0d0b;
 }
 
-/* Darken only the final part of the image, with no visible horizontal stop. */
 .service-reference-card__photo::after {
-  background: linear-gradient(
-    180deg,
-    transparent 64%,
-    rgba(23, 21, 19, .015) 72%,
-    rgba(23, 21, 19, .05) 80%,
-    rgba(23, 21, 19, .12) 88%,
-    rgba(23, 21, 19, .24) 95%,
-    rgba(23, 21, 19, .38) 100%
-  ) !important;
+  content: none !important;
+  display: none !important;
 }
 
-/* The form itself starts transparent and becomes the card charcoal gradually. */
-.service-reference-card__body {
-  z-index: 3;
-  margin-top: 0;
-  padding-top: calc(var(--service-card-fade-overlap) + 30px);
-  overflow: visible;
-  background: linear-gradient(
-    180deg,
-    rgba(23, 21, 19, 0) 0,
-    rgba(23, 21, 19, .025) 18px,
-    rgba(23, 21, 19, .06) 36px,
-    rgba(23, 21, 19, .12) 54px,
-    rgba(23, 21, 19, .22) 72px,
-    rgba(23, 21, 19, .36) 88px,
-    rgba(23, 21, 19, .54) 104px,
-    rgba(23, 21, 19, .72) 120px,
-    rgba(23, 21, 19, .88) 136px,
-    #171513 154px,
-    #171513 100%
-  );
+.service-reference-card__photo img {
+  object-fit: cover;
+  transform: scale(1);
+  filter: contrast(1.01) saturate(.96);
+  transition: transform .42s cubic-bezier(.22, .61, .36, 1);
 }
 
-/*
- * Very soft glass blur spanning both sides of the seam.
- * It has no coloured fill of its own, so it cannot create a muddy stripe.
- */
-.service-reference-card__body::after {
+/* Keep per-image framing tuned to the actual well construction. */
+.service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 50% !important; }
+.service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 49% !important; }
+.service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 58% !important; }
+
+/* One fixed, long multi-stop overlay across the entire card. */
+.service-reference-card::after {
   content: '';
   position: absolute;
-  z-index: 0;
-  top: -68px;
-  left: 0;
-  right: 0;
-  height: var(--service-card-glass-height);
+  z-index: 1;
+  inset: 0;
   pointer-events: none;
-  background: transparent;
-  -webkit-backdrop-filter: blur(4px) saturate(.98);
-  backdrop-filter: blur(4px) saturate(.98);
-  -webkit-mask-image: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(0,0,0,.08) 9%,
-    rgba(0,0,0,.28) 20%,
-    rgba(0,0,0,.62) 34%,
-    #000 48%,
-    #000 66%,
-    rgba(0,0,0,.6) 78%,
-    rgba(0,0,0,.24) 90%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(0,0,0,.08) 9%,
-    rgba(0,0,0,.28) 20%,
-    rgba(0,0,0,.62) 34%,
-    #000 48%,
-    #000 66%,
-    rgba(0,0,0,.6) 78%,
-    rgba(0,0,0,.24) 90%,
-    transparent 100%
+  border-radius: inherit;
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 13, 11, 0) 0%,
+    rgba(15, 13, 11, .015) 28%,
+    rgba(15, 13, 11, .05) 38%,
+    rgba(15, 13, 11, .18) 50%,
+    rgba(15, 13, 11, .52) 63%,
+    rgba(15, 13, 11, .82) 74%,
+    rgba(15, 13, 11, .96) 88%,
+    #0f0d0b 100%
   );
 }
 
-/* No animated glass sweep or text blur. */
-.service-reference-card__body::before {
+/* Content floats over the same image instead of starting a new black section. */
+.service-reference-card__body {
+  position: relative;
+  z-index: 2;
+  isolation: auto;
+  overflow: visible;
+  flex: 1;
+  padding: 80% 28px 26px;
+  background: transparent !important;
+}
+
+.service-reference-card__body::before,
+.service-reference-card__body::after {
+  content: none !important;
   display: none !important;
   animation: none !important;
-  content: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
-.motion-ready .service-reference-card:not(.is-visible) .service-reference-card__body > h3,
-.motion-ready .service-reference-card:not(.is-visible) .service-reference-card__body > p,
-.motion-ready .service-reference-card:not(.is-visible) .service-reference-card__body > .service-reference-card__benefits,
-.motion-ready .service-reference-card:not(.is-visible) .service-reference-card__body > .service-reference-card__footer,
-.motion-ready .service-reference-card.is-visible .service-reference-card__body > h3,
-.motion-ready .service-reference-card.is-visible .service-reference-card__body > p,
-.motion-ready .service-reference-card.is-visible .service-reference-card__body > .service-reference-card__benefits,
-.motion-ready .service-reference-card.is-visible .service-reference-card__body > .service-reference-card__footer {
+.service-reference-card__body > h3,
+.service-reference-card__body > p,
+.service-reference-card__body > .service-reference-card__benefits,
+.service-reference-card__body > .service-reference-card__footer {
+  position: relative;
+  z-index: 3;
   opacity: 1 !important;
   filter: none !important;
   transform: none !important;
   transition: none !important;
 }
 
-@media (max-width: 1100px) {
-  .service-reference-card {
-    --service-card-fade-overlap: 102px;
-    --service-card-glass-height: 138px;
-  }
+.service-reference-card__body > h3 {
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .28);
+}
 
+.service-reference-card__body > p {
+  text-shadow: 0 1px 12px rgba(0, 0, 0, .2);
+}
+
+/* Labels stay above the fixed overlay. */
+.service-reference-card__number,
+.service-reference-card__category {
+  z-index: 3 !important;
+}
+
+/* Hover only scales the underlying photo. The gradient itself never changes. */
+.service-reference-card:hover {
+  transform: none !important;
+  border-color: rgba(29, 25, 21, .14) !important;
+  box-shadow: 0 18px 44px rgba(37, 31, 25, .08) !important;
+}
+
+.service-reference-card:hover .service-reference-card__photo img {
+  transform: scale(1.03);
+  filter: contrast(1.01) saturate(.96);
+}
+
+@media (max-width: 1180px) {
   .service-reference-card__body {
-    padding-top: calc(var(--service-card-fade-overlap) + 27px);
+    padding-right: 23px;
+    padding-bottom: 24px;
+    padding-left: 23px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .service-reference-card__body {
+    padding-top: 90%;
   }
 
-  .service-reference-card__body::after {
-    top: -62px;
+  .service-reference-card:nth-child(3) .service-reference-card__photo img {
+    object-position: 50% 57% !important;
+  }
+}
+
+@media (max-width: 820px) {
+  .service-reference-card__body {
+    padding-right: 22px;
+    padding-bottom: 24px;
+    padding-left: 22px;
   }
 }
 
 @media (max-width: 767px) {
-  .service-reference-card {
-    --service-card-fade-overlap: 96px;
-    --service-card-glass-height: 128px;
-  }
-
   .service-reference-card__body {
-    padding-top: calc(var(--service-card-fade-overlap) + 26px);
-    background: linear-gradient(
-      180deg,
-      rgba(23, 21, 19, 0) 0,
-      rgba(23, 21, 19, .035) 16px,
-      rgba(23, 21, 19, .08) 32px,
-      rgba(23, 21, 19, .16) 48px,
-      rgba(23, 21, 19, .3) 64px,
-      rgba(23, 21, 19, .48) 80px,
-      rgba(23, 21, 19, .68) 94px,
-      rgba(23, 21, 19, .86) 108px,
-      #171513 126px,
-      #171513 100%
-    );
+    padding: 112% 20px 22px;
   }
 
-  .service-reference-card__body::after {
-    top: -56px;
-    -webkit-backdrop-filter: blur(3px) saturate(.98);
-    backdrop-filter: blur(3px) saturate(.98);
-  }
-
-  .service-reference-card:nth-child(3) .service-reference-card__photo img {
-    object-position: 50% 58% !important;
-  }
+  .service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 48% !important; }
+  .service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 48% !important; }
+  .service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 56% !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .service-reference-card__body::after {
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+  .service-reference-card__photo img,
+  .service-reference-card:hover .service-reference-card__photo img {
+    transition: none !important;
+    transform: none !important;
   }
 }

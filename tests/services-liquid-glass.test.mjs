@@ -11,14 +11,23 @@ test('service cards use requested 3→1, 1→2, 2→3 image order', () => {
   assert.deepEqual(imageRefs, [2, 0, 1]);
 });
 
-test('service cards use a subtle seamless glass fade without an opaque fog band', () => {
-  assert.match(css, /--service-card-fade-overlap:\s*112px/);
-  assert.match(css, /--service-card-glass-height:\s*150px/);
-  assert.match(css, /margin-bottom:\s*calc\(var\(--service-card-fade-overlap\) \* -1\)/);
-  assert.match(css, /service-reference-card__body[\s\S]*rgba\(23, 21, 19, 0\)[\s\S]*#171513/);
-  assert.match(css, /service-reference-card__body::after[\s\S]*background:\s*transparent/);
-  assert.match(css, /backdrop-filter:\s*blur\(4px\) saturate\(\.98\)/);
-  assert.match(css, /mask-image:\s*linear-gradient/);
-  assert.match(css, /service-reference-card__body::before[\s\S]*display:\s*none\s*!important/);
-  assert.match(css, /@media\s*\(max-width:\s*767px\)[\s\S]*backdrop-filter:\s*blur\(3px\)/);
+test('service cards use a static full-card cinematic overlay with no separate black body', () => {
+  assert.match(css, /service-reference-card__photo\s*\{[\s\S]*position:\s*absolute\s*!important[\s\S]*inset:\s*0\s*!important/);
+  assert.match(css, /service-reference-card::after\s*\{[\s\S]*position:\s*absolute[\s\S]*inset:\s*0[\s\S]*pointer-events:\s*none/);
+  assert.match(css, /rgba\(15, 13, 11, \.05\) 38%/);
+  assert.match(css, /rgba\(15, 13, 11, \.18\) 50%/);
+  assert.match(css, /rgba\(15, 13, 11, \.52\) 63%/);
+  assert.match(css, /rgba\(15, 13, 11, \.82\) 74%/);
+  assert.match(css, /rgba\(15, 13, 11, \.96\) 88%/);
+  assert.match(css, /#0f0d0b 100%/);
+  assert.match(css, /service-reference-card__body\s*\{[\s\S]*background:\s*transparent\s*!important/);
+  assert.match(css, /service-reference-card__body::before,[\s\S]*service-reference-card__body::after[\s\S]*content:\s*none\s*!important/);
+  assert.doesNotMatch(css, /backdrop-filter:\s*blur\([1-9]/);
+});
+
+test('service hover keeps the overlay fixed and only scales the underlying image', () => {
+  assert.match(css, /service-reference-card:hover\s*\{[\s\S]*transform:\s*none\s*!important/);
+  assert.match(css, /service-reference-card:hover \.service-reference-card__photo img\s*\{[\s\S]*transform:\s*scale\(1\.03\)/);
+  assert.doesNotMatch(css, /service-reference-card:hover::after/);
+  assert.match(css, /prefers-reduced-motion:\s*reduce/);
 });
