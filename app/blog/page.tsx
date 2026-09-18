@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
-import blogHeroImage from '../../d99f5283-0d57-4271-8db0-e7bb5158f0c1.webp';
+import blogHeroImage from '../../blog-index-hero-drilling.webp';
 
 export const dynamic = 'force-static';
 export const revalidate = false;
@@ -18,13 +18,13 @@ export const metadata: Metadata = {
     title: 'Блог / База знань ZAHIDALEXBUR',
     description: 'Практичні матеріали про буріння свердловин, воду та геологію Львівської області.',
     url: '/blog',
-    images: [{ url: assets.hero, alt: 'Буріння свердловини у Львівській області' }],
+    images: [{ url: blogHeroImage.src, alt: 'Буріння свердловини у Львівській області' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Блог / База знань ZAHIDALEXBUR',
     description: 'Практичні матеріали про буріння свердловин, воду та геологію.',
-    images: [assets.hero],
+    images: [blogHeroImage.src],
   },
 };
 

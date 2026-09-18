@@ -60,7 +60,7 @@ test('article pages keep the reference editorial reading structure', () => {
 });
 
 test('blog index hero uses the dedicated repository image in a responsive split layout', () => {
-  assert.match(indexPage, /d99f5283-0d57-4271-8db0-e7bb5158f0c1\.webp/);
+  assert.match(indexPage, /blog-index-hero-drilling\.webp/);
   assert.match(indexPage, /blog-page__hero-grid/);
   assert.match(indexPage, /blog-page__hero-media/);
   assert.match(indexPage, /fetchPriority="high"/);

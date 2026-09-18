@@ -5,10 +5,10 @@ import { readFile } from 'node:fs/promises';
 const siteData = await readFile(new URL('../lib/site-data.ts', import.meta.url), 'utf8');
 const css = await readFile(new URL('../app/services-card-fade.css', import.meta.url), 'utf8');
 
-test('service cards use requested 3→1, 1→2, 2→3 image order', () => {
+test('service cards use semantic image order for the three well types', () => {
   const serviceBlock = siteData.slice(siteData.indexOf('export const services = ['), siteData.indexOf('export const processSteps'));
   const imageRefs = [...serviceBlock.matchAll(/image:\s*assets\.services\[(\d)\]/g)].map((match) => Number(match[1]));
-  assert.deepEqual(imageRefs, [2, 0, 1]);
+  assert.deepEqual(imageRefs, [0, 1, 2]);
 });
 
 test('service cards use a static full-card cinematic overlay with no separate black body', () => {

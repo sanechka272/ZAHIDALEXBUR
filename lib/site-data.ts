@@ -1,6 +1,6 @@
-import bezfiltrovaServiceImage from '../425d83c7-3324-483f-bcbf-66bdf21c82cb.webp';
-import filtrovaServiceImage from '../48531249-ec4d-4cb5-bd78-1726bea2bc62.webp';
-import promyslovaServiceImage from '../99b7ae26-44f5-4025-a31b-b47a7ad17b79.webp';
+import bezfiltrovaServiceImage from '../service-card-bezfiltrova-cross-section.webp';
+import filtrovaServiceImage from '../service-card-filtrova-cross-section.webp';
+import promyslovaServiceImage from '../service-card-promyslova-cross-section.webp';
 
 export const contact = {
   phoneDisplay: '+38 099 783 76 44',
@@ -35,7 +35,7 @@ export const services = [
     price: '1 800–2 100 грн/м',
     shortPrice: 'від 1 800 грн/м',
     description: 'Надійне рішення для стабільного водопостачання у приватних будинках.',
-    image: assets.services[2],
+    image: assets.services[0],
     included: [
       'Буріння та обсадна колона',
       'Цементація',
@@ -49,7 +49,7 @@ export const services = [
     price: '2 000–2 300 грн/м',
     shortPrice: 'від 2 000 грн/м',
     description: 'Оптимальний вибір для чистої води з додатковою фільтрацією.',
-    image: assets.services[0],
+    image: assets.services[1],
     included: [
       'Буріння',
       'Фільтр та обсадні труби',
@@ -64,7 +64,7 @@ export const services = [
     price: '2 300–2 500 грн/м',
     shortPrice: 'від 2 300 грн/м',
     description: 'Потужні рішення для виробництва, аграрного сектору та великих обʼєктів.',
-    image: assets.services[1],
+    image: assets.services[2],
     included: [
       'Проєктування',
       'Буріння великого діаметру',
