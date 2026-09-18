@@ -534,22 +534,22 @@
   text-align: right;
 }
 
-/* Article modal must visually isolate the dialog from article content underneath. */
-.article-page .reference-lead-modal {
+/* Article modal is portaled to <body> so article layers can never paint over it. */
+.article-lead-modal {
   z-index: 300;
 }
 
-.article-page .reference-lead-modal__backdrop {
-  background: rgba(8, 7, 6, .94);
-  -webkit-backdrop-filter: blur(10px) brightness(.38);
-  backdrop-filter: blur(10px) brightness(.38);
+.article-lead-modal .reference-lead-modal__backdrop {
+  background: rgba(8, 7, 6, .72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
-.article-page .reference-lead-modal__card {
+.article-lead-modal .reference-lead-modal__card {
   z-index: 2;
 }
 
-.article-page .reference-lead-modal__card h2 {
+.article-lead-modal .reference-lead-modal__card h2 {
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: 400;
 }

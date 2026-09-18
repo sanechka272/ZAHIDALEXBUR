@@ -113,3 +113,12 @@ test('water-location article uses its dedicated repository image everywhere', ()
   assert.match(indexPage, /blog-yak-vyznachyty-vodu-na-diliantsi-featured\.webp/);
   assert.match(articlePage, /blog-yak-vyznachyty-vodu-na-diliantsi-featured\.webp/);
 });
+
+
+test('article lead modal is portaled outside article stacking contexts and keeps original backdrop look', () => {
+  assert.match(articleInteractions, /createPortal/);
+  assert.match(articleInteractions, /createPortal\(modal, document\.body\)/);
+  assert.match(articleInteractions, /article-lead-modal/);
+  assert.match(articleCss, /\.article-lead-modal \.reference-lead-modal__backdrop[\s\S]*rgba\(8, 7, 6, \.72\)/);
+  assert.match(articleCss, /backdrop-filter:\s*blur\(8px\)/);
+});

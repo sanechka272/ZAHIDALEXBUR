@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { LeadForm } from '@/components/LeadForm';
 
 function ArrowIcon() {
@@ -58,6 +59,11 @@ export function ArticleShareButton({ title }: { title: string }) {
 
 export function ArticleLeadButton({ children, className = '' }: { children: ReactNode; className?: string }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     document.body.classList.toggle('no-scroll', open);
@@ -71,22 +77,26 @@ export function ArticleLeadButton({ children, className = '' }: { children: Reac
     };
   }, [open]);
 
+  const modal = (
+    <div className={`reference-lead-modal article-lead-modal ${open ? 'is-open' : ''}`} aria-hidden={!open}>
+      <button type="button" className="reference-lead-modal__backdrop" aria-label="Закрити форму" onClick={() => setOpen(false)} />
+      <div className="reference-lead-modal__card" role="dialog" aria-modal="true" aria-label="Консультація щодо свердловини">
+        <button className="reference-lead-modal__close" type="button" aria-label="Закрити" onClick={() => setOpen(false)}><CloseIcon /></button>
+        <span className="eyebrow-label">КОНСУЛЬТАЦІЯ</span>
+        <h2>Розкажіть,<br />де потрібна вода</h2>
+        <p>Передайте телефон і населений пункт — уточнимо задачу та підкажемо наступний крок.</p>
+        <LeadForm />
+      </div>
+    </div>
+  );
+
   return (
     <>
       <button type="button" className={className} onClick={() => setOpen(true)}>
         <span>{children}</span>
         <ArrowIcon />
       </button>
-      <div className={`reference-lead-modal ${open ? 'is-open' : ''}`} aria-hidden={!open}>
-        <button type="button" className="reference-lead-modal__backdrop" aria-label="Закрити форму" onClick={() => setOpen(false)} />
-        <div className="reference-lead-modal__card" role="dialog" aria-modal="true" aria-label="Консультація щодо свердловини">
-          <button className="reference-lead-modal__close" type="button" aria-label="Закрити" onClick={() => setOpen(false)}><CloseIcon /></button>
-          <span className="eyebrow-label">КОНСУЛЬТАЦІЯ</span>
-          <h2>Розкажіть,<br />де потрібна вода</h2>
-          <p>Передайте телефон і населений пункт — уточнимо задачу та підкажемо наступний крок.</p>
-          <LeadForm />
-        </div>
-      </div>
+      {mounted ? createPortal(modal, document.body) : null}
     </>
   );
 }
