@@ -69,7 +69,7 @@ export function LeadForm() {
         <span>Телефон</span>
         <input
           name="phone"
-          type="tel"
+          type="text"
           required
           autoComplete="tel"
           inputMode="tel"
@@ -77,6 +77,7 @@ export function LeadForm() {
           maxLength={13}
           aria-invalid={phoneError ? true : undefined}
           aria-describedby={phoneError ? 'lead-phone-error' : undefined}
+          onInvalid={(event) => event.preventDefault()}
           onChange={(event) => {
             const nextPhone = normalizeUaPhoneInput(event.currentTarget.value);
             setPhone(nextPhone);
@@ -96,7 +97,7 @@ export function LeadForm() {
       </label>
       <label><span>Населений пункт</span><input name="location" autoComplete="address-level2" /></label>
       {status === 'error' ? <p role="alert">Не вдалося надіслати заявку. Спробуйте ще раз або зателефонуйте нам.</p> : null}
-      <button type="submit" disabled={status === 'submitting'}>{status === 'submitting' ? 'Надсилаємо…' : 'Підготувати заявку'} <Arrow /></button>
+      <button type="submit" formNoValidate disabled={status === 'submitting'}>{status === 'submitting' ? 'Надсилаємо…' : 'Підготувати заявку'} <Arrow /></button>
     </form>
   );
 }

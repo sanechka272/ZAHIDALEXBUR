@@ -8,5 +8,8 @@ test('lead form uses application phone validation instead of browser-native patt
   assert.match(leadForm, /<form className="reference-lead-form" onSubmit=\{submit\} noValidate>/);
   assert.doesNotMatch(leadForm, /pattern="\\\\\+380/);
   assert.match(leadForm, /isValidUaPhone\(phone\)/);
-  assert.match(leadForm, /type="tel"/);
+  assert.match(leadForm, /type="text"/);
+  assert.match(leadForm, /inputMode="tel"/);
+  assert.match(leadForm, /onInvalid=\{\(event\) => event\.preventDefault\(\)\}/);
+  assert.match(leadForm, /formNoValidate/);
 });
