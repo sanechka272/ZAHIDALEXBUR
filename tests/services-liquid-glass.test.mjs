@@ -11,14 +11,14 @@ test('service cards use requested 3→1, 1→2, 2→3 image order', () => {
   assert.deepEqual(imageRefs, [2, 0, 1]);
 });
 
-test('service cards use a seamless glass fade that spans photo and copy', () => {
-  assert.match(css, /--service-card-fade-overlap:\s*156px/);
-  assert.match(css, /--service-card-glass-height:\s*260px/);
+test('service cards use a subtle seamless glass fade without an opaque fog band', () => {
+  assert.match(css, /--service-card-fade-overlap:\s*112px/);
+  assert.match(css, /--service-card-glass-height:\s*150px/);
   assert.match(css, /margin-bottom:\s*calc\(var\(--service-card-fade-overlap\) \* -1\)/);
   assert.match(css, /service-reference-card__body[\s\S]*rgba\(23, 21, 19, 0\)[\s\S]*#171513/);
-  assert.match(css, /service-reference-card__body::after[\s\S]*top:\s*calc\(var\(--service-card-fade-overlap\) \* -\.72\)/);
-  assert.match(css, /backdrop-filter:\s*blur\(12px\) saturate\(\.96\)/);
+  assert.match(css, /service-reference-card__body::after[\s\S]*background:\s*transparent/);
+  assert.match(css, /backdrop-filter:\s*blur\(4px\) saturate\(\.98\)/);
   assert.match(css, /mask-image:\s*linear-gradient/);
   assert.match(css, /service-reference-card__body::before[\s\S]*display:\s*none\s*!important/);
-  assert.match(css, /@media\s*\(max-width:\s*767px\)[\s\S]*backdrop-filter:\s*blur\(10px\)/);
+  assert.match(css, /@media\s*\(max-width:\s*767px\)[\s\S]*backdrop-filter:\s*blur\(3px\)/);
 });
