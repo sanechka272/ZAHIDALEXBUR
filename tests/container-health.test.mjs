@@ -14,6 +14,6 @@ test('container healthcheck is independent from database availability', () => {
 });
 
 test('fresh container generation is used after runtime secret changes', () => {
-  assert.match(worker, /zahidalexbur-production-v3/);
-  assert.match(worker, /x-zab-container-generation', 'v3'/);
+  assert.match(worker, /zahidalexbur-production-v4/);
+  assert.match(worker, /x-zab-container-generation', 'v4'/);
 });
