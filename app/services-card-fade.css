@@ -1,7 +1,8 @@
-/* Service-card photo-to-copy fade: keep the well construction visible behind the transition. */
+/* Seamless photo-to-copy liquid-glass transition for service cards. */
 
 .service-reference-card {
-  --service-card-fade-overlap: 124px;
+  --service-card-fade-overlap: 156px;
+  --service-card-glass-height: 260px;
 }
 
 /* Show more of the lower industrial assembly instead of cropping the system out. */
@@ -10,10 +11,8 @@
 }
 
 /*
- * Pull the copy layer over the final part of the image. The first part of the
- * copy background is transparent, then gradually becomes the card charcoal.
- * This removes the hard horizontal cut and gives the requested liquid-glass
- * fading transition without hiding the technical image.
+ * Pull the copy layer farther over the image so the image, blur and dark body
+ * blend as one continuous surface instead of three separate horizontal bands.
  */
 .service-reference-card__photo {
   z-index: 1;
@@ -23,52 +22,82 @@
 .service-reference-card__photo::after {
   background: linear-gradient(
     180deg,
-    transparent 74%,
-    rgba(23, 21, 19, .08) 84%,
-    rgba(23, 21, 19, .2) 92%,
-    rgba(23, 21, 19, .34) 100%
+    transparent 58%,
+    rgba(23, 21, 19, .02) 68%,
+    rgba(23, 21, 19, .08) 77%,
+    rgba(23, 21, 19, .18) 86%,
+    rgba(23, 21, 19, .34) 94%,
+    rgba(23, 21, 19, .52) 100%
   ) !important;
 }
 
 .service-reference-card__body {
   z-index: 3;
   margin-top: 0;
-  padding-top: calc(var(--service-card-fade-overlap) + 28px);
+  padding-top: calc(var(--service-card-fade-overlap) + 32px);
   overflow: visible;
   background:
     linear-gradient(
       180deg,
       rgba(23, 21, 19, 0) 0,
-      rgba(23, 21, 19, .08) 28px,
-      rgba(23, 21, 19, .24) 58px,
-      rgba(23, 21, 19, .5) 86px,
-      rgba(23, 21, 19, .78) 108px,
-      rgba(23, 21, 19, .96) 126px,
-      #171513 140px,
+      rgba(23, 21, 19, .035) 20px,
+      rgba(23, 21, 19, .09) 46px,
+      rgba(23, 21, 19, .18) 72px,
+      rgba(23, 21, 19, .3) 98px,
+      rgba(23, 21, 19, .46) 122px,
+      rgba(23, 21, 19, .64) 144px,
+      rgba(23, 21, 19, .8) 164px,
+      rgba(23, 21, 19, .92) 182px,
+      #171513 204px,
       #171513 100%
     );
 }
 
-/* A very light glass veil only through the transition zone. */
+/*
+ * One broad glass veil crosses the photo/body seam and continues into the top
+ * of the copy area. The gradient mask removes any visible start/end edge.
+ */
 .service-reference-card__body::after {
   content: '';
   position: absolute;
   z-index: 0;
-  top: 18px;
+  top: calc(var(--service-card-fade-overlap) * -.72);
   left: 0;
   right: 0;
-  height: 104px;
+  height: var(--service-card-glass-height);
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, .025),
-    rgba(255, 255, 255, .012) 45%,
+    rgba(255, 255, 255, .01) 0%,
+    rgba(255, 255, 255, .018) 34%,
+    rgba(23, 21, 19, .045) 58%,
+    rgba(23, 21, 19, .09) 76%,
+    rgba(23, 21, 19, .16) 100%
+  );
+  -webkit-backdrop-filter: blur(12px) saturate(.96);
+  backdrop-filter: blur(12px) saturate(.96);
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0,0,0,.18) 10%,
+    rgba(0,0,0,.65) 22%,
+    #000 38%,
+    #000 72%,
+    rgba(0,0,0,.62) 84%,
+    rgba(0,0,0,.16) 95%,
     transparent 100%
   );
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 24%, #000 66%, transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 24%, #000 66%, transparent);
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0,0,0,.18) 10%,
+    rgba(0,0,0,.65) 22%,
+    #000 38%,
+    #000 72%,
+    rgba(0,0,0,.62) 84%,
+    rgba(0,0,0,.16) 95%,
+    transparent 100%
+  );
 }
 
 /* Remove the previous animated text/sweep interpretation completely. */
@@ -94,52 +123,55 @@
 
 @media (max-width: 1100px) {
   .service-reference-card {
-    --service-card-fade-overlap: 104px;
+    --service-card-fade-overlap: 132px;
+    --service-card-glass-height: 228px;
   }
 
   .service-reference-card__body {
-    padding-top: calc(var(--service-card-fade-overlap) + 25px);
+    padding-top: calc(var(--service-card-fade-overlap) + 28px);
     background:
       linear-gradient(
         180deg,
         rgba(23, 21, 19, 0) 0,
-        rgba(23, 21, 19, .1) 24px,
-        rgba(23, 21, 19, .3) 48px,
-        rgba(23, 21, 19, .62) 72px,
-        rgba(23, 21, 19, .9) 94px,
-        #171513 116px,
+        rgba(23, 21, 19, .05) 28px,
+        rgba(23, 21, 19, .14) 58px,
+        rgba(23, 21, 19, .3) 88px,
+        rgba(23, 21, 19, .54) 112px,
+        rgba(23, 21, 19, .78) 134px,
+        rgba(23, 21, 19, .94) 154px,
+        #171513 176px,
         #171513 100%
       );
-  }
-
-  .service-reference-card__body::after {
-    height: 88px;
   }
 }
 
 @media (max-width: 767px) {
   .service-reference-card {
-    --service-card-fade-overlap: 88px;
+    --service-card-fade-overlap: 116px;
+    --service-card-glass-height: 210px;
   }
 
   .service-reference-card__body {
-    padding-top: calc(var(--service-card-fade-overlap) + 24px);
+    padding-top: calc(var(--service-card-fade-overlap) + 26px);
     background:
       linear-gradient(
         180deg,
         rgba(23, 21, 19, 0) 0,
-        rgba(23, 21, 19, .12) 20px,
-        rgba(23, 21, 19, .34) 40px,
-        rgba(23, 21, 19, .68) 62px,
-        rgba(23, 21, 19, .94) 82px,
-        #171513 100px,
+        rgba(23, 21, 19, .05) 24px,
+        rgba(23, 21, 19, .13) 48px,
+        rgba(23, 21, 19, .27) 72px,
+        rgba(23, 21, 19, .48) 94px,
+        rgba(23, 21, 19, .7) 112px,
+        rgba(23, 21, 19, .88) 130px,
+        #171513 154px,
         #171513 100%
       );
   }
 
   .service-reference-card__body::after {
-    top: 12px;
-    height: 74px;
+    top: calc(var(--service-card-fade-overlap) * -.76);
+    -webkit-backdrop-filter: blur(10px) saturate(.96);
+    backdrop-filter: blur(10px) saturate(.96);
   }
 
   .service-reference-card:nth-child(3) .service-reference-card__photo img {
@@ -149,7 +181,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .service-reference-card__body::after {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
   }
 }
