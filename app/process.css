@@ -14,10 +14,7 @@
   inset: 0;
   z-index: -3;
   overflow: hidden;
-  background-image: url('/media/6cf70733-a291-4fd2-ae11-f5d510e1d959.webp') !important;
-  background-size: cover;
-  background-position: center 52%;
-  background-repeat: no-repeat;
+  background-color: #14120f;
   opacity: 1;
   transform: scale(1.015);
   transform-origin: 50% 50%;
@@ -25,7 +22,7 @@
 }
 
 .process-story__media img {
-  display: none;
+  display: block;
 }
 
 .process-story__veil {

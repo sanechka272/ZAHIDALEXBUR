@@ -15,6 +15,7 @@ const siteData = await readFile(new URL('../lib/site-data.ts', import.meta.url),
 
 const productionPhotos = [
   '../public/media/hero-drilling-main.png',
+  '../public/media/process-drilling-background.webp',
   '../service-card-filtrova-cross-section.webp',
   '../service-card-promyslova-cross-section.webp',
   '../service-card-bezfiltrova-cross-section.webp',

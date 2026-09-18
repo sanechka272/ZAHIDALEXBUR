@@ -12,6 +12,7 @@ export const contact = {
 export const assets = {
   logo: '/brand/zahidalexbur-logo.svg',
   hero: '/media/hero-drilling-main.png',
+  process: '/media/process-drilling-background.webp',
   about: '/media/about-mountain-forest.jpg',
   services: [
     bezfiltrovaServiceImage.src,

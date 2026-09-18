@@ -257,7 +257,7 @@ export default function LandingPage() {
       </section>
 
       <section className="process-story reveal" id="process">
-        <div className="process-story__media" style={{ backgroundImage: 'none' }} aria-hidden="true"><Image src={assets.hero} alt="" fill sizes="100vw" quality={90} style={{ objectFit: 'cover', objectPosition: 'center 52%' }} /></div>
+        <div className="process-story__media" aria-hidden="true"><Image src={assets.process} alt="" fill sizes="100vw" quality={90} style={{ objectFit: 'cover', objectPosition: 'center 52%' }} /></div>
         <div className="process-story__veil" aria-hidden="true" />
         <div className="reference-shell process-story__layout">
           <div className="process-story__copy reveal reveal--from-left">
