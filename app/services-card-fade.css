@@ -2,12 +2,20 @@
    Layer order: image -> cinematic gradient -> UI content. */
 
 .service-reference-card {
+  --service-image-y: 3%;
+  --service-image-scale: 1.14;
+  --service-image-hover-scale: 1.17;
   position: relative;
   isolation: isolate;
   overflow: hidden;
   align-self: stretch;
+  height: 100%;
   background: #0f0d0b;
 }
+
+.service-reference-card:nth-child(1) { --service-image-y: 3%; }
+.service-reference-card:nth-child(2) { --service-image-y: 3.5%; }
+.service-reference-card:nth-child(3) { --service-image-y: -3.5%; --service-image-scale: 1.15; --service-image-hover-scale: 1.18; }
 
 /* The service photo is the card background from top to bottom. */
 .service-reference-card__photo {
@@ -31,7 +39,7 @@
 
 .service-reference-card__photo img {
   object-fit: cover;
-  transform: translate3d(0, 4%, 0) scale(1.14);
+  transform: translate3d(0, var(--service-image-y), 0) scale(var(--service-image-scale));
   transform-origin: 50% 50%;
   filter: contrast(1.01) saturate(.96);
   transition: transform .42s cubic-bezier(.22, .61, .36, 1);
@@ -118,7 +126,7 @@
 }
 
 .service-reference-card:hover .service-reference-card__photo img {
-  transform: translate3d(0, 4%, 0) scale(1.17);
+  transform: translate3d(0, var(--service-image-y), 0) scale(var(--service-image-hover-scale));
   filter: contrast(1.01) saturate(.96);
 }
 
@@ -135,12 +143,14 @@
     padding-top: 90%;
   }
 
-  .service-reference-card__photo img {
-    transform: translate3d(0, 3.5%, 0) scale(1.13);
+  .service-reference-card {
+    --service-image-scale: 1.14;
+    --service-image-hover-scale: 1.17;
   }
 
-  .service-reference-card:hover .service-reference-card__photo img {
-    transform: translate3d(0, 3.5%, 0) scale(1.16);
+  .service-reference-card:nth-child(3) {
+    --service-image-scale: 1.15;
+    --service-image-hover-scale: 1.18;
   }
 }
 
@@ -157,12 +167,18 @@
     padding: 112% 20px 22px;
   }
 
-  .service-reference-card__photo img {
-    transform: translate3d(0, 3%, 0) scale(1.12);
+  .service-reference-card:nth-child(1) { --service-image-y: 2%; }
+  .service-reference-card:nth-child(2) { --service-image-y: 2.5%; }
+  .service-reference-card:nth-child(3) { --service-image-y: -2.5%; }
+
+  .service-reference-card {
+    --service-image-scale: 1.13;
+    --service-image-hover-scale: 1.16;
   }
 
-  .service-reference-card:hover .service-reference-card__photo img {
-    transform: translate3d(0, 3%, 0) scale(1.15);
+  .service-reference-card:nth-child(3) {
+    --service-image-scale: 1.14;
+    --service-image-hover-scale: 1.17;
   }
 }
 
@@ -170,6 +186,6 @@
   .service-reference-card__photo img,
   .service-reference-card:hover .service-reference-card__photo img {
     transition: none !important;
-    transform: translate3d(0, 3%, 0) scale(1.12) !important;
+    transform: translate3d(0, var(--service-image-y), 0) scale(var(--service-image-scale)) !important;
   }
 }
