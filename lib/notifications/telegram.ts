@@ -65,8 +65,15 @@ export async function notifyTelegramLead({ id, duplicate, data }: TelegramLead) 
     });
 
     if (!response.ok) {
-      console.error('[telegram] lead notification failed', { status: response.status });
-      return { sent: false, skipped: false as const };
+      let description = 'telegram_api_error';
+      try {
+        const payload = await response.json() as { description?: string };
+        if (payload.description) description = payload.description;
+      } catch {
+        // Keep a generic error if Telegram did not return JSON.
+      }
+      console.error('[telegram] lead notification failed', { status: response.status, description });
+      return { sent: false, skipped: false as const, status: response.status, description };
     }
 
     return { sent: true, skipped: false as const };
