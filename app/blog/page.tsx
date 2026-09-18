@@ -4,9 +4,16 @@ import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
 import blogHeroImage from '../../blog-index-hero-drilling.webp';
+import waterDisappearsArticleImage from '../../blog-chomu-voda-mozhe-znyknuty-featured.webp';
 
 export const dynamic = 'force-static';
 export const revalidate = false;
+
+const WATER_DISAPPEARS_SLUG = 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny';
+
+function getBlogIndexArticleImage(article: (typeof blogArticles)[number]) {
+  return article.slug === WATER_DISAPPEARS_SLUG ? waterDisappearsArticleImage : article.image;
+}
 
 export const metadata: Metadata = {
   title: 'Блог про свердловини, воду та геологію | ZAHIDALEXBUR',
@@ -70,7 +77,7 @@ export default function BlogIndexPage() {
             <article className="blog-index-card" key={article.slug}>
               <Link href={`/blog/${article.slug}`} className="blog-index-card__media" aria-label={article.title}>
                 <Image
-                  src={article.image}
+                  src={getBlogIndexArticleImage(article)}
                   alt={article.imageAlt}
                   fill
                   sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw"
