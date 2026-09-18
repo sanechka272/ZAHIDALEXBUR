@@ -25,3 +25,12 @@ test('Telegram credentials stay in deployment environment and are forwarded into
   assert.match(worker, /envVars\.TELEGRAM_BOT_TOKEN = env\.TELEGRAM_BOT_TOKEN/);
   assert.match(worker, /envVars\.TELEGRAM_CHAT_ID = env\.TELEGRAM_CHAT_ID/);
 });
+
+
+test('lead endpoint falls back to Telegram when database storage is unavailable', () => {
+  assert.match(route, /lead storage failed; attempting Telegram fallback/);
+  assert.match(route, /const fallbackId = randomUUID\(\)/);
+  assert.match(route, /if \(telegram\.sent\)/);
+  assert.match(route, /storage: 'telegram_only'/);
+  assert.match(route, /status: 202/);
+});

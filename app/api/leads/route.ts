@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { leadInputSchema } from '@/lib/analytics/contracts';
 import { geoTokenFromEdgeHeaders } from '@/lib/analytics/edge-geo';
 import { createLead } from '@/lib/analytics/repository';
@@ -77,13 +78,15 @@ export async function POST(request: Request) {
   if (digits.length < 7 || digits.length > 15) return Response.json({ error: 'invalid_phone' }, { status: 400 });
 
   const cookies = parseCookies(request.headers.get('cookie'));
+  const context = {
+    visitorId: cookies.get(VISITOR_COOKIE) ?? null,
+    sessionId: cookies.get(SESSION_COOKIE) ?? null,
+    userAgent: request.headers.get('user-agent') ?? '',
+    ip: clientGeoKey(request),
+  };
+
   try {
-    const result = await createLead(parsed.data, {
-      visitorId: cookies.get(VISITOR_COOKIE) ?? null,
-      sessionId: cookies.get(SESSION_COOKIE) ?? null,
-      userAgent: request.headers.get('user-agent') ?? '',
-      ip: clientGeoKey(request),
-    });
+    const result = await createLead(parsed.data, context);
 
     await notifyTelegramLead({
       id: result.id,
@@ -96,7 +99,22 @@ export async function POST(request: Request) {
     headers.append('set-cookie', cookie(SESSION_COOKIE, result.sessionId, SESSION_MAX_AGE));
     return Response.json({ ok: true, id: result.id, duplicate: result.duplicate }, { status: result.duplicate ? 200 : 201, headers });
   } catch (error) {
-    console.error('[analytics] lead submission failed', error);
+    console.error('[analytics] lead storage failed; attempting Telegram fallback', error);
+
+    const fallbackId = randomUUID();
+    const telegram = await notifyTelegramLead({
+      id: fallbackId,
+      duplicate: false,
+      data: parsed.data,
+    });
+
+    if (telegram.sent) {
+      return Response.json(
+        { ok: true, id: fallbackId, duplicate: false, degraded: true, storage: 'telegram_only' },
+        { status: 202, headers: { 'cache-control': 'no-store' } },
+      );
+    }
+
     return Response.json({ error: 'submission_failed' }, { status: 500, headers: { 'cache-control': 'no-store' } });
   }
 }
