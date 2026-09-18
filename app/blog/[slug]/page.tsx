@@ -8,6 +8,7 @@ import filterVsNoFilterArticleImage from '../../../blog-filtrova-chy-bezfiltrova
 import turnkeyWellArticleImage from '../../../blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp';
 import waterLocationArticleImage from '../../../blog-yak-vyznachyty-vodu-na-diliantsi-featured.webp';
 import sitePreparationArticleImage from '../../../blog-yak-pidhotuvaty-dilianku-do-burinnya-featured.webp';
+import pumpChoiceArticleImage from '../../../blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured.webp';
 import { ArticleLeadButton, ArticleShareButton } from '@/components/ArticleInteractions';
 import { blogArticles, getBlogArticle, getRelatedBlogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
@@ -21,6 +22,7 @@ const FILTER_VS_NO_FILTER_ARTICLE_SLUG = 'filtrova-chy-bezfiltrova-sverdlovyna';
 const TURNKEY_WELL_ARTICLE_SLUG = 'yak-oblashtuvaty-sverdlovynu-pid-kliuch';
 const WATER_LOCATION_ARTICLE_SLUG = 'yak-vyznachyty-vodu-na-diliantsi';
 const SITE_PREPARATION_ARTICLE_SLUG = 'yak-pidhotuvaty-dilianku-do-burinnya-sverdlovyny';
+const PUMP_CHOICE_ARTICLE_SLUG = 'yakyi-nasos-obraty-dlia-sverdlovyny';
 
 function getArticleVisual(slug: string, fallback: string) {
   if (slug === FEATURED_DEPTH_ARTICLE_SLUG) return featuredDepthArticleImage;
@@ -29,6 +31,7 @@ function getArticleVisual(slug: string, fallback: string) {
   if (slug === TURNKEY_WELL_ARTICLE_SLUG) return turnkeyWellArticleImage;
   if (slug === WATER_LOCATION_ARTICLE_SLUG) return waterLocationArticleImage;
   if (slug === SITE_PREPARATION_ARTICLE_SLUG) return sitePreparationArticleImage;
+  if (slug === PUMP_CHOICE_ARTICLE_SLUG) return pumpChoiceArticleImage;
   return fallback;
 }
 

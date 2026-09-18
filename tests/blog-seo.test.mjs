@@ -131,3 +131,10 @@ test('site-preparation article uses its dedicated repository image everywhere', 
   assert.match(indexPage, /blog-yak-pidhotuvaty-dilianku-do-burinnya-featured\.webp/);
   assert.match(articlePage, /blog-yak-pidhotuvaty-dilianku-do-burinnya-featured\.webp/);
 });
+
+
+test('pump-choice article uses its dedicated repository image everywhere', () => {
+  assert.match(blogSection, /blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured\.webp/);
+  assert.match(indexPage, /blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured\.webp/);
+  assert.match(articlePage, /blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured\.webp/);
+});

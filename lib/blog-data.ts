@@ -3,6 +3,7 @@ import filterVsNoFilterArticleImage from '../blog-filtrova-chy-bezfiltrova-featu
 import turnkeyWellArticleImage from '../blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp';
 import waterLocationArticleImage from '../blog-yak-vyznachyty-vodu-na-diliantsi-featured.webp';
 import sitePreparationArticleImage from '../blog-yak-pidhotuvaty-dilianku-do-burinnya-featured.webp';
+import pumpChoiceArticleImage from '../blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured.webp';
 import { assets } from './site-data';
 
 export type BlogSectionBlock = {
@@ -159,7 +160,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Як вибрати насос для свердловини: основні параметри | ZAHIDALEXBUR',
     metaDescription: 'Як підібрати насос для свердловини за глибиною, дебітом, напором і витратою води. Пояснюємо ключові параметри без зайвих складнощів.',
     excerpt: 'Типи насосів, характеристики та рекомендації.',
-    image: assets.services[2],
+    image: pumpChoiceArticleImage.src,
     imageAlt: 'Насосне обладнання для свердловини на воду',
     readTime: '5 хв читання',
     intro: 'Насос для свердловини підбирають не за принципом «чим потужніший, тим краще». Він має відповідати глибині, дебіту свердловини, потрібному напору та реальному споживанню води.',
