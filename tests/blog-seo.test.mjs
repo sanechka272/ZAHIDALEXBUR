@@ -121,4 +121,6 @@ test('article lead modal is portaled outside article stacking contexts and keeps
   assert.match(articleInteractions, /article-lead-modal/);
   assert.match(articleCss, /\.article-lead-modal \.reference-lead-modal__backdrop[\s\S]*rgba\(8, 7, 6, \.72\)/);
   assert.match(articleCss, /backdrop-filter:\s*blur\(8px\)/);
+  assert.match(articleCss, /\.article-lead-modal\s*\{[\s\S]*transition:\s*none\s*!important[\s\S]*visibility:\s*hidden/);
+  assert.match(articleCss, /\.article-lead-modal\.is-open\s*\{[\s\S]*visibility:\s*visible/);
 });

@@ -537,6 +537,12 @@
 /* Article modal is portaled to <body> so article layers can never paint over it. */
 .article-lead-modal {
   z-index: 300;
+  transition: none !important;
+  visibility: hidden;
+}
+
+.article-lead-modal.is-open {
+  visibility: visible;
 }
 
 .article-lead-modal .reference-lead-modal__backdrop {
