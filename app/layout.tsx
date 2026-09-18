@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { FirstPartyTracker } from '@/components/analytics/FirstPartyTracker';
 import { GtmBridge } from '@/components/analytics/GtmBridge';
+import { MetaPixel } from '@/components/analytics/MetaPixel';
 import './globals.css';
 import './fixes.css';
 import './final.css';
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {children}
         <FirstPartyTracker />
         <GtmBridge />
+        <MetaPixel />
       </body>
     </html>
   );
