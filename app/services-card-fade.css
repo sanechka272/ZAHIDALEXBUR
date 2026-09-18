@@ -36,9 +36,9 @@
 }
 
 /* Keep per-image framing tuned to the actual well construction. */
-.service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 50% !important; }
-.service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 49% !important; }
-.service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 58% !important; }
+.service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 63% !important; }
+.service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 62% !important; }
+.service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 66% !important; }
 
 /* One fixed, long multi-stop overlay across the entire card. */
 .service-reference-card::after {
@@ -132,9 +132,9 @@
     padding-top: 90%;
   }
 
-  .service-reference-card:nth-child(3) .service-reference-card__photo img {
-    object-position: 50% 57% !important;
-  }
+  .service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 62% !important; }
+  .service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 61% !important; }
+  .service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 65% !important; }
 }
 
 @media (max-width: 820px) {
@@ -150,9 +150,9 @@
     padding: 112% 20px 22px;
   }
 
-  .service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 48% !important; }
-  .service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 48% !important; }
-  .service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 56% !important; }
+  .service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 60% !important; }
+  .service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 59% !important; }
+  .service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 63% !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
