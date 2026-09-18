@@ -25,8 +25,7 @@ test('blog listing and article cover use responsive Next Image instead of full-s
   assert.match(blogArticle, /article-page__cover[\s\S]*?<Image[\s\S]*?sizes=/);
 });
 
-test('image optimizer keeps high visual fidelity and favors fast first-request WebP encoding', () => {
-  assert.match(config, /qualities:\s*\[[^\]]*90[^\]]*\]/);
-  assert.match(config, /formats:\s*\[['"]image\/webp['"]\]/);
-  assert.doesNotMatch(config, /image\/avif/);
+test('image optimizer uses the production quality and modern responsive formats', () => {
+  assert.match(config, /qualities:\s*\[[^\]]*82[^\]]*\]/);
+  assert.match(config, /formats:\s*\[[^\]]*['"]image\/avif['"][^\]]*['"]image\/webp['"][^\]]*\]/);
 });

@@ -49,3 +49,18 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler@4 deploy
+
+      - name: Verify Telegram delivery configuration
+        if: steps.cloudflare.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          result="$(curl -sS --retry 6 --retry-delay 5 --retry-all-errors -w $'\n%{http_code}' https://zahidalexbur.com/api/telegram-status)"
+          status="$(printf '%s\n' "$result" | tail -n1)"
+          body="$(printf '%s\n' "$result" | sed '$d')"
+          echo "Telegram status endpoint returned HTTP $status"
+          echo "$body"
+          if [ "$status" != "200" ]; then
+            echo "Telegram runtime is not ready."
+            exit 1
+          fi

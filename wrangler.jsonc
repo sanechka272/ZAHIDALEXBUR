@@ -3,6 +3,7 @@
   "name": "zahidalexbur",
   "main": "cloudflare/worker.ts",
   "compatibility_date": "2026-09-16",
+  "keep_vars": true,
   "routes": [
     {
       "pattern": "zahidalexbur.com",
