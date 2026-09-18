@@ -92,3 +92,10 @@ test('blog index and discovery routes are indexable through sitemap and robots',
   assert.match(robots, /sitemap\.xml/);
   assert.doesNotMatch(robots, /disallow:\s*\[[^\]]*\/blog/);
 });
+
+
+test('water-disappears article uses its dedicated repository image everywhere', () => {
+  assert.match(blogSection, /blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
+  assert.match(indexPage, /blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
+  assert.match(articlePage, /blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
+});
