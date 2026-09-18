@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isValidUaPhone } from '@/lib/phone';
 
 export const periodPresetSchema = z.enum([
   'today',
@@ -43,7 +44,7 @@ export type TrackEventInput = z.infer<typeof trackEventSchema>;
 
 export const leadInputSchema = z.object({
   name: z.string().trim().max(120).optional(),
-  phone: z.string().trim().min(7).max(32),
+  phone: z.string().trim().refine(isValidUaPhone, { message: 'Invalid Ukrainian phone number' }),
   location: z.string().trim().max(180).optional(),
   service: z.string().trim().max(160).optional(),
   originatingPage: z.string().startsWith('/').max(2048),

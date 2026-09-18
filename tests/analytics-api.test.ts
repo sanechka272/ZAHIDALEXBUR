@@ -97,3 +97,20 @@ test('health endpoint reports runtime readiness without depending on database av
   assert.equal(typeof body.databaseConfigured, 'boolean');
   assert.equal(typeof body.telegramConfigured, 'boolean');
 });
+
+
+test('lead API rejects malformed Ukrainian phone numbers', async () => {
+  for (const phone of ['+38', '+38099123456', '+3809912345678', '+48123123123', '0991234567']) {
+    const response = await leadPost(new Request('https://zahidalexbur.com/api/leads', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', origin: 'https://zahidalexbur.com' },
+      body: JSON.stringify({
+        phone,
+        originatingPage: '/',
+        startedAtMs: Date.now() - 5000,
+        honeypot: '',
+      }),
+    }));
+    assert.equal(response.status, 400, `expected invalid phone ${phone} to be rejected`);
+  }
+});

@@ -469,3 +469,19 @@
   .service-reference-card:hover { transform: none; }
   .service-reference-card:hover .service-reference-card__photo img { transform: none; }
 }
+
+
+.reference-lead-form input[aria-invalid="true"] {
+  border-color: #a44f43;
+  box-shadow: 0 0 0 2px rgba(164, 79, 67, .11);
+}
+
+.reference-field-error {
+  display: block;
+  margin-top: 1px;
+  color: #9c4037;
+  font-size: 11px;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-transform: none;
+}

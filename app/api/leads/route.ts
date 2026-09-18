@@ -3,6 +3,7 @@ import { leadInputSchema } from '@/lib/analytics/contracts';
 import { geoTokenFromEdgeHeaders } from '@/lib/analytics/edge-geo';
 import { createLead } from '@/lib/analytics/repository';
 import { notifyTelegramLead } from '@/lib/notifications/telegram';
+import { isValidUaPhone } from '@/lib/phone';
 
 export const runtime = 'nodejs';
 
@@ -74,8 +75,7 @@ export async function POST(request: Request) {
     return Response.json({ error: 'invalid_submission' }, { status: 400 });
   }
 
-  const digits = parsed.data.phone.replace(/\D/g, '');
-  if (digits.length < 7 || digits.length > 15) return Response.json({ error: 'invalid_phone' }, { status: 400 });
+  if (!isValidUaPhone(parsed.data.phone)) return Response.json({ error: 'invalid_phone' }, { status: 400 });
 
   const telegramHandledAtEdge = request.headers.get('x-zab-telegram-edge') === '1';
   const cookies = parseCookies(request.headers.get('cookie'));

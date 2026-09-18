@@ -1,4 +1,5 @@
 import { Container, getContainer } from '@cloudflare/containers';
+import { isValidUaPhone } from '../lib/phone';
 
 type EdgeCf = {
   country?: string | null;
@@ -129,13 +130,12 @@ async function readEdgeLeadPayload(request: Request): Promise<EdgeLeadPayload | 
   }
 
   const phone = cleanString(raw.phone);
-  const digits = phone.replace(/\D/g, '');
   const honeypot = cleanString(raw.honeypot);
   const originatingPage = cleanString(raw.originatingPage);
   const startedAtMs = typeof raw.startedAtMs === 'number' ? raw.startedAtMs : Number.NaN;
   const now = Date.now();
 
-  if (honeypot || !originatingPage || digits.length < 7 || digits.length > 15) return null;
+  if (honeypot || !originatingPage || !isValidUaPhone(phone)) return null;
   if (!Number.isFinite(startedAtMs) || startedAtMs > now || now - startedAtMs < 1200) return null;
 
   return {
