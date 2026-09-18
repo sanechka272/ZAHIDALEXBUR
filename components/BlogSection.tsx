@@ -6,14 +6,18 @@ import { useMemo, useState } from 'react';
 import featuredDepthArticleImage from '../blog-hlybyna-sverdlovyny-lvivska-oblast-featured.webp';
 import blogKnowledgeHeroImage from '../blog-knowledge-hero-drilling.webp';
 import waterDisappearsArticleImage from '../blog-chomu-voda-mozhe-znyknuty-featured.webp';
+import filterVsNoFilterArticleImage from '../blog-filtrova-chy-bezfiltrova-featured.webp';
 import { featuredBlogArticle, landingBlogArticles } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
 
 const categories = ['УСІ МАТЕРІАЛИ', 'ГЕОЛОГІЯ', 'БУРІННЯ', 'ОБЛАШТУВАННЯ', 'ВОДА', 'ЦІНИ', 'ПОРАДИ'] as const;
 const WATER_DISAPPEARS_SLUG = 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny';
+const FILTER_VS_NO_FILTER_SLUG = 'filtrova-chy-bezfiltrova-sverdlovyna';
 
 function getLandingArticleImage(article: (typeof landingBlogArticles)[number]) {
-  return article.slug === WATER_DISAPPEARS_SLUG ? waterDisappearsArticleImage : article.image;
+  if (article.slug === WATER_DISAPPEARS_SLUG) return waterDisappearsArticleImage;
+  if (article.slug === FILTER_VS_NO_FILTER_SLUG) return filterVsNoFilterArticleImage;
+  return article.image;
 }
 
 function ArrowIcon() {

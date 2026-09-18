@@ -5,14 +5,18 @@ import { blogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
 import blogHeroImage from '../../blog-index-hero-drilling.webp';
 import waterDisappearsArticleImage from '../../blog-chomu-voda-mozhe-znyknuty-featured.webp';
+import filterVsNoFilterArticleImage from '../../blog-filtrova-chy-bezfiltrova-featured.webp';
 
 export const dynamic = 'force-static';
 export const revalidate = false;
 
 const WATER_DISAPPEARS_SLUG = 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny';
+const FILTER_VS_NO_FILTER_SLUG = 'filtrova-chy-bezfiltrova-sverdlovyna';
 
 function getBlogIndexArticleImage(article: (typeof blogArticles)[number]) {
-  return article.slug === WATER_DISAPPEARS_SLUG ? waterDisappearsArticleImage : article.image;
+  if (article.slug === WATER_DISAPPEARS_SLUG) return waterDisappearsArticleImage;
+  if (article.slug === FILTER_VS_NO_FILTER_SLUG) return filterVsNoFilterArticleImage;
+  return article.image;
 }
 
 export const metadata: Metadata = {

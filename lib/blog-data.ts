@@ -1,4 +1,5 @@
 import waterDisappearsArticleImage from '../blog-chomu-voda-mozhe-znyknuty-featured.webp';
+import filterVsNoFilterArticleImage from '../blog-filtrova-chy-bezfiltrova-featured.webp';
 import { assets } from './site-data';
 
 export type BlogSectionBlock = {
@@ -73,7 +74,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Фільтрова чи безфільтрова свердловина: різниця | ZAHIDALEXBUR',
     metaDescription: 'Порівнюємо фільтрові та безфільтрові свердловини: конструкцію, умови застосування, переваги та фактори, які впливають на вибір.',
     excerpt: 'Порівнюємо конструкції, їх переваги та особливості використання.',
-    image: assets.services[2],
+    image: filterVsNoFilterArticleImage.src,
     imageAlt: 'Конструкція фільтрової свердловини на воду',
     readTime: '6 хв читання',
     intro: 'Тип свердловини не варто обирати лише за назвою або ціною. Фільтрова й безфільтрова конструкції застосовуються за різних геологічних умов і вирішують різні задачі.',
