@@ -30,15 +30,17 @@
 
 .service-reference-card__photo img {
   object-fit: cover;
-  transform: scale(1);
+  transform: translate3d(0, 5.5%, 0) scale(1.08);
+  transform-origin: 50% 50%;
   filter: contrast(1.01) saturate(.96);
   transition: transform .42s cubic-bezier(.22, .61, .36, 1);
 }
 
-/* Keep per-image framing tuned to the actual well construction. */
-.service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 63% !important; }
-.service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 62% !important; }
-.service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 66% !important; }
+/* Keep the source crop centered; the visible downward shift is done with transform,
+   because object-position barely changes these near-matching source/card ratios. */
+.service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 50% !important; }
+.service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 50% !important; }
+.service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 53% !important; }
 
 /* One fixed, long multi-stop overlay across the entire card. */
 .service-reference-card::after {
@@ -115,7 +117,7 @@
 }
 
 .service-reference-card:hover .service-reference-card__photo img {
-  transform: scale(1.03);
+  transform: translate3d(0, 5.5%, 0) scale(1.11);
   filter: contrast(1.01) saturate(.96);
 }
 
@@ -132,9 +134,13 @@
     padding-top: 90%;
   }
 
-  .service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 62% !important; }
-  .service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 61% !important; }
-  .service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 65% !important; }
+  .service-reference-card__photo img {
+    transform: translate3d(0, 5%, 0) scale(1.08);
+  }
+
+  .service-reference-card:hover .service-reference-card__photo img {
+    transform: translate3d(0, 5%, 0) scale(1.11);
+  }
 }
 
 @media (max-width: 820px) {
@@ -150,15 +156,19 @@
     padding: 112% 20px 22px;
   }
 
-  .service-reference-card:nth-child(1) .service-reference-card__photo img { object-position: 50% 60% !important; }
-  .service-reference-card:nth-child(2) .service-reference-card__photo img { object-position: 50% 59% !important; }
-  .service-reference-card:nth-child(3) .service-reference-card__photo img { object-position: 50% 63% !important; }
+  .service-reference-card__photo img {
+    transform: translate3d(0, 4.5%, 0) scale(1.07);
+  }
+
+  .service-reference-card:hover .service-reference-card__photo img {
+    transform: translate3d(0, 4.5%, 0) scale(1.10);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .service-reference-card__photo img,
   .service-reference-card:hover .service-reference-card__photo img {
     transition: none !important;
-    transform: none !important;
+    transform: translate3d(0, 4.5%, 0) scale(1.07) !important;
   }
 }
