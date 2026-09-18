@@ -2,6 +2,7 @@ import waterDisappearsArticleImage from '../blog-chomu-voda-mozhe-znyknuty-featu
 import filterVsNoFilterArticleImage from '../blog-filtrova-chy-bezfiltrova-featured.webp';
 import turnkeyWellArticleImage from '../blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp';
 import waterLocationArticleImage from '../blog-yak-vyznachyty-vodu-na-diliantsi-featured.webp';
+import sitePreparationArticleImage from '../blog-yak-pidhotuvaty-dilianku-do-burinnya-featured.webp';
 import { assets } from './site-data';
 
 export type BlogSectionBlock = {
@@ -136,7 +137,7 @@ export const blogArticles: BlogArticle[] = [
     metaTitle: 'Як підготувати ділянку до буріння свердловини | ZAHIDALEXBUR',
     metaDescription: 'Що підготувати до приїзду бурової: місце під свердловину, заїзд техніки, комунікації, робочу зону та умови для виконання робіт.',
     excerpt: 'Що варто підготувати до приїзду бурової техніки, щоб роботи пройшли без зайвих затримок.',
-    image: assets.process,
+    image: sitePreparationArticleImage.src,
     imageAlt: 'Підготовлена ділянка перед бурінням свердловини на воду',
     readTime: '5 хв читання',
     intro: 'Підготовка ділянки починається не з техніки, а з правильно обраного місця та зрозумілих умов для роботи бригади. Завчасно продуманий заїзд, робоча зона й відомі комунікації допомагають уникнути зайвих пауз уже після прибуття бурової.',

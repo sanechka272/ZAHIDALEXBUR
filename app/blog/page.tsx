@@ -8,6 +8,7 @@ import waterDisappearsArticleImage from '../../blog-chomu-voda-mozhe-znyknuty-fe
 import filterVsNoFilterArticleImage from '../../blog-filtrova-chy-bezfiltrova-featured.webp';
 import turnkeyWellArticleImage from '../../blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured.webp';
 import waterLocationArticleImage from '../../blog-yak-vyznachyty-vodu-na-diliantsi-featured.webp';
+import sitePreparationArticleImage from '../../blog-yak-pidhotuvaty-dilianku-do-burinnya-featured.webp';
 
 export const dynamic = 'force-static';
 export const revalidate = false;
@@ -16,12 +17,14 @@ const WATER_DISAPPEARS_SLUG = 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny';
 const FILTER_VS_NO_FILTER_SLUG = 'filtrova-chy-bezfiltrova-sverdlovyna';
 const TURNKEY_WELL_SLUG = 'yak-oblashtuvaty-sverdlovynu-pid-kliuch';
 const WATER_LOCATION_SLUG = 'yak-vyznachyty-vodu-na-diliantsi';
+const SITE_PREPARATION_SLUG = 'yak-pidhotuvaty-dilianku-do-burinnya-sverdlovyny';
 
 function getBlogIndexArticleImage(article: (typeof blogArticles)[number]) {
   if (article.slug === WATER_DISAPPEARS_SLUG) return waterDisappearsArticleImage;
   if (article.slug === FILTER_VS_NO_FILTER_SLUG) return filterVsNoFilterArticleImage;
   if (article.slug === TURNKEY_WELL_SLUG) return turnkeyWellArticleImage;
   if (article.slug === WATER_LOCATION_SLUG) return waterLocationArticleImage;
+  if (article.slug === SITE_PREPARATION_SLUG) return sitePreparationArticleImage;
   return article.image;
 }
 

@@ -124,3 +124,10 @@ test('article lead modal is portaled outside article stacking contexts and keeps
   assert.match(articleCss, /\.article-lead-modal\s*\{[\s\S]*transition:\s*none\s*!important[\s\S]*visibility:\s*hidden/);
   assert.match(articleCss, /\.article-lead-modal\.is-open\s*\{[\s\S]*visibility:\s*visible/);
 });
+
+
+test('site-preparation article uses its dedicated repository image everywhere', () => {
+  assert.match(blogSection, /blog-yak-pidhotuvaty-dilianku-do-burinnya-featured\.webp/);
+  assert.match(indexPage, /blog-yak-pidhotuvaty-dilianku-do-burinnya-featured\.webp/);
+  assert.match(articlePage, /blog-yak-pidhotuvaty-dilianku-do-burinnya-featured\.webp/);
+});
