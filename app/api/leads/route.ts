@@ -1,6 +1,7 @@
 import { leadInputSchema } from '@/lib/analytics/contracts';
 import { geoTokenFromEdgeHeaders } from '@/lib/analytics/edge-geo';
 import { createLead } from '@/lib/analytics/repository';
+import { notifyTelegramLead } from '@/lib/notifications/telegram';
 
 export const runtime = 'nodejs';
 
@@ -82,6 +83,12 @@ export async function POST(request: Request) {
       sessionId: cookies.get(SESSION_COOKIE) ?? null,
       userAgent: request.headers.get('user-agent') ?? '',
       ip: clientGeoKey(request),
+    });
+
+    await notifyTelegramLead({
+      id: result.id,
+      duplicate: result.duplicate,
+      data: parsed.data,
     });
 
     const headers = new Headers({ 'cache-control': 'no-store' });

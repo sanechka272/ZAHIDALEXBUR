@@ -21,6 +21,9 @@ type Env = {
   ANALYTICS_SESSION_SECRET?: string;
   DATABASE_POOL_SIZE?: string;
   ANALYTICS_RETENTION_BATCH_SIZE?: string;
+  TELEGRAM_BOT_TOKEN?: string;
+  TELEGRAM_CHAT_ID?: string;
+  TELEGRAM_MESSAGE_THREAD_ID?: string;
 };
 
 type WorkerContext = {
@@ -45,6 +48,9 @@ export class ZahidaContainer extends Container {
 
     if (env.DATABASE_URL) envVars.DATABASE_URL = env.DATABASE_URL;
     if (env.ANALYTICS_SESSION_SECRET) envVars.ANALYTICS_SESSION_SECRET = env.ANALYTICS_SESSION_SECRET;
+    if (env.TELEGRAM_BOT_TOKEN) envVars.TELEGRAM_BOT_TOKEN = env.TELEGRAM_BOT_TOKEN;
+    if (env.TELEGRAM_CHAT_ID) envVars.TELEGRAM_CHAT_ID = env.TELEGRAM_CHAT_ID;
+    if (env.TELEGRAM_MESSAGE_THREAD_ID) envVars.TELEGRAM_MESSAGE_THREAD_ID = env.TELEGRAM_MESSAGE_THREAD_ID;
 
     this.envVars = envVars;
   }
