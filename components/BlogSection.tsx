@@ -5,10 +5,16 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import featuredDepthArticleImage from '../blog-hlybyna-sverdlovyny-lvivska-oblast-featured.webp';
 import blogKnowledgeHeroImage from '../blog-knowledge-hero-drilling.webp';
+import waterDisappearsArticleImage from '../blog-chomu-voda-mozhe-znyknuty-featured.webp';
 import { featuredBlogArticle, landingBlogArticles } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
 
 const categories = ['УСІ МАТЕРІАЛИ', 'ГЕОЛОГІЯ', 'БУРІННЯ', 'ОБЛАШТУВАННЯ', 'ВОДА', 'ЦІНИ', 'ПОРАДИ'] as const;
+const WATER_DISAPPEARS_SLUG = 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny';
+
+function getLandingArticleImage(article: (typeof landingBlogArticles)[number]) {
+  return article.slug === WATER_DISAPPEARS_SLUG ? waterDisappearsArticleImage : article.image;
+}
 
 function ArrowIcon() {
   return (
@@ -104,7 +110,7 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
             {filteredArticles.map((article) => (
               <article className="blog-kb-card" key={article.slug}>
                 <Link className="blog-kb-card__media" href={`/blog/${article.slug}`} aria-label={article.title}>
-                  <Image src={article.image} alt={article.imageAlt} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={90} />
+                  <Image src={getLandingArticleImage(article)} alt={article.imageAlt} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={90} />
                 </Link>
                 <div className="blog-kb-card__body">
                   <span className="blog-kb__meta">{article.category} · {article.readTime.toUpperCase().replace(' ЧИТАННЯ', '')}</span>
