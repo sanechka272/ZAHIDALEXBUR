@@ -6,7 +6,7 @@ import { ArticleLeadButton, ArticleShareButton } from '@/components/ArticleInter
 import { blogArticles, getBlogArticle, getRelatedBlogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
 
-const SITE_URL = 'https://zahidalexbur.com.ua';
+const SITE_URL = 'https://zahidalexbur.com';
 const ARTICLE_PUBLISHED_AT = '2026-08-12';
 const ARTICLE_PUBLISHED_LABEL = '12 серпня 2026';
 export const dynamic = 'force-static';

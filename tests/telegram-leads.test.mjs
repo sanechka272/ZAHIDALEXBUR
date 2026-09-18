@@ -9,7 +9,7 @@ const worker = await readFile(new URL('../cloudflare/worker.ts', import.meta.url
 
 test('successful lead submissions trigger Telegram Bot API notification', () => {
   assert.match(route, /notifyTelegramLead/);
-  assert.match(route, /await notifyTelegramLead\(/);
+  assert.match(route, /telegramHandledAtEdge/);
   assert.match(telegram, /api\.telegram\.org\/bot/);
   assert.match(telegram, /sendMessage/);
   assert.match(telegram, /Нова заявка ZAHIDALEXBUR/);
@@ -33,4 +33,20 @@ test('lead endpoint falls back to Telegram when database storage is unavailable'
   assert.match(route, /if \(telegram\.sent\)/);
   assert.match(route, /storage: 'telegram_only'/);
   assert.match(route, /status: 202/);
+});
+
+
+test('Worker edge owns Telegram delivery and exposes a safe status probe', () => {
+  assert.match(worker, /sendLeadTelegramAtEdge/);
+  assert.match(worker, /x-zab-telegram-edge/);
+  assert.match(worker, /\/api\/telegram-status/);
+  assert.match(worker, /telegramApiRequest\(env, 'getMe'\)/);
+  assert.match(worker, /telegramApiRequest\(env, 'getChat'/);
+  assert.match(worker, /x-zab-telegram-status/);
+});
+
+test('container route skips duplicate Telegram delivery when edge already handled it', () => {
+  assert.match(route, /telegramHandledAtEdge/);
+  assert.match(route, /if \(!telegramHandledAtEdge\)/);
+  assert.match(route, /storage_unavailable/);
 });

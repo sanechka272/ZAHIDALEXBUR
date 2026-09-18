@@ -19,7 +19,7 @@ import './services-card-fade.css';
 import './blog-index-hero.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://zahidalexbur.com.ua'),
+  metadataBase: new URL('https://zahidalexbur.com'),
   title: 'Буріння свердловин у Львові та області | ZAHIDALEXBUR',
   description:
     'Буріння свердловин у Львові та Львівській області: безфільтрові, фільтрові та промислові свердловини. Розрахунок вартості та консультація.',

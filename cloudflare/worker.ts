@@ -32,6 +32,22 @@ type WorkerContext = {
 
 type CacheKind = 'image' | 'static';
 
+type EdgeLeadPayload = {
+  name?: string;
+  phone: string;
+  location?: string;
+  service?: string;
+  originatingPage: string;
+  honeypot: string;
+  startedAtMs: number;
+};
+
+type TelegramApiResult = {
+  ok: boolean;
+  status: number;
+  description?: string;
+};
+
 export class ZahidaContainer extends Container {
   defaultPort = 3000;
   sleepAfter = '2h';
@@ -56,13 +72,14 @@ export class ZahidaContainer extends Container {
   }
 }
 
-function edgeRequest(request: Request) {
+function edgeRequest(request: Request, trustedHeaders: Record<string, string> = {}) {
   const headers = new Headers(request.headers);
   const internalHeaders = [
     'x-zab-edge-country',
     'x-zab-edge-region',
     'x-zab-edge-region-code',
     'x-zab-edge-city',
+    'x-zab-telegram-edge',
   ];
   for (const name of internalHeaders) headers.delete(name);
 
@@ -71,8 +88,180 @@ function edgeRequest(request: Request) {
   if (cf?.region) headers.set('x-zab-edge-region', cf.region);
   if (cf?.regionCode) headers.set('x-zab-edge-region-code', cf.regionCode);
   if (cf?.city) headers.set('x-zab-edge-city', cf.city);
+  for (const [name, value] of Object.entries(trustedHeaders)) headers.set(name, value);
 
   return new Request(request, { headers });
+}
+
+
+function escapeTelegramHtml(value: string) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+}
+
+function cleanString(value: unknown) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+async function readEdgeLeadPayload(request: Request): Promise<EdgeLeadPayload | null> {
+  const origin = request.headers.get('origin');
+  if (origin) {
+    try {
+      if (new URL(origin).origin !== new URL(request.url).origin) return null;
+    } catch {
+      return null;
+    }
+  }
+
+  if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) return null;
+
+  let raw: Record<string, unknown>;
+  try {
+    const text = await request.text();
+    if (new TextEncoder().encode(text).byteLength > 16 * 1024) return null;
+    const parsed = JSON.parse(text);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+    raw = parsed as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+
+  const phone = cleanString(raw.phone);
+  const digits = phone.replace(/\D/g, '');
+  const honeypot = cleanString(raw.honeypot);
+  const originatingPage = cleanString(raw.originatingPage);
+  const startedAtMs = typeof raw.startedAtMs === 'number' ? raw.startedAtMs : Number.NaN;
+  const now = Date.now();
+
+  if (honeypot || !originatingPage || digits.length < 7 || digits.length > 15) return null;
+  if (!Number.isFinite(startedAtMs) || startedAtMs > now || now - startedAtMs < 1200) return null;
+
+  return {
+    name: cleanString(raw.name) || undefined,
+    phone,
+    location: cleanString(raw.location) || undefined,
+    service: cleanString(raw.service) || undefined,
+    originatingPage,
+    honeypot,
+    startedAtMs,
+  };
+}
+
+async function telegramApiRequest(
+  env: Env,
+  method: string,
+  payload?: Record<string, unknown>,
+): Promise<TelegramApiResult> {
+  const token = env.TELEGRAM_BOT_TOKEN?.trim();
+  if (!token) return { ok: false, status: 500, description: 'bot_token_missing' };
+
+  try {
+    const response = await fetch('https://api.telegram.org/bot' + token + '/' + method, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload ?? {}),
+    });
+
+    let body: { ok?: boolean; description?: string } = {};
+    try {
+      body = await response.json() as { ok?: boolean; description?: string };
+    } catch {
+      // Telegram normally returns JSON; keep a generic description otherwise.
+    }
+
+    return {
+      ok: response.ok && body.ok !== false,
+      status: response.status,
+      description: body.description,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      status: 503,
+      description: error instanceof Error ? error.message : 'telegram_network_error',
+    };
+  }
+}
+
+async function sendLeadTelegramAtEdge(
+  env: Env,
+  lead: EdgeLeadPayload,
+  leadId: string,
+  duplicate: boolean,
+): Promise<TelegramApiResult> {
+  const chatId = env.TELEGRAM_CHAT_ID?.trim();
+  if (!chatId) return { ok: false, status: 500, description: 'chat_id_missing' };
+
+  const lines = [
+    duplicate ? '🔁 <b>Повторна заявка ZAHIDALEXBUR</b>' : '💧 <b>Нова заявка ZAHIDALEXBUR</b>',
+    '',
+    lead.name ? '<b>Імʼя:</b> ' + escapeTelegramHtml(lead.name) : null,
+    '<b>Телефон:</b> ' + escapeTelegramHtml(lead.phone),
+    lead.location ? '<b>Населений пункт:</b> ' + escapeTelegramHtml(lead.location) : null,
+    lead.service ? '<b>Послуга:</b> ' + escapeTelegramHtml(lead.service) : null,
+    '<b>Сторінка:</b> ' + escapeTelegramHtml(lead.originatingPage),
+    '<b>Lead ID:</b> ' + escapeTelegramHtml(leadId),
+  ].filter(Boolean);
+
+  const body: Record<string, unknown> = {
+    chat_id: chatId,
+    text: lines.join('\n'),
+    parse_mode: 'HTML',
+    disable_web_page_preview: true,
+  };
+
+  const threadRaw = env.TELEGRAM_MESSAGE_THREAD_ID?.trim();
+  if (threadRaw) {
+    const threadId = Number.parseInt(threadRaw, 10);
+    if (Number.isFinite(threadId) && threadId > 0) body.message_thread_id = threadId;
+  }
+
+  return telegramApiRequest(env, 'sendMessage', body);
+}
+
+async function telegramStatusResponse(env: Env) {
+  const tokenConfigured = Boolean(env.TELEGRAM_BOT_TOKEN?.trim());
+  const chatConfigured = Boolean(env.TELEGRAM_CHAT_ID?.trim());
+
+  if (!tokenConfigured || !chatConfigured) {
+    return Response.json(
+      {
+        configured: false,
+        tokenConfigured,
+        chatConfigured,
+        bot: null,
+        chat: null,
+      },
+      { status: 503, headers: { 'cache-control': 'no-store' } },
+    );
+  }
+
+  const [bot, chat] = await Promise.all([
+    telegramApiRequest(env, 'getMe'),
+    telegramApiRequest(env, 'getChat', { chat_id: env.TELEGRAM_CHAT_ID!.trim() }),
+  ]);
+
+  return Response.json(
+    {
+      configured: true,
+      bot,
+      chat,
+      ready: bot.ok && chat.ok,
+    },
+    { status: bot.ok && chat.ok ? 200 : 503, headers: { 'cache-control': 'no-store' } },
+  );
+}
+
+function responseWithTelegramStatus(response: Response, status: 'sent' | 'failed') {
+  const headers = new Headers(response.headers);
+  headers.set('x-zab-telegram-status', status);
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
 }
 
 function isBackendPath(pathname: string) {
@@ -122,7 +311,7 @@ function responseWithCacheStatus(response: Response, kind: CacheKind, status: 'H
 function responseWithRelease(response: Response, env: Env) {
   const headers = new Headers(response.headers);
   headers.set('x-zab-worker-version', env.CF_VERSION_METADATA?.id ?? 'unknown');
-  headers.set('x-zab-container-generation', 'v3');
+  headers.set('x-zab-container-generation', 'v4');
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
@@ -203,6 +392,10 @@ export default {
       return env.ASSETS.fetch(request);
     }
 
+    if (request.method === 'GET' && url.pathname === '/api/telegram-status') {
+      return responseWithRelease(await telegramStatusResponse(env), env);
+    }
+
     const edgeImage = await transformNextImageAtEdge(request, url);
     if (edgeImage) return edgeImage;
 
@@ -220,8 +413,75 @@ export default {
 
     // New object name forces a fresh stateless Next.js container instance once,
     // avoiding a previously warm Durable Object instance during the rollout.
-    const container = getContainer(env.APP_CONTAINER as any, 'zahidalexbur-production-v3');
-    const response = await container.fetch(edgeRequest(request));
+    const container = getContainer(env.APP_CONTAINER as any, 'zahidalexbur-production-v4');
+    const isLeadSubmission = request.method === 'POST' && url.pathname === '/api/leads';
+    const leadRequestCopy = isLeadSubmission ? request.clone() : null;
+
+    let response: Response;
+    try {
+      response = await container.fetch(
+        edgeRequest(request, isLeadSubmission ? { 'x-zab-telegram-edge': '1' } : {}),
+      );
+    } catch (error) {
+      if (leadRequestCopy) {
+        const lead = await readEdgeLeadPayload(leadRequestCopy);
+        if (lead) {
+          const fallbackId = crypto.randomUUID();
+          const telegram = await sendLeadTelegramAtEdge(env, lead, fallbackId, false);
+          if (telegram.ok) {
+            return responseWithRelease(
+              Response.json(
+                { ok: true, id: fallbackId, duplicate: false, degraded: true, storage: 'telegram_only' },
+                { status: 202, headers: { 'cache-control': 'no-store', 'x-zab-telegram-status': 'sent' } },
+              ),
+              env,
+            );
+          }
+          console.error('[telegram-edge] container failure fallback failed', telegram);
+        }
+      }
+      throw error;
+    }
+
+    if (isLeadSubmission && leadRequestCopy) {
+      const lead = await readEdgeLeadPayload(leadRequestCopy);
+
+      if (lead && response.ok) {
+        let result: { id?: string; duplicate?: boolean } = {};
+        try {
+          result = await response.clone().json() as { id?: string; duplicate?: boolean };
+        } catch {
+          // Keep a generated request id if the container response is unexpectedly non-JSON.
+        }
+
+        const telegram = await sendLeadTelegramAtEdge(
+          env,
+          lead,
+          result.id ?? crypto.randomUUID(),
+          result.duplicate === true,
+        );
+
+        if (!telegram.ok) console.error('[telegram-edge] lead delivery failed', telegram);
+        return responseWithRelease(responseWithTelegramStatus(response, telegram.ok ? 'sent' : 'failed'), env);
+      }
+
+      if (lead && response.status >= 500) {
+        const fallbackId = crypto.randomUUID();
+        const telegram = await sendLeadTelegramAtEdge(env, lead, fallbackId, false);
+
+        if (telegram.ok) {
+          return responseWithRelease(
+            Response.json(
+              { ok: true, id: fallbackId, duplicate: false, degraded: true, storage: 'telegram_only' },
+              { status: 202, headers: { 'cache-control': 'no-store', 'x-zab-telegram-status': 'sent' } },
+            ),
+            env,
+          );
+        }
+
+        console.error('[telegram-edge] database fallback delivery failed', telegram);
+      }
+    }
 
     if (!kind || !canStore(response)) return responseWithRelease(response, env);
 

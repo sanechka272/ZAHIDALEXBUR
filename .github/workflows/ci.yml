@@ -27,6 +27,8 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/zahidalexbur_test
       ANALYTICS_SESSION_SECRET: ci-only-session-secret-at-least-32-bytes
       GEOIP_CITY_DB_PATH: ./tests/fixtures/empty.mmdb
+      TELEGRAM_BOT_TOKEN: ci-only-telegram-token
+      TELEGRAM_CHAT_ID: "-1000000000000"
     steps:
       - name: Checkout
         uses: actions/checkout@v4

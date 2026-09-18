@@ -75,3 +75,11 @@ test('operations runbook calls out Cloudflare Containers paid-plan requirement',
   assert.match(ops, /wrangler secret put DATABASE_URL/);
   assert.match(ops, /wrangler secret put ANALYTICS_SESSION_SECRET/);
 });
+
+
+test('production custom domain is source-controlled so Wrangler deploys do not remove it', () => {
+  const config = read('wrangler.jsonc');
+  assert.match(config, /"routes"\s*:\s*\[/);
+  assert.match(config, /"pattern"\s*:\s*"zahidalexbur\.com"/);
+  assert.match(config, /"custom_domain"\s*:\s*true/);
+});

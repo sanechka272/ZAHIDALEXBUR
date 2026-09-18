@@ -3,6 +3,12 @@
   "name": "zahidalexbur",
   "main": "cloudflare/worker.ts",
   "compatibility_date": "2026-09-16",
+  "routes": [
+    {
+      "pattern": "zahidalexbur.com",
+      "custom_domain": true
+    }
+  ],
   "assets": {
     "directory": "./public",
     "binding": "ASSETS"

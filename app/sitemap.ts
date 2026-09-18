@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { blogArticles } from '@/lib/blog-data';
 
-const SITE_URL = 'https://zahidalexbur.com.ua';
+const SITE_URL = 'https://zahidalexbur.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

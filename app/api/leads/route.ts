@@ -77,6 +77,7 @@ export async function POST(request: Request) {
   const digits = parsed.data.phone.replace(/\D/g, '');
   if (digits.length < 7 || digits.length > 15) return Response.json({ error: 'invalid_phone' }, { status: 400 });
 
+  const telegramHandledAtEdge = request.headers.get('x-zab-telegram-edge') === '1';
   const cookies = parseCookies(request.headers.get('cookie'));
   const context = {
     visitorId: cookies.get(VISITOR_COOKIE) ?? null,
@@ -88,11 +89,13 @@ export async function POST(request: Request) {
   try {
     const result = await createLead(parsed.data, context);
 
-    await notifyTelegramLead({
-      id: result.id,
-      duplicate: result.duplicate,
-      data: parsed.data,
-    });
+    if (!telegramHandledAtEdge) {
+      await notifyTelegramLead({
+        id: result.id,
+        duplicate: result.duplicate,
+        data: parsed.data,
+      });
+    }
 
     const headers = new Headers({ 'cache-control': 'no-store' });
     headers.append('set-cookie', cookie(VISITOR_COOKIE, result.visitorId, VISITOR_MAX_AGE));
@@ -100,6 +103,13 @@ export async function POST(request: Request) {
     return Response.json({ ok: true, id: result.id, duplicate: result.duplicate }, { status: result.duplicate ? 200 : 201, headers });
   } catch (error) {
     console.error('[analytics] lead storage failed; attempting Telegram fallback', error);
+
+    if (telegramHandledAtEdge) {
+      return Response.json(
+        { error: 'storage_unavailable' },
+        { status: 500, headers: { 'cache-control': 'no-store' } },
+      );
+    }
 
     const fallbackId = randomUUID();
     const telegram = await notifyTelegramLead({
