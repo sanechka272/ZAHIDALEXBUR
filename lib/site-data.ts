@@ -30,8 +30,8 @@ export const services = [
   {
     id: '01',
     title: 'Безфільтрова свердловина',
-    price: '2 300 грн/м',
-    shortPrice: '2 300 грн/м',
+    price: '2 500 грн/м',
+    shortPrice: '2 500 грн/м',
     description: 'Надійне рішення для стабільного водопостачання у приватних будинках.',
     image: assets.services[0],
     included: [
@@ -44,8 +44,8 @@ export const services = [
   {
     id: '02',
     title: 'Фільтрова свердловина',
-    price: '2 500 грн/м',
-    shortPrice: '2 500 грн/м',
+    price: '2 800 грн/м',
+    shortPrice: '2 800 грн/м',
     description: 'Оптимальний вибір для чистої води з додатковою фільтрацією.',
     image: assets.services[1],
     included: [
