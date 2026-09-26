@@ -33,7 +33,7 @@
     }
   ],
   "vars": {
-    "APP_CONTAINER_KEY": "zahidalexbur-blog-preview-v68",
+    "APP_CONTAINER_KEY": "zahidalexbur-blog-preview",
     "DATABASE_POOL_SIZE": "5",
     "ANALYTICS_RETENTION_BATCH_SIZE": "5000"
   },
