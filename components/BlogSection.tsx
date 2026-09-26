@@ -3,10 +3,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { featuredBlogArticle, landingBlogArticles } from '@/lib/blog-data';
+import { featuredBlogArticle, getBlogReadTime, landingBlogArticles } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
 
-const categories = ['УСІ МАТЕРІАЛИ', 'ГЕОЛОГІЯ', 'БУРІННЯ', 'ОБЛАШТУВАННЯ', 'ВОДА', 'ЦІНИ', 'ПОРАДИ'] as const;
+const categories = ['УСІ МАТЕРІАЛИ', 'ГЕОЛОГІЯ', 'БУРІННЯ', 'ОБЛАШТУВАННЯ', 'ВОДА', 'РЕМОНТ', 'ЦІНИ', 'ПОРАДИ'] as const;
 const BLOG_KNOWLEDGE_HERO_IMAGE = '/media/blog-knowledge-hero-drilling.webp';
 
 function ArrowIcon() {
@@ -63,7 +63,7 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
             <Image src={featuredBlogArticle.image} alt={featuredBlogArticle.imageAlt} fill sizes="(max-width: 900px) 100vw, 48vw" quality={82} />
           </Link>
           <div className="blog-kb__featured-copy">
-            <span className="blog-kb__meta">{featuredBlogArticle.category} · {featuredBlogArticle.readTime.toUpperCase().replace(' ЧИТАННЯ', '')}</span>
+            <span className="blog-kb__meta">{featuredBlogArticle.category} · {getBlogReadTime(featuredBlogArticle).toUpperCase().replace(' ЧИТАННЯ', '')}</span>
             <h3><Link href={`/blog/${featuredBlogArticle.slug}`}>{featuredBlogArticle.title}</Link></h3>
             <p>{featuredBlogArticle.excerpt}</p>
             <Link className="blog-kb__button" href={`/blog/${featuredBlogArticle.slug}`}>Читати матеріал <ArrowIcon /></Link>
@@ -106,7 +106,7 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
                   <Image src={article.image} alt={article.imageAlt} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={82} />
                 </Link>
                 <div className="blog-kb-card__body">
-                  <span className="blog-kb__meta">{article.category} · {article.readTime.toUpperCase().replace(' ЧИТАННЯ', '')}</span>
+                  <span className="blog-kb__meta">{article.category} · {getBlogReadTime(article).toUpperCase().replace(' ЧИТАННЯ', '')}</span>
                   <h3><Link href={`/blog/${article.slug}`}>{article.title}</Link></h3>
                   <p>{article.excerpt}</p>
                   <Link className="blog-kb-card__link" href={`/blog/${article.slug}`}>Читати <ArrowIcon /></Link>
