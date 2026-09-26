@@ -17,7 +17,7 @@ export const coreBlogArticles: BlogArticle[] = [
   {
     slug: 'hlybyna-sverdlovyny-lvivska-oblast',
     tag: 'ГЕОЛОГІЯ',
-    category: 'ГЕОЛОГІЯ',
+    category: 'Геологія',
     title: 'Яка глибина свердловини потрібна у Львівській області',
     metaTitle: 'Глибина свердловини у Львівській області | ZAHIDALEXBUR',
     metaDescription: 'Від чого залежить глибина свердловини у Львові та області, чому дані сусідів лише орієнтир і як формується реалістичний прогноз до буріння.',
@@ -72,7 +72,7 @@ export const coreBlogArticles: BlogArticle[] = [
   {
     slug: 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny',
     tag: 'ВОДА',
-    category: 'РЕМОНТ',
+    category: 'Ремонт',
     title: 'Чому вода може зникнути зі свердловини',
     metaTitle: 'Чому у свердловині зникає вода: причини | ZAHIDALEXBUR',
     metaDescription: 'Що перевіряти, якщо свердловина почала давати мало води або вода зникла: насос, рівні, дебіт, замулення, витік та стан конструкції.',
@@ -125,7 +125,7 @@ export const coreBlogArticles: BlogArticle[] = [
   {
     slug: 'filtrova-chy-bezfiltrova-sverdlovyna',
     tag: 'БУРІННЯ',
-    category: 'БУРІННЯ',
+    category: 'Буріння',
     title: 'Фільтрова чи безфільтрова свердловина: у чому різниця на практиці',
     metaTitle: 'Фільтрова чи безфільтрова свердловина: різниця | ZAHIDALEXBUR',
     metaDescription: 'Порівнюємо фільтрові та безфільтрові свердловини: як працюють конструкції, де застосовуються, що впливає на ресурс і чому тип визначає геологія.',
@@ -174,7 +174,7 @@ export const coreBlogArticles: BlogArticle[] = [
   {
     slug: 'yak-oblashtuvaty-sverdlovynu-pid-kliuch',
     tag: 'ОБЛАШТУВАННЯ',
-    category: 'ОБЛАШТУВАННЯ',
+    category: 'Облаштування',
     title: 'Як облаштувати свердловину під ключ: від насоса до води в будинку',
     metaTitle: 'Облаштування свердловини під ключ: етапи робіт | ZAHIDALEXBUR',
     metaDescription: 'Що входить в облаштування свердловини під ключ: насос, труба, кабель, автоматика, гідроакумулятор, кесон або адаптер, магістраль і запуск.',
@@ -231,7 +231,7 @@ export const coreBlogArticles: BlogArticle[] = [
   {
     slug: 'yak-vyznachyty-vodu-na-diliantsi',
     tag: 'ГЕОЛОГІЯ',
-    category: 'ГЕОЛОГІЯ',
+    category: 'Геологія',
     title: 'Як визначити, чи є вода на вашій ділянці перед бурінням',
     metaTitle: 'Як визначити воду на ділянці перед бурінням | ZAHIDALEXBUR',
     metaDescription: 'Що реально допомагає оцінити перспективи буріння: сусідні свердловини, геологічні дані, рельєф і чому лоза не дає точну глибину.',
@@ -285,7 +285,7 @@ export const coreBlogArticles: BlogArticle[] = [
   {
     slug: 'yak-pidhotuvaty-dilianku-do-burinnya-sverdlovyny',
     tag: 'ПОРАДИ',
-    category: 'ПОРАДИ',
+    category: 'Буріння',
     title: 'Як підготувати ділянку до буріння свердловини і не рознести подвір’я',
     metaTitle: 'Як підготувати ділянку до буріння свердловини | ZAHIDALEXBUR',
     metaDescription: 'Практична підготовка ділянки до буріння: точка, заїзд, ворота, дроти, комунікації, робоча зона, шлам і що прибрати до приїзду техніки.',
@@ -343,7 +343,7 @@ export const coreBlogArticles: BlogArticle[] = [
   {
     slug: 'yakyi-nasos-obraty-dlia-sverdlovyny',
     tag: 'ПОРАДИ',
-    category: 'ПОРАДИ',
+    category: 'Облаштування',
     title: 'Який насос обрати для свердловини: без правила «чим потужніший, тим краще»',
     metaTitle: 'Як вибрати насос для свердловини | ZAHIDALEXBUR',
     metaDescription: 'Як підібрати свердловинний насос за динамічним рівнем, дебітом, напором, витратою будинку і діаметром. Чому запас потужності може нашкодити.',
