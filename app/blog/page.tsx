@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BlogArticleLibrary } from '@/components/BlogArticleLibrary';
 import { blogArticles, getBlogReadTime } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
 
@@ -30,9 +31,19 @@ export const metadata: Metadata = {
 };
 
 export default function BlogIndexPage() {
-  const articles = [...blogArticles].sort((a, b) =>
-    (b.updatedAt ?? b.publishedAt ?? '2026-08-12').localeCompare(a.updatedAt ?? a.publishedAt ?? '2026-08-12')
-  );
+  const articles = [...blogArticles]
+    .sort((a, b) =>
+      (b.updatedAt ?? b.publishedAt ?? '2026-08-12').localeCompare(a.updatedAt ?? a.publishedAt ?? '2026-08-12')
+    )
+    .map((article) => ({
+      slug: article.slug,
+      category: article.category,
+      title: article.title,
+      excerpt: article.excerpt,
+      image: article.image,
+      imageAlt: article.imageAlt,
+      readTime: getBlogReadTime(article),
+    }));
 
   return (
     <main className="blog-page">
@@ -70,30 +81,7 @@ export default function BlogIndexPage() {
         </div>
       </section>
 
-      <section className="blog-page__list" aria-label="Усі матеріали">
-        <div className="blog-page__shell blog-page__grid">
-          {articles.map((article, index) => (
-            <article className="blog-index-card" key={article.slug}>
-              <Link href={`/blog/${article.slug}`} className="blog-index-card__media" aria-label={article.title}>
-                <Image
-                  src={article.image}
-                  alt={article.imageAlt}
-                  fill
-                  sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw"
-                  quality={82}
-                />
-                <span>{String(index + 1).padStart(2, '0')}</span>
-              </Link>
-              <div className="blog-index-card__body">
-                <div><span>{article.category}</span><small>{getBlogReadTime(article)}</small></div>
-                <h2><Link href={`/blog/${article.slug}`}>{article.title}</Link></h2>
-                <p>{article.excerpt}</p>
-                <Link href={`/blog/${article.slug}`}><strong>Читати статтю →</strong></Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      <BlogArticleLibrary articles={articles} />
 
       <footer className="reference-footer blog-page__footer">
         <div className="blog-page__shell reference-footer__inner">
