@@ -265,6 +265,15 @@ function responseWithTelegramStatus(response: Response, status: 'sent' | 'failed
   });
 }
 
+function appContainerKey(env: Env) {
+  const explicit = env.APP_CONTAINER_KEY?.trim();
+  if (explicit) {
+    const version = env.CF_VERSION_METADATA?.id?.trim() || 'current';
+    return `${explicit}-${version}`;
+  }
+  return 'zahidalexbur-production-v5';
+}
+
 function isBackendPath(pathname: string) {
   return pathname === '/api' || pathname.startsWith('/api/') || pathname === '/analytics' || pathname.startsWith('/analytics/');
 }
@@ -312,7 +321,7 @@ function responseWithCacheStatus(response: Response, kind: CacheKind, status: 'H
 function responseWithRelease(response: Response, env: Env) {
   const headers = new Headers(response.headers);
   headers.set('x-zab-worker-version', env.CF_VERSION_METADATA?.id ?? 'unknown');
-  headers.set('x-zab-container-generation', env.APP_CONTAINER_KEY ?? 'zahidalexbur-production-v5');
+  headers.set('x-zab-container-generation', appContainerKey(env));
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
@@ -436,7 +445,7 @@ export default {
       // should never see a failed form merely because analytics/database storage
       // is temporarily unavailable.
       const storageRequest = request.clone();
-      const storageContainer = getContainer(env.APP_CONTAINER as any, env.APP_CONTAINER_KEY ?? 'zahidalexbur-production-v5');
+      const storageContainer = getContainer(env.APP_CONTAINER as any, appContainerKey(env));
       ctx.waitUntil(
         storageContainer
           .fetch(edgeRequest(storageRequest, { 'x-zab-telegram-edge': '1' }))
@@ -485,7 +494,7 @@ export default {
     // Next.js container without disturbing the production container instance.
     const container = getContainer(
       env.APP_CONTAINER as any,
-      env.APP_CONTAINER_KEY ?? 'zahidalexbur-production-v5',
+      appContainerKey(env),
     );
     const isLeadSubmission = request.method === 'POST' && url.pathname === '/api/leads';
     const leadRequestCopy = isLeadSubmission ? request.clone() : null;
