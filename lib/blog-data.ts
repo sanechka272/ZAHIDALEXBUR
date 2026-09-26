@@ -16,6 +16,11 @@ export type BlogChecklist = {
   items: string[];
 };
 
+export type BlogSource = {
+  label: string;
+  href: string;
+};
+
 export type BlogArticle = {
   slug: string;
   tag: string;
@@ -38,6 +43,8 @@ export type BlogArticle = {
   updatedAt?: string;
   faq?: BlogFaqItem[];
   checklist?: BlogChecklist;
+  quickAnswer?: string;
+  sources?: BlogSource[];
 };
 
 const existingBlogArticles: BlogArticle[] = [
