@@ -12,7 +12,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'vartist-burinnya-sverdlovyny-lviv',
     tag: 'ЦІНИ',
-    category: 'ЦІНИ',
+    category: 'Ціни',
     title: 'Скільки коштує пробурити свердловину у Львові та області у 2026 році',
     metaTitle: 'Ціна буріння свердловини у Львові 2026 | ZAHIDALEXBUR',
     metaDescription: 'Пояснюємо актуальну логіку ціни буріння свердловини у Львові та області: ставка за метр, труби, фільтр, насос, автоматика, облаштування та підключення.',
@@ -47,7 +47,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'tsina-burinnya-sverdlovyny-za-metr',
     tag: 'ЦІНИ',
-    category: 'ЦІНИ',
+    category: 'Ціни',
     title: 'Ціна буріння свердловини за метр: що насправді входить у ставку',
     metaTitle: 'Ціна буріння свердловини за метр | ZAHIDALEXBUR',
     metaDescription: 'Що означає ціна буріння за погонний метр, які матеріали можуть входити у ставку та як правильно порівнювати пропозиції по Львову.',
@@ -79,7 +79,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'sverdlovyna-pid-kliuch-shcho-vkhodyt-u-vartist',
     tag: 'ЦІНИ',
-    category: 'ЦІНИ',
+    category: 'Ціни',
     title: 'Свердловина під ключ: що входить у вартість готової системи',
     metaTitle: 'Свердловина під ключ: склад і ціна | ZAHIDALEXBUR',
     metaDescription: 'Розбираємо повний склад свердловини під ключ: буріння, обсадка, прокачування, насос, автоматика, кесон або адаптер, траншея та запуск.',
@@ -108,7 +108,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'vid-choho-zalezhyt-tsina-sverdlovyny',
     tag: 'ЦІНИ',
-    category: 'ЦІНИ',
+    category: 'Ціни',
     title: 'Від чого залежить ціна свердловини на воду',
     metaTitle: 'Від чого залежить ціна свердловини | ZAHIDALEXBUR',
     metaDescription: 'Глибина, геологія, обсадка, діаметр, тип фільтра, насос і облаштування: пояснюємо головні фактори вартості свердловини.',
@@ -141,7 +141,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'vartist-sverdlovyny-30-50-70-100-metriv',
     tag: 'ЦІНИ',
-    category: 'ЦІНИ',
+    category: 'Ціни',
     title: 'Свердловина 30, 50, 70 або 100 метрів: як змінюється вартість',
     metaTitle: 'Ціна свердловини 30, 50, 70, 100 м | ZAHIDALEXBUR',
     metaDescription: 'Пояснюємо, як глибина 30, 50, 70 або 100 метрів впливає на ціну та чому однакова глибина не гарантує однаковий кошторис.',
@@ -170,7 +170,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'dodatkovi-vytraty-pislia-burinnya',
     tag: 'ЦІНИ',
-    category: 'ЦІНИ',
+    category: 'Ціни',
     title: 'Які витрати виникають після буріння свердловини',
     metaTitle: 'Витрати після буріння свердловини | ZAHIDALEXBUR',
     metaDescription: 'Насос, автоматика, кесон, адаптер, траншея, аналіз та очищення води: які витрати варто врахувати ще до початку буріння.',
@@ -203,7 +203,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'vartist-oblashtuvannia-sverdlovyny',
     tag: 'ЦІНИ',
-    category: 'ЦІНИ',
+    category: 'Ціни',
     title: 'Скільки коштує облаштування свердловини після буріння',
     metaTitle: 'Вартість облаштування свердловини | ZAHIDALEXBUR',
     metaDescription: 'З чого складається ціна облаштування свердловини: насос, автоматика, кесон або адаптер, магістраль, монтаж і запуск.',
@@ -235,7 +235,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'koshtorys-na-burinnya-sverdlovyny',
     tag: 'ЦІНИ',
-    category: 'ЦІНИ',
+    category: 'Ціни',
     title: 'Що має бути в кошторисі на буріння свердловини',
     metaTitle: 'Кошторис на буріння свердловини: що перевірити',
     metaDescription: 'Чекліст кошторису на свердловину: проходка, труби, фільтр, прокачування, доставка, насос, автоматика, облаштування та гарантія.',
@@ -273,7 +273,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'na-yakii-hlybyni-pytna-voda',
     tag: 'ГЕОЛОГІЯ',
-    category: 'ГЕОЛОГІЯ',
+    category: 'Геологія',
     title: 'На якій глибині знаходиться питна вода',
     metaTitle: 'На якій глибині питна вода у свердловині',
     metaDescription: 'Чому не існує універсальної глибини питної води, як відрізняються водоносні горизонти та чому якість визначають аналізом, а не кількістю метрів.',
@@ -305,7 +305,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'yak-vyznachayut-hlybynu-sverdlovyny',
     tag: 'ГЕОЛОГІЯ',
-    category: 'ГЕОЛОГІЯ',
+    category: 'Геологія',
     title: 'Як визначають глибину свердловини перед бурінням',
     metaTitle: 'Як визначити глибину свердловини до буріння',
     metaDescription: 'Геологічні карти, сусідні свердловини, рельєф і фактична проходка: як формується прогноз глибини до початку робіт.',
@@ -337,7 +337,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'vodonosnyi-horyzont-shcho-tse',
     tag: 'ГЕОЛОГІЯ',
-    category: 'ГЕОЛОГІЯ',
+    category: 'Геологія',
     title: 'Що таке водоносний горизонт і як з нього отримують воду',
     metaTitle: 'Водоносний горизонт: що це простими словами',
     metaDescription: 'Просте пояснення водоносного горизонту, водотривких шарів, живлення підземних вод і вибору горизонту для свердловини.',
@@ -369,7 +369,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'statychnyi-dynamichnyi-riven-vody',
     tag: 'ГЕОЛОГІЯ',
-    category: 'ГЕОЛОГІЯ',
+    category: 'Геологія',
     title: 'Статичний і динамічний рівень води у свердловині: у чому різниця',
     metaTitle: 'Статичний і динамічний рівень свердловини',
     metaDescription: 'Що таке статичний та динамічний рівень води, як вони пов’язані з насосом і чому ці параметри важливі для стабільної роботи свердловини.',
@@ -401,7 +401,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'debit-sverdlovyny-dlia-budynku',
     tag: 'ГЕОЛОГІЯ',
-    category: 'ГЕОЛОГІЯ',
+    category: 'Геологія',
     title: 'Який дебіт свердловини потрібен для приватного будинку',
     metaTitle: 'Дебіт свердловини для приватного будинку',
     metaDescription: 'Що таке дебіт свердловини, як оцінити потребу будинку у воді та чому насос не повинен відбирати більше, ніж може дати горизонт.',
@@ -434,7 +434,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'yak-vidbuvayetsia-burinnya-sverdlovyny',
     tag: 'БУРІННЯ',
-    category: 'БУРІННЯ',
+    category: 'Буріння',
     title: 'Як відбувається буріння свердловини: від підготовки до першої води',
     metaTitle: 'Як відбувається буріння свердловини | Етапи',
     metaDescription: 'Повний процес буріння свердловини: оцінка ділянки, заїзд техніки, проходка, обсадка, прокачування, перевірка та підготовка до облаштування.',
@@ -464,7 +464,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'skilky-chasu-zaimaie-burinnya',
     tag: 'БУРІННЯ',
-    category: 'БУРІННЯ',
+    category: 'Буріння',
     title: 'Скільки часу займає буріння свердловини',
     metaTitle: 'Скільки часу бурять свердловину | ZAHIDALEXBUR',
     metaDescription: 'Від чого залежить тривалість буріння свердловини: глибина, породи, конструкція, під’їзд, обсадка та прокачування.',
@@ -497,7 +497,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'koly-krashche-buryty-sverdlovynu',
     tag: 'БУРІННЯ',
-    category: 'БУРІННЯ',
+    category: 'Буріння',
     title: 'Коли краще бурити свердловину: сезон, погода та стан ділянки',
     metaTitle: 'Коли краще бурити свердловину | Сезонність',
     metaDescription: 'Весна, літо, осінь чи зима: як сезон впливає на буріння свердловини, під’їзд техніки та відновлення ділянки.',
@@ -530,7 +530,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'burinnya-sverdlovyny-vzymku',
     tag: 'БУРІННЯ',
-    category: 'БУРІННЯ',
+    category: 'Буріння',
     title: 'Чи можна бурити свердловину взимку',
     metaTitle: 'Буріння свердловини взимку: чи можна',
     metaDescription: 'Переваги та обмеження зимового буріння: замерзлий ґрунт, доступ техніки, технологічна вода, мороз і подальше облаштування.',
@@ -562,7 +562,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'malohabarytna-chy-velyka-burova',
     tag: 'БУРІННЯ',
-    category: 'БУРІННЯ',
+    category: 'Буріння',
     title: 'Малогабаритна чи велика бурова установка: що вибрати',
     metaTitle: 'Малогабаритна чи велика бурова установка',
     metaDescription: 'Порівнюємо малогабаритні та автомобільні бурові установки: доступ на ділянку, можливості по глибині, продуктивність і обмеження.',
@@ -594,7 +594,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'skilky-mistsia-potribno-dlia-burinnya',
     tag: 'БУРІННЯ',
-    category: 'БУРІННЯ',
+    category: 'Буріння',
     title: 'Скільки місця потрібно для буріння свердловини на ділянці',
     metaTitle: 'Скільки місця потрібно для буріння свердловини',
     metaDescription: 'Який простір потрібен для заїзду бурової установки, роботи з трубами, безпечних відстаней і подальшого сервісу свердловини.',
@@ -631,7 +631,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'de-pravylno-rozmistyty-sverdlovynu',
     tag: 'ПОРАДИ',
-    category: 'ПОРАДИ',
+    category: 'Буріння',
     title: 'Де правильно розмістити свердловину на ділянці',
     metaTitle: 'Де розмістити свердловину на ділянці',
     metaDescription: 'Як вибрати місце для свердловини з урахуванням будинку, септика, комунікацій, під’їзду техніки, рельєфу та майбутнього сервісу.',
@@ -660,7 +660,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'vidstan-vid-sverdlovyny-do-budynku',
     tag: 'ПОРАДИ',
-    category: 'ПОРАДИ',
+    category: 'Буріння',
     title: 'На якій відстані від будинку можна бурити свердловину',
     metaTitle: 'Відстань від свердловини до будинку',
     metaDescription: 'Як вибрати відстань від свердловини до будинку з урахуванням фундаменту, заїзду техніки, водопровідної магістралі та сервісного доступу.',
@@ -692,7 +692,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'vidstan-vid-sverdlovyny-do-septyka',
     tag: 'ПОРАДИ',
-    category: 'ПОРАДИ',
+    category: 'Буріння',
     title: 'Якою має бути відстань від свердловини до септика',
     metaTitle: 'Відстань від свердловини до септика: що врахувати',
     metaDescription: 'Чому не можна ставити свердловину поруч із септиком, які санітарні ризики потрібно врахувати та чому конкретну відстань перевіряють за нормами і умовами ділянки.',
@@ -722,7 +722,7 @@ export const blogWave1Articles: BlogArticle[] = [
   {
     slug: 'odna-sverdlovyna-na-dva-budynky',
     tag: 'ПОРАДИ',
-    category: 'ПОРАДИ',
+    category: 'Облаштування',
     title: 'Чи можна зробити одну свердловину на два будинки',
     metaTitle: 'Одна свердловина на два будинки: чи можна',
     metaDescription: 'Коли однієї свердловини вистачить на два будинки, як рахувати дебіт, насос, автоматику, магістралі та відповідальність за спільну систему.',
