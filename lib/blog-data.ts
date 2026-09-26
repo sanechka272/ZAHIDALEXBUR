@@ -1,3 +1,5 @@
+import { blogWave1Articles } from './blog-wave1';
+
 
 export type BlogSectionBlock = {
   heading: string;
@@ -38,7 +40,7 @@ export type BlogArticle = {
   checklist?: BlogChecklist;
 };
 
-export const blogArticles: BlogArticle[] = [
+const existingBlogArticles: BlogArticle[] = [
   {
     slug: 'hlybyna-sverdlovyny-lvivska-oblast',
     tag: 'ГЕОЛОГІЯ',
@@ -181,6 +183,8 @@ export const blogArticles: BlogArticle[] = [
     relatedSlugs: ['yak-oblashtuvaty-sverdlovynu-pid-kliuch', 'chomu-voda-mozhe-znyknuty-zi-sverdlovyny', 'hlybyna-sverdlovyny-lvivska-oblast'],
   },
 ];
+
+export const blogArticles: BlogArticle[] = [...existingBlogArticles, ...blogWave1Articles];
 
 export const featuredBlogArticle = blogArticles.find((article) => article.featured) ?? blogArticles[0];
 export const landingBlogArticles = blogArticles.filter((article) => !article.featured).slice(0, 6);
