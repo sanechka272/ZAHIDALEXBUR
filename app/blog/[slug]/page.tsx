@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArticleLeadButton, ArticleShareButton } from '@/components/ArticleInteractions';
-import { blogArticles, getBlogArticle, getRelatedBlogArticles } from '@/lib/blog-data';
+import { blogArticles, getBlogArticle, getBlogReadTime, getRelatedBlogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
 
 const SITE_URL = 'https://zahidalexbur.com';
@@ -95,6 +95,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
   const publishedAt = article.publishedAt ?? DEFAULT_ARTICLE_PUBLISHED_AT;
   const publishedLabel = article.publishedLabel ?? DEFAULT_ARTICLE_PUBLISHED_LABEL;
   const modifiedAt = article.updatedAt ?? publishedAt;
+  const readTime = getBlogReadTime(article);
 
   const consultationCopy =
     article.category === 'РЕМОНТ'
@@ -213,7 +214,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
             <div className="article-page__hero-grid">
               <header className="article-page__intro">
-                <span className="article-page__eyebrow">{article.category} · {article.readTime}</span>
+                <span className="article-page__eyebrow">{article.category} · {readTime}</span>
                 <h1>{article.title}</h1>
                 <p>{article.intro}</p>
                 {article.quickAnswer ? (
@@ -233,7 +234,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                   <Image src={articleVisual} alt={article.imageAlt} fill sizes="(max-width: 900px) 100vw, 58vw" quality={82} preload fetchPriority="high" />
                 </div>
                 <div className="article-page__media-tools">
-                  <span><ClockIcon />{article.readTime}</span>
+                  <span><ClockIcon />{readTime}</span>
                   <ArticleShareButton title={article.title} />
                 </div>
               </div>
@@ -337,7 +338,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                       <Image src={relatedArticle.image} alt={relatedArticle.imageAlt} fill sizes="110px" quality={82} />
                     </Link>
                     <div className="article-related__copy">
-                      <span>{relatedArticle.category} · {relatedArticle.readTime}</span>
+                      <span>{relatedArticle.category} · {getBlogReadTime(relatedArticle)}</span>
                       <h3><Link href={`/blog/${relatedArticle.slug}`}>{relatedArticle.title}</Link></h3>
                     </div>
                     <Link className="article-related__arrow" href={`/blog/${relatedArticle.slug}`} aria-label={`Читати ${relatedArticle.title}`}>→</Link>
