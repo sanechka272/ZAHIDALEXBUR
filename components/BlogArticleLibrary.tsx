@@ -74,9 +74,9 @@ export function BlogArticleLibrary({ articles }: { articles: BlogLibraryArticle[
 
           <label className="blog-kb__search">
             <SearchIcon />
-            <span className="sr-only">Пошук статей</span>
             <input
               type="search"
+              aria-label="Пошук статей"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Пошук статей..."
