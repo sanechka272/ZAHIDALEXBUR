@@ -16,7 +16,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'chy-mozhna-pyty-vodu-zi-sverdlovyny-bez-analizu',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Чи можна пити воду зі свердловини без аналізу',
     metaTitle: 'Чи можна пити воду зі свердловини без аналізу',
     metaDescription: 'Чиста на вигляд вода зі свердловини не гарантує безпечний склад. Пояснюємо, що може бути невидимим і коли робити лабораторний аналіз.',
@@ -46,7 +46,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'yakyi-analiz-vody-pislia-burinnya',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Який аналіз води зробити після буріння свердловини',
     metaTitle: 'Аналіз води після буріння свердловини: що перевірити',
     metaDescription: 'Які показники перевіряти у воді з нової свердловини, коли брати пробу, чому важлива правильна тара та як не переплатити за випадковий пакет.',
@@ -81,7 +81,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'chomu-voda-pakhne-tukhlymy-yaitsiamy',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Чому вода зі свердловини пахне тухлими яйцями',
     metaTitle: 'Запах тухлих яєць у воді зі свердловини',
     metaDescription: 'Запах сірководню у воді зі свердловини: звідки він береться, чому може з’являтися лише в гарячій воді та як правильно шукати причину.',
@@ -111,7 +111,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'zalizo-u-vodi-zi-sverdlovyny',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Залізо у воді зі свердловини: чому вода може бути прозорою, а потім стати рудою',
     metaTitle: 'Залізо у воді зі свердловини: ознаки та очищення',
     metaDescription: 'Руде забарвлення, металевий присмак і плями на сантехніці: як проявляється залізо у свердловинній воді та чому потрібен аналіз перед фільтром.',
@@ -142,7 +142,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'marhanets-u-vodi-zi-sverdlovyny',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Марганець у воді зі свердловини: чому з’являється чорний наліт',
     metaTitle: 'Марганець у воді зі свердловини: ознаки',
     metaDescription: 'Чорний або темний осад у воді, плями на сантехніці та проблеми з фільтрами: як проявляється марганець і чому його аналізують разом із залізом.',
@@ -172,7 +172,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'nitrati-u-vodi-zi-sverdlovyny',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Нітрати у воді зі свердловини: проблема, яку не видно у склянці',
     metaTitle: 'Нітрати у воді зі свердловини: аналіз і причини',
     metaDescription: 'Звідки нітрати потрапляють у приватні свердловини, чому їх не визначити на смак і коли аналіз особливо важливий.',
@@ -202,7 +202,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'bakterii-u-vodi-zi-sverdlovyny',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Бактерії у воді зі свердловини: як вони потрапляють туди, де «вода з-під землі»',
     metaTitle: 'Бактерії у воді зі свердловини: причини і аналіз',
     metaDescription: 'Мікробіологія приватної свердловини: негерметичне гирло, підтоплення, септик, ремонт та правильний відбір проби.',
@@ -232,7 +232,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'bilyi-osad-u-vodi',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Білий осад у воді зі свердловини: чому він з’являється в чайнику і на кранах',
     metaTitle: 'Білий осад у воді зі свердловини: причини',
     metaDescription: 'Білий наліт, накип та осад після кип’ятіння: як жорсткість і мінеральний склад води впливають на сантехніку та техніку.',
@@ -262,7 +262,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'chornyi-osad-u-vodi',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Чорний осад у воді зі свердловини: марганець, труби чи старий фільтр',
     metaTitle: 'Чорний осад у воді зі свердловини: причини',
     metaDescription: 'Чорні пластівці або темний наліт у воді: як відрізнити марганець від відкладень у трубах, фільтрах та обладнанні.',
@@ -292,7 +292,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'zhorstka-voda-zi-sverdlovyny',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Жорстка вода зі свердловини: коли це просто накип, а коли вже проблема для техніки',
     metaTitle: 'Жорстка вода зі свердловини: ознаки і рішення',
     metaDescription: 'Накип, плями на кранах, слабке піноутворення та бойлер: як проявляється жорсткість води і коли потрібне пом’якшення.',
@@ -322,7 +322,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'chy-potriben-filtr-dlia-vody-zi-sverdlovyny',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Чи потрібен фільтр для води зі свердловини, якщо вона виглядає чистою',
     metaTitle: 'Чи потрібен фільтр для води зі свердловини',
     metaDescription: 'Коли свердловинній воді потрібна механічна фільтрація, знезалізнення, пом’якшення або питний фільтр, а коли зайве обладнання лише створює витрати.',
@@ -353,7 +353,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'yak-vybraty-systemu-ochyshchennia-vody',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Як вибрати систему очищення води зі свердловини і не купити зайвого',
     metaTitle: 'Система очищення води зі свердловини: як вибрати',
     metaDescription: 'Покроковий підбір водоочищення: аналіз води, пікова витрата, залізо, марганець, жорсткість, питна лінія, сервіс і бюджет.',
@@ -388,7 +388,7 @@ export const blogWave2WaterArticles: BlogArticle[] = [
   {
     slug: 'koly-povtoriuvaty-analiz-vody',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Як часто перевіряти воду зі свердловини і коли не чекати планового аналізу',
     metaTitle: 'Як часто робити аналіз води зі свердловини',
     metaDescription: 'Коли повторювати аналіз приватної свердловини: щорічний контроль, ремонт, підтоплення, зміна запаху, кольору або смаку.',
