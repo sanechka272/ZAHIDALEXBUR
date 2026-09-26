@@ -7,8 +7,8 @@ import { blogArticles, getBlogArticle, getRelatedBlogArticles } from '@/lib/blog
 import { assets, contact } from '@/lib/site-data';
 
 const SITE_URL = 'https://zahidalexbur.com';
-const ARTICLE_PUBLISHED_AT = '2026-08-12';
-const ARTICLE_PUBLISHED_LABEL = '12 серпня 2026';
+const DEFAULT_ARTICLE_PUBLISHED_AT = '2026-08-12';
+const DEFAULT_ARTICLE_PUBLISHED_LABEL = '12 серпня 2026';
 export const dynamic = 'force-static';
 export const revalidate = false;
 export const dynamicParams = false;
@@ -24,10 +24,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const canonical = `/blog/${article.slug}`;
   const articleVisualUrl = article.image;
+  const publishedAt = article.publishedAt ?? DEFAULT_ARTICLE_PUBLISHED_AT;
+  const modifiedAt = article.updatedAt ?? publishedAt;
 
   return {
     title: article.metaTitle,
     description: article.metaDescription,
+    keywords: article.keywords,
+    authors: [{ name: 'ZAHIDALEXBUR', url: '/' }],
     alternates: { canonical },
     openGraph: {
       type: 'article',
@@ -36,7 +40,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: article.metaTitle,
       description: article.metaDescription,
       images: [{ url: articleVisualUrl, alt: article.imageAlt }],
-      publishedTime: ARTICLE_PUBLISHED_AT,
+      publishedTime: publishedAt,
+      modifiedTime: modifiedAt,
     },
     twitter: {
       card: 'summary_large_image',
@@ -87,6 +92,10 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
   const article = getBlogArticle(slug);
   if (!article) notFound();
 
+  const publishedAt = article.publishedAt ?? DEFAULT_ARTICLE_PUBLISHED_AT;
+  const publishedLabel = article.publishedLabel ?? DEFAULT_ARTICLE_PUBLISHED_LABEL;
+  const modifiedAt = article.updatedAt ?? publishedAt;
+
   const articleIndex = blogArticles.findIndex((candidate) => candidate.slug === article.slug);
   const previousArticle = articleIndex > 0 ? blogArticles[articleIndex - 1] : null;
   const nextArticle = articleIndex >= 0 && articleIndex < blogArticles.length - 1 ? blogArticles[articleIndex + 1] : null;
@@ -103,8 +112,8 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
         headline: article.title,
         description: article.metaDescription,
         image: [`${SITE_URL}${articleVisualUrl}`],
-        datePublished: ARTICLE_PUBLISHED_AT,
-        dateModified: ARTICLE_PUBLISHED_AT,
+        datePublished: publishedAt,
+        dateModified: modifiedAt,
         inLanguage: 'uk-UA',
         mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
         author: { '@type': 'Organization', name: 'ZAHIDALEXBUR', url: SITE_URL },
@@ -124,6 +133,17 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
           { '@type': 'ListItem', position: 3, name: article.title, item: articleUrl },
         ],
       },
+      ...(article.faq?.length
+        ? [{
+            '@type': 'FAQPage',
+            '@id': `${articleUrl}#faq`,
+            mainEntity: article.faq.map((item) => ({
+              '@type': 'Question',
+              name: item.question,
+              acceptedAnswer: { '@type': 'Answer', text: item.answer },
+            })),
+          }]
+        : []),
     ],
   };
 
@@ -162,7 +182,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                 <p>{article.intro}</p>
                 <div className="article-page__author">
                   <span className="article-page__author-mark" aria-hidden="true">ZB</span>
-                  <div><strong>Команда ZAHIDALEXBUR</strong><time dateTime={ARTICLE_PUBLISHED_AT}>{ARTICLE_PUBLISHED_LABEL}</time></div>
+                  <div><strong>Команда ZAHIDALEXBUR</strong><time dateTime={publishedAt}>{publishedLabel}</time></div>
                 </div>
               </header>
 
@@ -207,22 +227,34 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                   <span>0{index + 1}</span>
                   <h2>{section.heading}</h2>
                   <p>{section.body}</p>
-                  {index === 2 && (
+                  {index === 1 && article.checklist && (
                     <div className="article-info-card">
                       <span className="article-info-card__icon"><ChecklistIcon /></span>
                       <div>
-                        <strong>Що бажано підготувати:</strong>
+                        <strong>{article.checklist.title}</strong>
                         <ul>
-                          <li>Точна адреса або геолокація</li>
-                          <li>Тип об’єкта та сценарій використання води</li>
-                          <li>Бажана продуктивність системи</li>
-                          <li>Інформація про доступ техніки до місця робіт</li>
+                          {article.checklist.items.map((item) => <li key={item}>{item}</li>)}
                         </ul>
                       </div>
                     </div>
                   )}
                 </section>
               ))}
+
+              {article.faq?.length ? (
+                <section id="faq" className="article-faq">
+                  <span>FAQ</span>
+                  <h2>Поширені питання</h2>
+                  <div className="article-faq__list">
+                    {article.faq.map((item) => (
+                      <div className="article-faq__item" key={item.question}>
+                        <h3>{item.question}</h3>
+                        <p>{item.answer}</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
 
               <nav className="article-page__article-nav" aria-label="Навігація між статтями">
                 <div>
