@@ -30,6 +30,10 @@ export const metadata: Metadata = {
 };
 
 export default function BlogIndexPage() {
+  const articles = [...blogArticles].sort((a, b) =>
+    (b.updatedAt ?? b.publishedAt ?? '2026-08-12').localeCompare(a.updatedAt ?? a.publishedAt ?? '2026-08-12')
+  );
+
   return (
     <main className="blog-page">
       <header className="blog-page__header">
@@ -68,7 +72,7 @@ export default function BlogIndexPage() {
 
       <section className="blog-page__list" aria-label="Усі матеріали">
         <div className="blog-page__shell blog-page__grid">
-          {blogArticles.map((article, index) => (
+          {articles.map((article, index) => (
             <article className="blog-index-card" key={article.slug}>
               <Link href={`/blog/${article.slug}`} className="blog-index-card__media" aria-label={article.title}>
                 <Image
