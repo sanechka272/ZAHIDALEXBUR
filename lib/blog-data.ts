@@ -1,4 +1,6 @@
 import { blogWave1Articles } from './blog-wave1';
+import { blogWave2ProblemArticles } from './blog-wave2-problems';
+import { blogWave2WaterArticles } from './blog-wave2-water';
 
 
 export type BlogSectionBlock = {
@@ -191,7 +193,7 @@ const existingBlogArticles: BlogArticle[] = [
   },
 ];
 
-export const blogArticles: BlogArticle[] = [...existingBlogArticles, ...blogWave1Articles];
+export const blogArticles: BlogArticle[] = [...existingBlogArticles, ...blogWave2ProblemArticles, ...blogWave2WaterArticles, ...blogWave1Articles];
 
 export const featuredBlogArticle = blogArticles.find((article) => article.featured) ?? blogArticles[0];
 export const landingBlogArticles = blogArticles.filter((article) => !article.featured).slice(0, 6);
