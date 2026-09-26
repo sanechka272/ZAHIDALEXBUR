@@ -96,6 +96,42 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
   const publishedLabel = article.publishedLabel ?? DEFAULT_ARTICLE_PUBLISHED_LABEL;
   const modifiedAt = article.updatedAt ?? publishedAt;
 
+  const consultationCopy =
+    article.category === 'РЕМОНТ'
+      ? 'Опишіть симптоми — допоможемо зрозуміти, що перевіряти у свердловині та обладнанні.'
+      : article.category === 'ВОДА'
+        ? 'Маєте аналіз води або дивний запах, колір чи осад? Допоможемо розібратися, з чого почати.'
+        : article.category === 'ЦІНИ'
+          ? 'Передайте адресу або геолокацію — підкажемо, які параметри потрібні для реалістичного розрахунку.'
+          : 'Допоможемо оцінити умови на ділянці та підібрати технічне рішення без зайвих робіт.';
+
+  const finalCtaTitle =
+    article.category === 'РЕМОНТ'
+      ? 'Спочатку діагностика — потім ремонт'
+      : article.category === 'ВОДА'
+        ? 'Розберемо ваш аналіз води'
+        : article.category === 'ЦІНИ'
+          ? 'Порахуємо під вашу ділянку'
+          : 'Допоможемо знайти правильне рішення';
+
+  const finalCtaText =
+    article.category === 'РЕМОНТ'
+      ? 'Розкажіть, що змінилося: тиск, дебіт, колір води, робота насоса. Це допоможе не міняти справне обладнання навмання.'
+      : article.category === 'ВОДА'
+        ? 'Надішліть результати лабораторії або опишіть проблему — підкажемо, які показники важливі й що перевіряти далі.'
+        : article.category === 'ЦІНИ'
+          ? 'Адреса, бажане водоспоживання і умови під’їзду дають набагато точніший бюджет, ніж універсальна ціна за метр.'
+          : 'Передайте адресу або геолокацію — зорієнтуємо по можливій глибині, конструкції та наступних кроках.';
+
+  const finalCtaButton =
+    article.category === 'РЕМОНТ'
+      ? 'Обговорити проблему'
+      : article.category === 'ВОДА'
+        ? 'Розібрати аналіз'
+        : article.category === 'ЦІНИ'
+          ? 'Отримати розрахунок'
+          : 'Обговорити ділянку';
+
   const articleIndex = blogArticles.findIndex((candidate) => candidate.slug === article.slug);
   const previousArticle = articleIndex > 0 ? blogArticles[articleIndex - 1] : null;
   const nextArticle = articleIndex >= 0 && articleIndex < blogArticles.length - 1 ? blogArticles[articleIndex + 1] : null;
@@ -222,7 +258,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
               <div className="article-consultation">
                 <span className="article-consultation__icon"><ConsultationIcon /></span>
                 <h2>Потрібна консультація?</h2>
-                <p>Допоможемо оцінити можливість буріння на вашій ділянці.</p>
+                <p>{consultationCopy}</p>
                 <ArticleLeadButton className="article-consultation__button">Зв’язатися з нами</ArticleLeadButton>
               </div>
             </aside>
@@ -232,7 +268,9 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                 <section key={section.heading} id={`section-${String(index + 1).padStart(2, '0')}`}>
                   <span>0{index + 1}</span>
                   <h2>{section.heading}</h2>
-                  <p>{section.body}</p>
+                  {section.body.split('\n\n').map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
                   {index === 1 && article.checklist && (
                     <div className="article-info-card">
                       <span className="article-info-card__icon"><ChecklistIcon /></span>
@@ -312,8 +350,8 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
         <section className="article-final-cta" aria-label="Консультація">
           <div className="blog-page__shell article-final-cta__grid">
-            <div><span>МАЄТЕ ПИТАННЯ?</span><h2>Допоможемо знайти<br />правильне рішення</h2></div>
-            <div className="article-final-cta__action"><p>Передайте адресу або геолокацію — зорієнтуємо по глибині та типу свердловини.</p><ArticleLeadButton className="article-final-cta__button">Обговорити ділянку</ArticleLeadButton></div>
+            <div><span>МАЄТЕ ПИТАННЯ?</span><h2>{finalCtaTitle}</h2></div>
+            <div className="article-final-cta__action"><p>{finalCtaText}</p><ArticleLeadButton className="article-final-cta__button">{finalCtaButton}</ArticleLeadButton></div>
             <div className="article-final-cta__label">НАДІЙНА<br />ВОДА —<br />РЕАЛЬНА<br />ПЕРЕВАГА</div>
           </div>
         </section>
