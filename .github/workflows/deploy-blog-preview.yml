@@ -2,7 +2,7 @@ name: Deploy blog feature preview
 
 on:
   push:
-    branches: [feature/blog-knowledge-base-seo]
+    branches: [feature/blog-knowledge-base-seo, feature/blog-seo-expansion]
   workflow_dispatch:
 
 permissions:
