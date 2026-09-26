@@ -78,7 +78,7 @@ export default function BlogIndexPage() {
                   sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw"
                   quality={82}
                 />
-                <span>0{index + 1}</span>
+                <span>{String(index + 1).padStart(2, '0')}</span>
               </Link>
               <div className="blog-index-card__body">
                 <div><span>{article.category}</span><small>{article.readTime}</small></div>
