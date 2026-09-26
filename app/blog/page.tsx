@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { blogArticles } from '@/lib/blog-data';
+import { blogArticles, getBlogReadTime } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
 
 export const dynamic = 'force-static';
@@ -85,7 +85,7 @@ export default function BlogIndexPage() {
                 <span>{String(index + 1).padStart(2, '0')}</span>
               </Link>
               <div className="blog-index-card__body">
-                <div><span>{article.category}</span><small>{article.readTime}</small></div>
+                <div><span>{article.category}</span><small>{getBlogReadTime(article)}</small></div>
                 <h2><Link href={`/blog/${article.slug}`}>{article.title}</Link></h2>
                 <p>{article.excerpt}</p>
                 <Link href={`/blog/${article.slug}`}><strong>Читати статтю →</strong></Link>
