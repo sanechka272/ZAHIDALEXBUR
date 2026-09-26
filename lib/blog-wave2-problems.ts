@@ -11,7 +11,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'chomu-zi-sverdlovyny-yde-pisok',
     tag: 'РЕМОНТ',
-    category: 'РЕМОНТ',
+    category: 'Ремонт',
     title: 'Чому зі свердловини йде пісок і що з цим робити',
     metaTitle: 'Чому зі свердловини йде пісок: причини | ZAHIDALEXBUR',
     metaDescription: 'Пісок у воді зі свердловини: як відрізнити залишки після буріння від проблеми фільтра, обсадки або надто потужного насоса.',
@@ -41,7 +41,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'chomu-voda-zi-sverdlovyny-mutna',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Чому вода зі свердловини мутна: 6 сценаріїв, які легко переплутати',
     metaTitle: 'Чому вода зі свердловини мутна: причини',
     metaDescription: 'Мутна вода зі свердловини після буріння, дощу або запуску насоса: як відрізнити повітря, пісок, мул та проблеми з конструкцією.',
@@ -74,7 +74,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'chomu-voda-zi-sverdlovyny-zhovta',
     tag: 'ВОДА',
-    category: 'ВОДА',
+    category: 'Вода',
     title: 'Чому вода зі свердловини жовта — і чому колір інколи з’являється не одразу',
     metaTitle: 'Жовта вода зі свердловини: причини',
     metaDescription: 'Жовта вода зі свердловини: залізо, органічні речовини, осад або проблеми після ремонту. Як відрізнити сценарії та що перевірити.',
@@ -107,7 +107,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'chomu-vpav-debit-sverdlovyny',
     tag: 'РЕМОНТ',
-    category: 'РЕМОНТ',
+    category: 'Ремонт',
     title: 'Чому впав дебіт свердловини: не поспішайте звинувачувати водоносний горизонт',
     metaTitle: 'Чому впав дебіт свердловини: причини',
     metaDescription: 'Зменшився дебіт свердловини: як відрізнити сезонне падіння рівня від замулення, забитого фільтра, проблем насоса або надмірного відбору.',
@@ -137,7 +137,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'chomu-vpav-tysk-vody-zi-sverdlovyny',
     tag: 'РЕМОНТ',
-    category: 'РЕМОНТ',
+    category: 'Ремонт',
     title: 'Чому впав тиск води зі свердловини: від простого картриджа до проблем насоса',
     metaTitle: 'Впав тиск води зі свердловини: що перевірити',
     metaDescription: 'Слабкий напір зі свердловини: забиті фільтри, реле тиску, гідроакумулятор, витік, зношений насос або падіння рівня води.',
@@ -166,7 +166,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'nasos-pratsiuie-ale-voda-ne-yde',
     tag: 'РЕМОНТ',
-    category: 'РЕМОНТ',
+    category: 'Ремонт',
     title: 'Насос працює, але вода не йде: що перевіряти по черзі',
     metaTitle: 'Насос працює, але вода не йде зі свердловини',
     metaDescription: 'Насос гуде або працює, але води немає: сухий хід, зворотний клапан, розрив труби, низький рівень, засмічення або несправність насоса.',
@@ -195,7 +195,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'nasos-chasto-vmykaietsia-vymykaietsia',
     tag: 'РЕМОНТ',
-    category: 'РЕМОНТ',
+    category: 'Ремонт',
     title: 'Насос часто вмикається і вимикається: чому це небезпечно',
     metaTitle: 'Насос часто вмикається і вимикається: причини',
     metaDescription: 'Часті старти свердловинного насоса: гідроакумулятор, реле тиску, витік, зворотний клапан або неправильні налаштування.',
@@ -224,7 +224,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'chomu-sverdlovyna-zamuliuietsia',
     tag: 'РЕМОНТ',
-    category: 'РЕМОНТ',
+    category: 'Ремонт',
     title: 'Чому свердловина замулюється і як це виглядає на практиці',
     metaTitle: 'Чому свердловина замулюється: ознаки і причини',
     metaDescription: 'Замулення свердловини: падіння дебіту, осад, довгий запуск після простою, причини та способи відновлення.',
@@ -253,7 +253,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'koly-potribno-chystyty-sverdlovynu',
     tag: 'РЕМОНТ',
-    category: 'РЕМОНТ',
+    category: 'Обслуговування',
     title: 'Коли потрібно чистити свердловину — і коли чистка взагалі не допоможе',
     metaTitle: 'Коли чистити свердловину: ознаки і діагностика',
     metaDescription: 'Ознаки, що свердловині потрібна чистка: осад, падіння дебіту, мутність, довге відновлення. Коли проблема насправді в насосі або конструкції.',
@@ -282,7 +282,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'yak-vidnovyty-staru-sverdlovynu',
     tag: 'РЕМОНТ',
-    category: 'РЕМОНТ',
+    category: 'Ремонт',
     title: 'Чи можна відновити стару свердловину замість буріння нової',
     metaTitle: 'Як відновити стару свердловину: коли це має сенс',
     metaDescription: 'Коли стару свердловину варто чистити або ремонтувати, а коли економічніше бурити нову: конструкція, дебіт, обсадка, насос та якість води.',
@@ -311,7 +311,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'povitria-u-vodoprovodi-zi-sverdlovyny',
     tag: 'РЕМОНТ',
-    category: 'РЕМОНТ',
+    category: 'Ремонт',
     title: 'Звідки береться повітря у водопроводі зі свердловини',
     metaTitle: 'Повітря у воді зі свердловини: причини',
     metaDescription: 'Кран плюється повітрям, вода йде ривками або біла від бульбашок: низький рівень, підсмоктування, клапан, труба або роботи з системою.',
@@ -340,7 +340,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'sverdlovyna-zamerzla-shcho-robyty',
     tag: 'РЕМОНТ',
-    category: 'РЕМОНТ',
+    category: 'Ремонт',
     title: 'Замерзла свердловина або труба до будинку: що робити без паніки',
     metaTitle: 'Замерзла свердловина: що робити',
     metaDescription: 'Немає води після морозу: як відрізнити замерзлу магістраль, вузол автоматики чи гирло свердловини і чого не робити при відігріванні.',
@@ -369,7 +369,7 @@ export const blogWave2ProblemArticles: BlogArticle[] = [
   {
     slug: 'chomu-nasos-ne-vymykaietsia',
     tag: 'РЕМОНТ',
-    category: 'РЕМОНТ',
+    category: 'Ремонт',
     title: 'Насос не вимикається і працює безперервно: 5 причин',
     metaTitle: 'Насос не вимикається: причини у системі свердловини',
     metaDescription: 'Свердловинний насос працює без зупинки: витік, слабкий насос, неправильне реле, падіння рівня, забитий фільтр або несправний клапан.',
