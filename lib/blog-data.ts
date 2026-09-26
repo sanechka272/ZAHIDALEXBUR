@@ -27,7 +27,7 @@ export type BlogSource = {
 export type BlogArticle = {
   slug: string;
   tag: string;
-  category: 'ГЕОЛОГІЯ' | 'БУРІННЯ' | 'ОБЛАШТУВАННЯ' | 'ВОДА' | 'ЦІНИ' | 'ПОРАДИ' | 'РЕМОНТ';
+  category: 'Буріння' | 'Геологія' | 'Ціни' | 'Вода' | 'Облаштування' | 'Ремонт' | 'Обслуговування';
   title: string;
   metaTitle: string;
   metaDescription: string;
