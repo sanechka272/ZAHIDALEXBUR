@@ -4,6 +4,16 @@ export type BlogSectionBlock = {
   body: string;
 };
 
+export type BlogFaqItem = {
+  question: string;
+  answer: string;
+};
+
+export type BlogChecklist = {
+  title: string;
+  items: string[];
+};
+
 export type BlogArticle = {
   slug: string;
   tag: string;
@@ -20,6 +30,12 @@ export type BlogArticle = {
   relatedSlugs: string[];
   location?: string;
   featured?: boolean;
+  keywords?: string[];
+  publishedAt?: string;
+  publishedLabel?: string;
+  updatedAt?: string;
+  faq?: BlogFaqItem[];
+  checklist?: BlogChecklist;
 };
 
 export const blogArticles: BlogArticle[] = [
