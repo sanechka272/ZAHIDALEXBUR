@@ -2,6 +2,7 @@ import { coreBlogArticles } from './blog-core';
 import { blogWave1Articles } from './blog-wave1';
 import { blogWave2ProblemArticles } from './blog-wave2-problems';
 import { blogWave2WaterArticles } from './blog-wave2-water';
+import { blogWave3Articles } from './blog-wave3-maintenance';
 
 export type BlogSectionBlock = {
   heading: string;
@@ -53,6 +54,7 @@ export const blogArticles: BlogArticle[] = [
   ...coreBlogArticles,
   ...blogWave2ProblemArticles,
   ...blogWave2WaterArticles,
+  ...blogWave3Articles,
   ...blogWave1Articles,
 ];
 
