@@ -180,6 +180,12 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                 <span className="article-page__eyebrow">{article.category} · {article.readTime}</span>
                 <h1>{article.title}</h1>
                 <p>{article.intro}</p>
+                {article.quickAnswer ? (
+                  <div className="article-quick-answer">
+                    <span>КОРОТКО</span>
+                    <p>{article.quickAnswer}</p>
+                  </div>
+                ) : null}
                 <div className="article-page__author">
                   <span className="article-page__author-mark" aria-hidden="true">ZB</span>
                   <div><strong>Команда ZAHIDALEXBUR</strong><time dateTime={publishedAt}>{publishedLabel}</time></div>
@@ -253,6 +259,20 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                       </div>
                     ))}
                   </div>
+                </section>
+              ) : null}
+
+              {article.sources?.length ? (
+                <section className="article-sources" aria-labelledby="article-sources-title">
+                  <span>ДЖЕРЕЛА</span>
+                  <h2 id="article-sources-title">Джерела та норми</h2>
+                  <ul>
+                    {article.sources.map((source) => (
+                      <li key={source.href}>
+                        <a href={source.href} target="_blank" rel="noreferrer">{source.label}</a>
+                      </li>
+                    ))}
+                  </ul>
                 </section>
               ) : null}
 
