@@ -59,6 +59,24 @@ export const blogArticles: BlogArticle[] = [
 export const featuredBlogArticle = blogArticles.find((article) => article.featured) ?? blogArticles[0];
 export const landingBlogArticles = blogArticles.filter((article) => !article.featured).slice(0, 6);
 
+export function getBlogReadTime(article: BlogArticle) {
+  const text = [
+    article.intro,
+    article.quickAnswer ?? '',
+    ...article.sections.map((section) => `${section.heading} ${section.body}`),
+    ...(article.faq ?? []).map((item) => `${item.question} ${item.answer}`),
+  ].join(' ');
+
+  const words = text
+    .replace(/[^\p{L}\p{N}’'-]+/gu, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
+
+  const minutes = Math.max(2, Math.ceil(words / 180));
+  return `${minutes} хв читання`;
+}
+
 export function getBlogArticle(slug: string) {
   return blogArticles.find((article) => article.slug === slug);
 }
