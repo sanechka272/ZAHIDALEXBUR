@@ -13,3 +13,9 @@ test('lead form uses application phone validation instead of browser-native patt
   assert.match(leadForm, /onInvalid=\{\(event\) => event\.preventDefault\(\)\}/);
   assert.match(leadForm, /formNoValidate/);
 });
+
+
+test('successful lead submission redirects to the dedicated thank-you page', () => {
+  assert.match(leadForm, /if \(!response\.ok\) throw new Error\('lead_submit_failed'\)/);
+  assert.match(leadForm, /window\.location\.assign\('\/thank-you-page'\)/);
+});

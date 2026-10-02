@@ -50,6 +50,7 @@ export function LeadForm() {
         detail: { leadId: result.id ?? null, pagePath: payload.originatingPage },
       }));
       setStatus('sent');
+      window.location.assign('/thank-you-page');
     } catch {
       setStatus('error');
     }
