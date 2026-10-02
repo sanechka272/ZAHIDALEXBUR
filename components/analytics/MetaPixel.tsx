@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-const META_PIXEL_ID = '1629168988924211';
+const META_PIXEL_ID = '1622095639354300';
 
 type MetaPixelFn = ((...args: unknown[]) => void) & {
   callMethod?: (...args: unknown[]) => void;
