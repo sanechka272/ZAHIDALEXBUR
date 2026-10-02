@@ -64,3 +64,25 @@ jobs:
             echo "Telegram runtime is not ready."
             exit 1
           fi
+
+
+      - name: Verify real lead delivery end-to-end
+        if: steps.cloudflare.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          started_at_ms="$(( $(date +%s%3N) - 5000 ))"
+          payload="$(printf '{"name":"DEPLOY E2E TEST","phone":"+380000000000","location":"Cloudflare CI","originatingPage":"/deploy-e2e","honeypot":"","startedAtMs":%s}' "$started_at_ms")"
+          http_code="$(curl -sS --retry 3 --retry-delay 2 --retry-all-errors             -D /tmp/lead-headers             -o /tmp/lead-body             -w '%{http_code}'             -X POST 'https://zahidalexbur.com/api/leads'             -H 'content-type: application/json'             -H 'origin: https://zahidalexbur.com'             --data "$payload")"
+          echo "Lead endpoint returned HTTP $http_code"
+          cat /tmp/lead-headers
+          cat /tmp/lead-body
+          echo
+          if [[ "$http_code" != 2* ]]; then
+            echo "Production lead delivery failed."
+            exit 1
+          fi
+          if ! grep -qi '^x-zab-telegram-status: sent' /tmp/lead-headers; then
+            echo "Lead was accepted but Telegram send confirmation header is missing."
+            exit 1
+          fi
