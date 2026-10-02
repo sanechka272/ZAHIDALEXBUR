@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 const META_PIXEL_ID = '1622095639354300';
 
@@ -54,6 +55,8 @@ function ensureMetaPixel() {
 }
 
 export function MetaPixel() {
+  const pathname = usePathname();
+
   useEffect(() => {
     if (window.location.pathname.startsWith('/analytics')) return;
 
@@ -77,6 +80,12 @@ export function MetaPixel() {
     window.addEventListener('zab:lead_submit', onLead);
     return () => window.removeEventListener('zab:lead_submit', onLead);
   }, []);
+
+  useEffect(() => {
+    if (pathname.startsWith('/analytics')) return;
+    ensureMetaPixel();
+    window.fbq?.('track', 'PageView');
+  }, [pathname]);
 
   return null;
 }
