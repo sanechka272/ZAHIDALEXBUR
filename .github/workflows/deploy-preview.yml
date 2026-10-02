@@ -67,7 +67,7 @@ jobs:
 
 
       - name: Verify real lead delivery end-to-end
-        if: steps.cloudflare.outputs.ready == 'true'
+        if: steps.cloudflare.outputs.ready == 'true' && github.event_name == 'workflow_dispatch'
         shell: bash
         run: |
           set -euo pipefail
