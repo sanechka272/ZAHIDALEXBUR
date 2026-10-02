@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
-const META_PIXEL_ID = '1622095639354300';
+const META_PIXEL_ID = '1629168988924211';
 
 type MetaPixelFn = ((...args: unknown[]) => void) & {
   callMethod?: (...args: unknown[]) => void;
