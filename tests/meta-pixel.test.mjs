@@ -7,9 +7,10 @@ const leadForm = await readFile(new URL('../components/LeadForm.tsx', import.met
 const layout = await readFile(new URL('../app/layout.tsx', import.meta.url), 'utf8');
 
 test('Meta Pixel is mounted globally with the configured pixel id', () => {
-  assert.match(pixel, /1629168988924211/);
+  assert.match(pixel, /1622095639354300/);
   assert.match(pixel, /fbevents\.js/);
   assert.match(pixel, /fbq\?\.\('init', META_PIXEL_ID\)/);
+  assert.match(pixel, /fbq\?\.\('track', 'PageView'\)/);
   assert.match(layout, /<MetaPixel \/>/);
 });
 
