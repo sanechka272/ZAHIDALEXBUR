@@ -38,7 +38,7 @@ export function LeadForm() {
     };
 
     try {
-      const response = await fetch('/api/leads', {
+      const response = await fetch('/lead-submit', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         credentials: 'same-origin',

@@ -221,6 +221,33 @@ async function sendLeadTelegramAtEdge(
   return telegramApiRequest(env, 'sendMessage', body);
 }
 
+
+async function sendLeadTelegramDirectAtEdge(
+  env: Env,
+  lead: EdgeLeadPayload,
+  leadId: string,
+): Promise<TelegramApiResult> {
+  const chatId = env.TELEGRAM_CHAT_ID?.trim();
+  if (!chatId) return { ok: false, status: 500, description: 'chat_id_missing' };
+
+  const lines = [
+    '💧 Нова заявка ZAHIDALEXBUR',
+    '',
+    lead.name ? 'Імʼя: ' + lead.name : null,
+    'Телефон: ' + lead.phone,
+    lead.location ? 'Населений пункт: ' + lead.location : null,
+    lead.service ? 'Послуга: ' + lead.service : null,
+    'Сторінка: ' + lead.originatingPage,
+    'Lead ID: ' + leadId,
+  ].filter(Boolean);
+
+  return telegramApiRequest(env, 'sendMessage', {
+    chat_id: chatId,
+    text: lines.join('\n'),
+    disable_web_page_preview: true,
+  });
+}
+
 async function telegramStatusResponse(env: Env) {
   const tokenConfigured = Boolean(env.TELEGRAM_BOT_TOKEN?.trim());
   const chatConfigured = Boolean(env.TELEGRAM_CHAT_ID?.trim());
@@ -238,9 +265,13 @@ async function telegramStatusResponse(env: Env) {
     );
   }
 
-  const [bot, chat] = await Promise.all([
+  const [bot, chat, sendPermission] = await Promise.all([
     telegramApiRequest(env, 'getMe'),
     telegramApiRequest(env, 'getChat', { chat_id: env.TELEGRAM_CHAT_ID!.trim() }),
+    telegramApiRequest(env, 'sendChatAction', {
+      chat_id: env.TELEGRAM_CHAT_ID!.trim(),
+      action: 'typing',
+    }),
   ]);
 
   return Response.json(
@@ -248,9 +279,13 @@ async function telegramStatusResponse(env: Env) {
       configured: true,
       bot,
       chat,
-      ready: bot.ok && chat.ok,
+      sendPermission,
+      ready: bot.ok && chat.ok && sendPermission.ok,
     },
-    { status: bot.ok && chat.ok ? 200 : 503, headers: { 'cache-control': 'no-store' } },
+    {
+      status: bot.ok && chat.ok && sendPermission.ok ? 200 : 503,
+      headers: { 'cache-control': 'no-store' },
+    },
   );
 }
 
@@ -311,7 +346,7 @@ function responseWithCacheStatus(response: Response, kind: CacheKind, status: 'H
 function responseWithRelease(response: Response, env: Env) {
   const headers = new Headers(response.headers);
   headers.set('x-zab-worker-version', env.CF_VERSION_METADATA?.id ?? 'unknown');
-  headers.set('x-zab-container-generation', 'v5');
+  headers.set('x-zab-container-generation', 'v6');
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
@@ -396,8 +431,81 @@ export default {
       return responseWithRelease(await telegramStatusResponse(env), env);
     }
 
-    // Lead delivery is handled at the Worker edge first. Telegram must not depend
-    // on the Next.js container, database availability, or container cold starts.
+    // Public lead forms use a dedicated edge-only endpoint. This path does not
+    // depend on Next.js routing, the database, or Telegram topic/thread settings.
+    if (request.method === 'POST' && url.pathname === '/lead-submit') {
+      const lead = await readEdgeLeadPayload(request.clone());
+      if (!lead) {
+        return responseWithRelease(
+          Response.json(
+            { error: 'invalid_submission' },
+            { status: 400, headers: { 'cache-control': 'no-store', 'x-zab-lead-path': 'direct-edge' } },
+          ),
+          env,
+        );
+      }
+
+      const leadId = crypto.randomUUID();
+      const telegram = await sendLeadTelegramDirectAtEdge(env, lead, leadId);
+
+      if (!telegram.ok) {
+        console.error('[telegram-direct-edge] lead delivery failed', telegram);
+        return responseWithRelease(
+          Response.json(
+            { error: 'telegram_delivery_failed' },
+            {
+              status: 502,
+              headers: {
+                'cache-control': 'no-store',
+                'x-zab-lead-path': 'direct-edge',
+                'x-zab-telegram-status': 'failed',
+              },
+            },
+          ),
+          env,
+        );
+      }
+
+      // Analytics storage is best-effort and happens only after Telegram accepted
+      // the lead. A storage failure can no longer make the form look failed.
+      const storageContainer = getContainer(env.APP_CONTAINER as any, 'zahidalexbur-production-v6');
+      const storageUrl = new URL('/api/leads', request.url);
+      const storageRequest = new Request(storageUrl.toString(), {
+        method: 'POST',
+        headers: request.headers,
+        body: JSON.stringify(lead),
+      });
+      ctx.waitUntil(
+        storageContainer
+          .fetch(edgeRequest(storageRequest, { 'x-zab-telegram-edge': '1' }))
+          .then((storageResponse: Response) => {
+            if (!storageResponse.ok) {
+              console.error('[analytics-direct-edge] background lead storage failed', storageResponse.status);
+            }
+          })
+          .catch((error: unknown) => {
+            console.error('[analytics-direct-edge] background lead storage crashed', error);
+          }),
+      );
+
+      return responseWithRelease(
+        Response.json(
+          { ok: true, id: leadId, duplicate: false, storage: 'direct_edge_telegram' },
+          {
+            status: 201,
+            headers: {
+              'cache-control': 'no-store',
+              'x-zab-lead-path': 'direct-edge',
+              'x-zab-telegram-status': 'sent',
+            },
+          },
+        ),
+        env,
+      );
+    }
+
+    // Legacy API stays available for older clients, but the live form no longer
+    // depends on this route.
     if (request.method === 'POST' && url.pathname === '/api/leads') {
       const lead = await readEdgeLeadPayload(request.clone());
       if (!lead) {
@@ -435,7 +543,7 @@ export default {
       // should never see a failed form merely because analytics/database storage
       // is temporarily unavailable.
       const storageRequest = request.clone();
-      const storageContainer = getContainer(env.APP_CONTAINER as any, 'zahidalexbur-production-v5');
+      const storageContainer = getContainer(env.APP_CONTAINER as any, 'zahidalexbur-production-v6');
       ctx.waitUntil(
         storageContainer
           .fetch(edgeRequest(storageRequest, { 'x-zab-telegram-edge': '1' }))
@@ -482,7 +590,7 @@ export default {
 
     // New object name forces a fresh stateless Next.js container instance once,
     // avoiding a previously warm Durable Object instance during the rollout.
-    const container = getContainer(env.APP_CONTAINER as any, 'zahidalexbur-production-v5');
+    const container = getContainer(env.APP_CONTAINER as any, 'zahidalexbur-production-v6');
     const isLeadSubmission = request.method === 'POST' && url.pathname === '/api/leads';
     const leadRequestCopy = isLeadSubmission ? request.clone() : null;
 

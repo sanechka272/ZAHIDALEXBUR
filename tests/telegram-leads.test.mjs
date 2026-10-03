@@ -65,3 +65,23 @@ test('lead POST is completed at the Worker edge before container/database work',
     'direct Telegram lead delivery must happen before the normal container path',
   );
 });
+
+
+test('live LeadForm uses the dedicated edge-only endpoint instead of the legacy Next API', async () => {
+  const form = await readFile(new URL('../components/LeadForm.tsx', import.meta.url), 'utf8');
+  assert.match(form, /fetch\('\/lead-submit'/);
+  assert.doesNotMatch(form, /fetch\('\/api\/leads'/);
+  assert.match(worker, /url\.pathname === '\/lead-submit'/);
+  assert.match(worker, /sendLeadTelegramDirectAtEdge/);
+  assert.match(worker, /storage: 'direct_edge_telegram'/);
+  assert.match(worker, /x-zab-lead-path': 'direct-edge'/);
+});
+
+test('direct edge Telegram sender ignores topic/thread configuration and status checks send permission', () => {
+  const directStart = worker.indexOf('async function sendLeadTelegramDirectAtEdge');
+  const statusStart = worker.indexOf('async function telegramStatusResponse');
+  const directSender = worker.slice(directStart, statusStart);
+  assert.doesNotMatch(directSender, /message_thread_id|parse_mode/);
+  assert.match(worker, /telegramApiRequest\(env, 'sendChatAction'/);
+  assert.match(worker, /sendPermission\.ok/);
+});
