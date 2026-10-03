@@ -9,6 +9,10 @@ const contentCss = readFileSync(new URL('../app/content.css', import.meta.url), 
 const processCss = readFileSync(new URL('../app/process.css', import.meta.url), 'utf8');
 
 const blogDataUrl = new URL('../lib/blog-data.ts', import.meta.url);
+const blogCoreUrl = new URL('../lib/blog-core.ts', import.meta.url);
+const blogWave1Url = new URL('../lib/blog-wave1.ts', import.meta.url);
+const blogWave2ProblemsUrl = new URL('../lib/blog-wave2-problems.ts', import.meta.url);
+const blogWave2WaterUrl = new URL('../lib/blog-wave2-water.ts', import.meta.url);
 const blogIndexUrl = new URL('../app/blog/page.tsx', import.meta.url);
 const blogArticleUrl = new URL('../app/blog/[slug]/page.tsx', import.meta.url);
 
@@ -20,16 +24,23 @@ test('services header is an editorial comparison without filters or carousel con
   assert.match(servicesCss, /\.services-reference__header\s*\{[\s\S]*?text-align:\s*left\s*!important/i);
 });
 
-test('blog contains seven internal SEO articles and cards link to their real routes', () => {
+test('blog contains an expanded internal SEO library and cards link to real routes', () => {
   assert.equal(existsSync(blogDataUrl), true, 'lib/blog-data.ts must exist');
   assert.equal(existsSync(blogIndexUrl), true, 'blog index page must exist');
   assert.equal(existsSync(blogArticleUrl), true, 'dynamic blog article page must exist');
 
   const blogData = readFileSync(blogDataUrl, 'utf8');
+  const blogContent = [
+    readFileSync(blogCoreUrl, 'utf8'),
+    readFileSync(blogWave1Url, 'utf8'),
+    readFileSync(blogWave2ProblemsUrl, 'utf8'),
+    readFileSync(blogWave2WaterUrl, 'utf8'),
+  ].join('\n');
   const blogPage = readFileSync(blogArticleUrl, 'utf8');
-  const slugCount = (blogData.match(/slug:\s*'/g) || []).length;
+  const slugCount = (blogContent.match(/slug:\s*'/g) || []).length;
 
-  assert.equal(slugCount, 7);
+  assert.ok(slugCount >= 50, `expected expanded SEO library, found ${slugCount} articles`);
+  assert.match(blogData, /coreBlogArticles/);
   assert.match(landing, /<BlogSection onLeadOpen=/);
   assert.match(blogSection, /href=\{`\/blog\/\$\{article\.slug\}`\}/);
   assert.doesNotMatch(blogSection, /href="https:\/\/zahidalexbur\.com\.ua\/blog"/);

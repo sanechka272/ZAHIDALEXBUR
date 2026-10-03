@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises';
 const nextConfig = await readFile(new URL('../next.config.mjs', import.meta.url), 'utf8');
 const siteData = await readFile(new URL('../lib/site-data.ts', import.meta.url), 'utf8');
 const blogData = await readFile(new URL('../lib/blog-data.ts', import.meta.url), 'utf8');
+const blogCore = await readFile(new URL('../lib/blog-core.ts', import.meta.url), 'utf8');
 const landing = await readFile(new URL('../components/LandingPage.tsx', import.meta.url), 'utf8');
 const layout = await readFile(new URL('../app/layout.tsx', import.meta.url), 'utf8');
 const worker = await readFile(new URL('../cloudflare/worker.ts', import.meta.url), 'utf8');
@@ -12,8 +13,9 @@ const worker = await readFile(new URL('../cloudflare/worker.ts', import.meta.url
 test('large production photos live under public media for edge resizing', () => {
   assert.doesNotMatch(siteData, /import .*service-card-.*\.webp/);
   assert.doesNotMatch(blogData, /import .*blog-.*\.webp/);
+  assert.doesNotMatch(blogCore, /import .*blog-.*\.webp/);
   assert.match(siteData, /\/media\/service-card-bezfiltrova-cross-section\.webp/);
-  assert.match(blogData, /\/media\/blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
+  assert.match(blogCore, /\/media\/blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
 });
 
 test('responsive images use bounded widths, AVIF and q82', () => {

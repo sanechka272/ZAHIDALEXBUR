@@ -3,12 +3,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArticleLeadButton, ArticleShareButton } from '@/components/ArticleInteractions';
-import { blogArticles, getBlogArticle, getRelatedBlogArticles } from '@/lib/blog-data';
+import { blogArticles, getBlogArticle, getBlogReadTime, getRelatedBlogArticles } from '@/lib/blog-data';
 import { assets, contact } from '@/lib/site-data';
 
 const SITE_URL = 'https://zahidalexbur.com';
-const ARTICLE_PUBLISHED_AT = '2026-08-12';
-const ARTICLE_PUBLISHED_LABEL = '12 серпня 2026';
+const DEFAULT_ARTICLE_PUBLISHED_AT = '2026-08-12';
+const DEFAULT_ARTICLE_PUBLISHED_LABEL = '12 серпня 2026';
 export const dynamic = 'force-static';
 export const revalidate = false;
 export const dynamicParams = false;
@@ -24,10 +24,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const canonical = `/blog/${article.slug}`;
   const articleVisualUrl = article.image;
+  const publishedAt = article.publishedAt ?? DEFAULT_ARTICLE_PUBLISHED_AT;
+  const modifiedAt = article.updatedAt ?? publishedAt;
 
   return {
     title: article.metaTitle,
     description: article.metaDescription,
+    keywords: article.keywords,
+    authors: [{ name: 'ZAHIDALEXBUR', url: '/' }],
     alternates: { canonical },
     openGraph: {
       type: 'article',
@@ -36,7 +40,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: article.metaTitle,
       description: article.metaDescription,
       images: [{ url: articleVisualUrl, alt: article.imageAlt }],
-      publishedTime: ARTICLE_PUBLISHED_AT,
+      publishedTime: publishedAt,
+      modifiedTime: modifiedAt,
     },
     twitter: {
       card: 'summary_large_image',
@@ -87,6 +92,47 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
   const article = getBlogArticle(slug);
   if (!article) notFound();
 
+  const publishedAt = article.publishedAt ?? DEFAULT_ARTICLE_PUBLISHED_AT;
+  const publishedLabel = article.publishedLabel ?? DEFAULT_ARTICLE_PUBLISHED_LABEL;
+  const modifiedAt = article.updatedAt ?? publishedAt;
+  const readTime = getBlogReadTime(article);
+
+  const consultationCopy =
+    article.category === 'Ремонт'
+      ? 'Опишіть симптоми — допоможемо зрозуміти, що перевіряти у свердловині та обладнанні.'
+      : article.category === 'Вода'
+        ? 'Маєте аналіз води або дивний запах, колір чи осад? Допоможемо розібратися, з чого почати.'
+        : article.category === 'Ціни'
+          ? 'Передайте адресу або геолокацію — підкажемо, які параметри потрібні для реалістичного розрахунку.'
+          : 'Допоможемо оцінити умови на ділянці та підібрати технічне рішення без зайвих робіт.';
+
+  const finalCtaTitle =
+    article.category === 'Ремонт'
+      ? 'Спочатку діагностика — потім ремонт'
+      : article.category === 'Вода'
+        ? 'Розберемо ваш аналіз води'
+        : article.category === 'Ціни'
+          ? 'Порахуємо під вашу ділянку'
+          : 'Допоможемо знайти правильне рішення';
+
+  const finalCtaText =
+    article.category === 'Ремонт'
+      ? 'Розкажіть, що змінилося: тиск, дебіт, колір води, робота насоса. Це допоможе не міняти справне обладнання навмання.'
+      : article.category === 'Вода'
+        ? 'Надішліть результати лабораторії або опишіть проблему — підкажемо, які показники важливі й що перевіряти далі.'
+        : article.category === 'Ціни'
+          ? 'Адреса, бажане водоспоживання і умови під’їзду дають набагато точніший бюджет, ніж універсальна ціна за метр.'
+          : 'Передайте адресу або геолокацію — зорієнтуємо по можливій глибині, конструкції та наступних кроках.';
+
+  const finalCtaButton =
+    article.category === 'Ремонт'
+      ? 'Обговорити проблему'
+      : article.category === 'Вода'
+        ? 'Розібрати аналіз'
+        : article.category === 'Ціни'
+          ? 'Отримати розрахунок'
+          : 'Обговорити ділянку';
+
   const articleIndex = blogArticles.findIndex((candidate) => candidate.slug === article.slug);
   const previousArticle = articleIndex > 0 ? blogArticles[articleIndex - 1] : null;
   const nextArticle = articleIndex >= 0 && articleIndex < blogArticles.length - 1 ? blogArticles[articleIndex + 1] : null;
@@ -103,8 +149,8 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
         headline: article.title,
         description: article.metaDescription,
         image: [`${SITE_URL}${articleVisualUrl}`],
-        datePublished: ARTICLE_PUBLISHED_AT,
-        dateModified: ARTICLE_PUBLISHED_AT,
+        datePublished: publishedAt,
+        dateModified: modifiedAt,
         inLanguage: 'uk-UA',
         mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
         author: { '@type': 'Organization', name: 'ZAHIDALEXBUR', url: SITE_URL },
@@ -124,6 +170,17 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
           { '@type': 'ListItem', position: 3, name: article.title, item: articleUrl },
         ],
       },
+      ...(article.faq?.length
+        ? [{
+            '@type': 'FAQPage',
+            '@id': `${articleUrl}#faq`,
+            mainEntity: article.faq.map((item) => ({
+              '@type': 'Question',
+              name: item.question,
+              acceptedAnswer: { '@type': 'Answer', text: item.answer },
+            })),
+          }]
+        : []),
     ],
   };
 
@@ -157,12 +214,18 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
             <div className="article-page__hero-grid">
               <header className="article-page__intro">
-                <span className="article-page__eyebrow">{article.category} · {article.readTime}</span>
+                <span className="article-page__eyebrow">{article.category} · {readTime}</span>
                 <h1>{article.title}</h1>
                 <p>{article.intro}</p>
+                {article.quickAnswer ? (
+                  <div className="article-quick-answer">
+                    <span>КОРОТКО</span>
+                    <p>{article.quickAnswer}</p>
+                  </div>
+                ) : null}
                 <div className="article-page__author">
                   <span className="article-page__author-mark" aria-hidden="true">ZB</span>
-                  <div><strong>Команда ZAHIDALEXBUR</strong><time dateTime={ARTICLE_PUBLISHED_AT}>{ARTICLE_PUBLISHED_LABEL}</time></div>
+                  <div><strong>Команда ZAHIDALEXBUR</strong><time dateTime={publishedAt}>{publishedLabel}</time></div>
                 </div>
               </header>
 
@@ -171,7 +234,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                   <Image src={articleVisual} alt={article.imageAlt} fill sizes="(max-width: 900px) 100vw, 58vw" quality={82} preload fetchPriority="high" />
                 </div>
                 <div className="article-page__media-tools">
-                  <span><ClockIcon />{article.readTime}</span>
+                  <span><ClockIcon />{readTime}</span>
                   <ArticleShareButton title={article.title} />
                 </div>
               </div>
@@ -196,7 +259,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
               <div className="article-consultation">
                 <span className="article-consultation__icon"><ConsultationIcon /></span>
                 <h2>Потрібна консультація?</h2>
-                <p>Допоможемо оцінити можливість буріння на вашій ділянці.</p>
+                <p>{consultationCopy}</p>
                 <ArticleLeadButton className="article-consultation__button">Зв’язатися з нами</ArticleLeadButton>
               </div>
             </aside>
@@ -206,23 +269,51 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                 <section key={section.heading} id={`section-${String(index + 1).padStart(2, '0')}`}>
                   <span>0{index + 1}</span>
                   <h2>{section.heading}</h2>
-                  <p>{section.body}</p>
-                  {index === 2 && (
+                  {section.body.split('\n\n').map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                  {index === 1 && article.checklist && (
                     <div className="article-info-card">
                       <span className="article-info-card__icon"><ChecklistIcon /></span>
                       <div>
-                        <strong>Що бажано підготувати:</strong>
+                        <strong>{article.checklist.title}</strong>
                         <ul>
-                          <li>Точна адреса або геолокація</li>
-                          <li>Тип об’єкта та сценарій використання води</li>
-                          <li>Бажана продуктивність системи</li>
-                          <li>Інформація про доступ техніки до місця робіт</li>
+                          {article.checklist.items.map((item) => <li key={item}>{item}</li>)}
                         </ul>
                       </div>
                     </div>
                   )}
                 </section>
               ))}
+
+              {article.faq?.length ? (
+                <section id="faq" className="article-faq">
+                  <span>FAQ</span>
+                  <h2>Поширені питання</h2>
+                  <div className="article-faq__list">
+                    {article.faq.map((item) => (
+                      <div className="article-faq__item" key={item.question}>
+                        <h3>{item.question}</h3>
+                        <p>{item.answer}</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
+              {article.sources?.length ? (
+                <section className="article-sources" aria-labelledby="article-sources-title">
+                  <span>ДЖЕРЕЛА</span>
+                  <h2 id="article-sources-title">Джерела та норми</h2>
+                  <ul>
+                    {article.sources.map((source) => (
+                      <li key={source.href}>
+                        <a href={source.href} target="_blank" rel="noreferrer">{source.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
 
               <nav className="article-page__article-nav" aria-label="Навігація між статтями">
                 <div>
@@ -247,7 +338,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
                       <Image src={relatedArticle.image} alt={relatedArticle.imageAlt} fill sizes="110px" quality={82} />
                     </Link>
                     <div className="article-related__copy">
-                      <span>{relatedArticle.category} · {relatedArticle.readTime}</span>
+                      <span>{relatedArticle.category} · {getBlogReadTime(relatedArticle)}</span>
                       <h3><Link href={`/blog/${relatedArticle.slug}`}>{relatedArticle.title}</Link></h3>
                     </div>
                     <Link className="article-related__arrow" href={`/blog/${relatedArticle.slug}`} aria-label={`Читати ${relatedArticle.title}`}>→</Link>
@@ -260,8 +351,8 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
         <section className="article-final-cta" aria-label="Консультація">
           <div className="blog-page__shell article-final-cta__grid">
-            <div><span>МАЄТЕ ПИТАННЯ?</span><h2>Допоможемо знайти<br />правильне рішення</h2></div>
-            <div className="article-final-cta__action"><p>Передайте адресу або геолокацію — зорієнтуємо по глибині та типу свердловини.</p><ArticleLeadButton className="article-final-cta__button">Обговорити ділянку</ArticleLeadButton></div>
+            <div><span>МАЄТЕ ПИТАННЯ?</span><h2>{finalCtaTitle}</h2></div>
+            <div className="article-final-cta__action"><p>{finalCtaText}</p><ArticleLeadButton className="article-final-cta__button">{finalCtaButton}</ArticleLeadButton></div>
             <div className="article-final-cta__label">НАДІЙНА<br />ВОДА —<br />РЕАЛЬНА<br />ПЕРЕВАГА</div>
           </div>
         </section>

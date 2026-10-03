@@ -7,6 +7,11 @@ const indexPage = await readFile(new URL('../app/blog/page.tsx', import.meta.url
 const sitemap = await readFile(new URL('../app/sitemap.ts', import.meta.url), 'utf8');
 const robots = await readFile(new URL('../app/robots.ts', import.meta.url), 'utf8');
 const blogData = await readFile(new URL('../lib/blog-data.ts', import.meta.url), 'utf8');
+const blogCore = await readFile(new URL('../lib/blog-core.ts', import.meta.url), 'utf8');
+const blogWave1 = await readFile(new URL('../lib/blog-wave1.ts', import.meta.url), 'utf8');
+const blogWave2Problems = await readFile(new URL('../lib/blog-wave2-problems.ts', import.meta.url), 'utf8');
+const blogWave2Water = await readFile(new URL('../lib/blog-wave2-water.ts', import.meta.url), 'utf8');
+const blogContent = [blogCore, blogWave1, blogWave2Problems, blogWave2Water].join('\n');
 const blogSection = await readFile(new URL('../components/BlogSection.tsx', import.meta.url), 'utf8');
 const articleCss = await readFile(new URL('../app/blog-seo.css', import.meta.url), 'utf8');
 const blogIndexHeroCss = await readFile(new URL('../app/blog-index-hero.css', import.meta.url), 'utf8');
@@ -27,9 +32,9 @@ test('article metadata contains canonical Open Graph and Twitter fields', () => 
   assert.match(articlePage, /type:\s*'article'/);
   assert.match(articlePage, /twitter:/);
   assert.match(articlePage, /datePublished/);
-  assert.match(blogData, /metaTitle:/);
-  assert.match(blogData, /metaDescription:/);
-  assert.match(blogData, /imageAlt:/);
+  assert.match(blogContent, /metaTitle:/);
+  assert.match(blogContent, /metaDescription:/);
+  assert.match(blogContent, /imageAlt:/);
 });
 
 test('article pages use semantic heading hierarchy and structured data', () => {
@@ -69,13 +74,13 @@ test('blog index hero uses the dedicated repository image in a responsive split 
   assert.match(blogIndexHeroCss, /@media \(max-width: 820px\)[\s\S]*\.blog-page__hero-grid\s*\{[^}]*grid-template-columns:\s*1fr/);
 });
 
-test('water-location article has the six text-first sections from the reference', () => {
-  assert.match(blogData, /Геологічні карти і регіональні дані/);
-  assert.match(blogData, /Дані сусідніх свердловин/);
-  assert.match(blogData, /Що потрібно перед виїздом техніки/);
-  assert.match(blogData, /Додаткові методи оцінки/);
-  assert.match(blogData, /Обмеження та реалістичні очікування/);
-  assert.match(blogData, /heading:\s*'Висновок'/);
+test('water-location article remains a substantive text-first guide after editorial expansion', () => {
+  assert.match(blogCore, /slug:\s*'yak-vyznachyty-vodu-na-diliantsi'/);
+  assert.match(blogCore, /Почніть не з лози, а з сусідів/);
+  assert.match(blogCore, /Що дають геологічні карти/);
+  assert.match(blogCore, /Рельєф інколи пояснює різницю краще за відстань/);
+  assert.match(blogCore, /Як вибирають саму точку на ділянці/);
+  assert.match(blogCore, /Який результат нормального попереднього аналізу/);
 });
 
 test('homepage blog section does not introduce a second H1', () => {
@@ -95,7 +100,7 @@ test('blog index and discovery routes are indexable through sitemap and robots',
 
 
 test('water-disappears article uses its dedicated public media image', () => {
-  assert.match(blogData, /\/media\/blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
+  assert.match(blogCore, /\/media\/blog-chomu-voda-mozhe-znyknuty-featured\.webp/);
   assert.match(blogSection, /article\.image/);
   assert.match(indexPage, /article\.image/);
   assert.match(articlePage, /article\.image/);
@@ -103,12 +108,12 @@ test('water-disappears article uses its dedicated public media image', () => {
 
 
 test('turnkey-well article uses its dedicated public media image', () => {
-  assert.match(blogData, /\/media\/blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured\.webp/);
+  assert.match(blogCore, /\/media\/blog-yak-oblashtuvaty-sverdlovynu-pid-kliuch-featured\.webp/);
 });
 
 
 test('water-location article uses its dedicated public media image', () => {
-  assert.match(blogData, /\/media\/blog-yak-vyznachyty-vodu-na-diliantsi-featured\.webp/);
+  assert.match(blogCore, /\/media\/blog-yak-vyznachyty-vodu-na-diliantsi-featured\.webp/);
 });
 
 
@@ -124,10 +129,10 @@ test('article lead modal is portaled outside article stacking contexts and keeps
 
 
 test('site-preparation article uses its dedicated public media image', () => {
-  assert.match(blogData, /\/media\/blog-yak-pidhotuvaty-dilianku-do-burinnya-featured\.webp/);
+  assert.match(blogCore, /\/media\/blog-yak-pidhotuvaty-dilianku-do-burinnya-featured\.webp/);
 });
 
 
 test('pump-choice article uses its dedicated public media image', () => {
-  assert.match(blogData, /\/media\/blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured\.webp/);
+  assert.match(blogCore, /\/media\/blog-yakyi-nasos-obraty-dlia-sverdlovyny-featured\.webp/);
 });

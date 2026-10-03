@@ -3,10 +3,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { featuredBlogArticle, landingBlogArticles } from '@/lib/blog-data';
+import { featuredBlogArticle, getBlogReadTime, landingBlogArticles } from '@/lib/blog-data';
 import { assets } from '@/lib/site-data';
 
-const categories = ['УСІ МАТЕРІАЛИ', 'ГЕОЛОГІЯ', 'БУРІННЯ', 'ОБЛАШТУВАННЯ', 'ВОДА', 'ЦІНИ', 'ПОРАДИ'] as const;
+const categories = ['Усі матеріали', 'Буріння', 'Геологія', 'Ціни', 'Вода', 'Облаштування', 'Ремонт', 'Обслуговування'] as const;
 const BLOG_KNOWLEDGE_HERO_IMAGE = '/media/blog-knowledge-hero-drilling.webp';
 
 function ArrowIcon() {
@@ -28,13 +28,13 @@ function SearchIcon() {
 
 export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => void }) {
   void _onLeadOpen;
-  const [activeCategory, setActiveCategory] = useState<(typeof categories)[number]>('УСІ МАТЕРІАЛИ');
+  const [activeCategory, setActiveCategory] = useState<(typeof categories)[number]>('Усі матеріали');
   const [query, setQuery] = useState('');
 
   const filteredArticles = useMemo(() => {
     const normalized = query.trim().toLocaleLowerCase('uk-UA');
     return landingBlogArticles.filter((article) => {
-      const matchesCategory = activeCategory === 'УСІ МАТЕРІАЛИ' || article.category === activeCategory;
+      const matchesCategory = activeCategory === 'Усі матеріали' || article.category === activeCategory;
       const matchesQuery = !normalized || `${article.title} ${article.excerpt} ${article.category}`.toLocaleLowerCase('uk-UA').includes(normalized);
       return matchesCategory && matchesQuery;
     });
@@ -48,7 +48,7 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
             <span className="blog-kb__eyebrow">БЛОГ / БАЗА ЗНАНЬ</span>
             <h2 id="blog-kb-title">Про свердловини<br />без зайвої води</h2>
             <p>Практичні матеріали про буріння, геологію, воду та облаштування свердловин у Львові та області.</p>
-            <div className="blog-kb__keywords" aria-label="Ключові теми"><span />ДОСВІД · ЕКСПЕРТИЗА · РЕАЛЬНІ КЕЙСИ</div>
+            <div className="blog-kb__keywords" aria-label="Ключові теми"><span />ДОСВІД · ЕКСПЕРТИЗА · ПРАКТИЧНІ РІШЕННЯ</div>
           </div>
           <div className="blog-kb__hero-media reveal reveal--from-right">
             <Image src={BLOG_KNOWLEDGE_HERO_IMAGE} alt="Бурова установка ZAHIDALEXBUR у Львівській області" fill sizes="(max-width: 900px) 100vw, 52vw" quality={82} />
@@ -63,7 +63,7 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
             <Image src={featuredBlogArticle.image} alt={featuredBlogArticle.imageAlt} fill sizes="(max-width: 900px) 100vw, 48vw" quality={82} />
           </Link>
           <div className="blog-kb__featured-copy">
-            <span className="blog-kb__meta">{featuredBlogArticle.category} · {featuredBlogArticle.readTime.toUpperCase().replace(' ЧИТАННЯ', '')}</span>
+            <span className="blog-kb__meta">{featuredBlogArticle.category} · {getBlogReadTime(featuredBlogArticle).toUpperCase().replace(' ЧИТАННЯ', '')}</span>
             <h3><Link href={`/blog/${featuredBlogArticle.slug}`}>{featuredBlogArticle.title}</Link></h3>
             <p>{featuredBlogArticle.excerpt}</p>
             <Link className="blog-kb__button" href={`/blog/${featuredBlogArticle.slug}`}>Читати матеріал <ArrowIcon /></Link>
@@ -88,14 +88,13 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
                   className={activeCategory === category ? 'is-active' : ''}
                   onClick={() => setActiveCategory(category)}
                 >
-                  {category === 'УСІ МАТЕРІАЛИ' ? category : category.charAt(0) + category.slice(1).toLocaleLowerCase('uk-UA')}
+                  {category}
                 </button>
               ))}
             </div>
             <label className="blog-kb__search">
-              <span className="sr-only">Пошук статей</span>
               <SearchIcon />
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Пошук статей..." type="search" />
+              <input aria-label="Пошук статей" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Пошук статей..." type="search" />
             </label>
           </div>
 
@@ -106,7 +105,7 @@ export function BlogSection({ onLeadOpen: _onLeadOpen }: { onLeadOpen: () => voi
                   <Image src={article.image} alt={article.imageAlt} fill sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw" quality={82} />
                 </Link>
                 <div className="blog-kb-card__body">
-                  <span className="blog-kb__meta">{article.category} · {article.readTime.toUpperCase().replace(' ЧИТАННЯ', '')}</span>
+                  <span className="blog-kb__meta">{article.category} · {getBlogReadTime(article).toUpperCase().replace(' ЧИТАННЯ', '')}</span>
                   <h3><Link href={`/blog/${article.slug}`}>{article.title}</Link></h3>
                   <p>{article.excerpt}</p>
                   <Link className="blog-kb-card__link" href={`/blog/${article.slug}`}>Читати <ArrowIcon /></Link>
